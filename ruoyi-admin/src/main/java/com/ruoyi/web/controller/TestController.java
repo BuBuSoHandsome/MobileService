@@ -1,15 +1,9 @@
-package com.ruoyi.web;
+package com.ruoyi.web.controller;
 
-import com.ruoyi.system.domain.MobileUrl;
 import com.ruoyi.system.service.TestMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Datetime:    2020/2/27   13:48
@@ -18,7 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("mobile")
-public class MainTest {
+    public class TestController {
 
     @Autowired
     private TestMobileService testMobileService;
