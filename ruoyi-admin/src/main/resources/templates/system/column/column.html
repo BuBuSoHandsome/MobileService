@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('选号卡类栏目列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>渠道：</p>
+                                <input type="text" name="channel"/>
+                            </li>
+                            <li>
+                                <p>卡名称：</p>
+                                <input type="text" name="text"/>
+                            </li>
+                            <li>
+                                <p>状态：</p>
+                                <select name="status">
+                                    <option value="">激活</option>
+                                    <option value="">未激活</option>
+                                </select>
+                            </li>
+                            <li class="select-time">
+                                <p>最后更新时间：</p>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginUpdatetime]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endUpdatetime]"/>
+                            </li>
+                            <!--<li>
+                                <p>卡描述：</p>
+                                <input type="text" name="describe"/>
+                            </li>-->
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:column:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:column:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:column:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:column:export">
+                    <i class="fa fa-download"></i> 导出
+                 </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:column:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:column:remove')}]];
+        var prefix = ctx + "system/column";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "【选号卡类栏目】",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'sid', 
+                    title : '编码',
+                    visible: false
+                },
+                {
+                    field : 'channel', 
+                    title : '渠道'
+                },
+ /*               {
+                    field : 'position', 
+                    title : '显示位置'
+                },*/
+                {
+                    field : 'text', 
+                    title : '卡名'
+                },
+                // {
+                //     field : 'constraint',
+                //     title : '卡类约束'
+                // },
+                {
+                    field : 'status', 
+                    title : '状态'
+                },
+                {
+                    field : 'updatetime',
+                    title : '最后更新时间'
+                },
+                {
+                    field : 'describe', 
+                    title : '卡描述'
+                }]
+                // {
+                //     field : 'pack',
+                //     title : '套餐'
+                // },
+                // {
+                //     title: '操作',
+                //     align: 'center',
+                //     formatter: function(value, row, index) {
+                //         var actions = [];
+                //         actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.sid + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                //         actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.sid + '\')"><i class="fa fa-remove"></i>删除</a>');
+                //         return actions.join('');
+                //     }
+                // }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

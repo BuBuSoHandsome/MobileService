@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ChooseNumberColumnMapper">
+    
+    <resultMap type="ChooseNumberColumn" id="ChooseNumberColumnResult">
+        <result property="sid"    column="sid"    />
+        <result property="channel"    column="channel"    />
+        <result property="position"    column="position"    />
+        <result property="text"    column="text"    />
+        <result property="pic"    column="pic"    />
+        <result property="constraint"    column="constraint"    />
+        <result property="status"    column="status"    />
+        <result property="updatetime"    column="updateTime"    />
+        <result property="describe"    column="describe"    />
+        <result property="pack"    column="pack"    />
+    </resultMap>
+
+    <sql id="selectChooseNumberColumnVo">
+        select sid,channel,position,text,pic,`constraint`,`status`,updateTime,`describe`,pack from choose_number_column
+    </sql>
+
+    <select id="selectChooseNumberColumnList" parameterType="ChooseNumberColumn" resultMap="ChooseNumberColumnResult">
+        <include refid="selectChooseNumberColumnVo"/>
+        <where>  
+            <if test="channel != null  and channel != ''"> and channel = #{channel}</if>
+            <if test="position != null  and position != ''"> and position = #{position}</if>
+            <if test="text != null  and text != ''"> and text = #{text}</if>
+            <if test="pic != null  and pic != ''"> and pic = #{pic}</if>
+            <if test="constraint != null  and constraint != ''"> and constraint = #{constraint}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="updatetime != null "> and updatetime = #{updatetime}</if>
+            <if test="describe != null  and describe != ''"> and describe = #{describe}</if>
+            <if test="pack != null  and pack != ''"> and pack = #{pack}</if>
+        </where>
+    </select>
+    
+    <select id="selectChooseNumberColumnById" parameterType="Long" resultMap="ChooseNumberColumnResult">
+        <include refid="selectChooseNumberColumnVo"/>
+        where sid = #{sid}
+    </select>
+        
+    <insert id="insertChooseNumberColumn" parameterType="ChooseNumberColumn">
+        insert into choose_number_column
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sid != null ">sid,</if>
+            <if test="channel != null  and channel != ''">channel,</if>
+            <if test="position != null  and position != ''">position,</if>
+            <if test="text != null  and text != ''">text,</if>
+            <if test="pic != null  and pic != ''">pic,</if>
+            <if test="constraint != null  and constraint != ''">constraint,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="updatetime != null ">updatetime,</if>
+            <if test="describe != null  and describe != ''">describe,</if>
+            <if test="pack != null  and pack != ''">pack,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sid != null ">#{sid},</if>
+            <if test="channel != null  and channel != ''">#{channel},</if>
+            <if test="position != null  and position != ''">#{position},</if>
+            <if test="text != null  and text != ''">#{text},</if>
+            <if test="pic != null  and pic != ''">#{pic},</if>
+            <if test="constraint != null  and constraint != ''">#{constraint},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="updatetime != null ">#{updatetime},</if>
+            <if test="describe != null  and describe != ''">#{describe},</if>
+            <if test="pack != null  and pack != ''">#{pack},</if>
+         </trim>
+    </insert>
+
+    <update id="updateChooseNumberColumn" parameterType="ChooseNumberColumn">
+        update choose_number_column
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="channel != null  and channel != ''">channel = #{channel},</if>
+            <if test="position != null  and position != ''">position = #{position},</if>
+            <if test="text != null  and text != ''">text = #{text},</if>
+            <if test="pic != null  and pic != ''">pic = #{pic},</if>
+            <if test="constraint != null  and constraint != ''">constraint = #{constraint},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="updatetime != null ">updatetime = #{updatetime},</if>
+            <if test="describe != null  and describe != ''">describe = #{describe},</if>
+            <if test="pack != null  and pack != ''">pack = #{pack},</if>
+        </trim>
+        where sid = #{sid}
+    </update>
+
+    <delete id="deleteChooseNumberColumnById" parameterType="Long">
+        delete from choose_number_column where sid = #{sid}
+    </delete>
+
+    <delete id="deleteChooseNumberColumnByIds" parameterType="String">
+        delete from choose_number_column where sid in 
+        <foreach item="sid" collection="array" open="(" separator="," close=")">
+            #{sid}
+        </foreach>
+    </delete>
+    
+</mapper>

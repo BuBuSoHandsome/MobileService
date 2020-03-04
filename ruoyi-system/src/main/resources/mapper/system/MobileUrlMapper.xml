@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.MobileUrlMapper">
+    
+    <resultMap type="MobileUrl" id="MobileUrlResult">
+        <result property="fdId"    column="fd_id"    />
+        <result property="url"    column="url"    />
+        <result property="eumn"    column="eumn"    />
+    </resultMap>
+
+    <sql id="selectMobileUrlVo">
+        select fd_id, url, eumn from mobile_url
+    </sql>
+
+    <select id="selectMobileUrlList" parameterType="MobileUrl" resultMap="MobileUrlResult">
+        <include refid="selectMobileUrlVo"/>
+        <where>  
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="eumn != null  and eumn != ''"> and eumn = #{eumn}</if>
+        </where>
+    </select>
+    
+    <select id="selectMobileUrlByEumn" parameterType="String" resultMap="MobileUrlResult">
+        <include refid="selectMobileUrlVo"/>
+        where eumn = #{eumn}
+    </select>
+        
+    <insert id="insertMobileUrl" parameterType="MobileUrl">
+        insert into mobile_url
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fdId != null  and fdId != ''">fd_id,</if>
+            <if test="url != null  and url != ''">url,</if>
+            <if test="eumn != null  and eumn != ''">eumn,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fdId != null  and fdId != ''">#{fdId},</if>
+            <if test="url != null  and url != ''">#{url},</if>
+            <if test="eumn != null  and eumn != ''">#{eumn},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMobileUrl" parameterType="MobileUrl">
+        update mobile_url
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="url != null  and url != ''">url = #{url},</if>
+            <if test="eumn != null  and eumn != ''">eumn = #{eumn},</if>
+        </trim>
+        where fd_id = #{fdId}
+    </update>
+
+    <delete id="deleteMobileUrlById" parameterType="String">
+        delete from mobile_url where fd_id = #{fdId}
+    </delete>
+
+    <delete id="deleteMobileUrlByIds" parameterType="String">
+        delete from mobile_url where fd_id in 
+        <foreach item="fdId" collection="array" open="(" separator="," close=")">
+            #{fdId}
+        </foreach>
+    </delete>
+    
+</mapper>
