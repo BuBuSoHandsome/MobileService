@@ -44,28 +44,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertChooseNumberColumn" parameterType="ChooseNumberColumn">
         insert into choose_number_column
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="sid != null ">sid,</if>
-            <if test="channel != null  and channel != ''">channel,</if>
-            <if test="position != null  and position != ''">position,</if>
-            <if test="text != null  and text != ''">text,</if>
-            <if test="pic != null  and pic != ''">pic,</if>
-            <if test="constraint != null  and constraint != ''">constraint,</if>
-            <if test="status != null  and status != ''">status,</if>
-            <if test="updatetime != null ">updatetime,</if>
-            <if test="describe != null  and describe != ''">describe,</if>
-            <if test="pack != null  and pack != ''">pack,</if>
+            <if test="sid != null ">`sid`,</if>
+            <if test="channel != null ">`channel`,</if>
+            <if test="position != null  ">`position`,</if>
+            <if test="text != null  ">`text`,</if>
+            <if test="pic != null  ">`pic`,</if>
+            <if test="constraint != null  ">`constraint`,</if>
+            <if test="status != null  ">`status`,</if>
+            <if test="updatetime != null ">`updateTime`,</if>
+            <if test="describe != null  ">`describe`,</if>
+            <if test="pack != null ">`pack`,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="sid != null ">#{sid},</if>
-            <if test="channel != null  and channel != ''">#{channel},</if>
-            <if test="position != null  and position != ''">#{position},</if>
-            <if test="text != null  and text != ''">#{text},</if>
-            <if test="pic != null  and pic != ''">#{pic},</if>
-            <if test="constraint != null  and constraint != ''">#{constraint},</if>
-            <if test="status != null  and status != ''">#{status},</if>
+            <if test="channel != null  ">#{channel},</if>
+            <if test="position != null  ">#{position},</if>
+            <if test="text != null  ">#{text},</if>
+            <if test="pic != null  ">#{pic},</if>
+            <if test="constraint != null  ">#{constraint},</if>
+            <if test="status != null  ">#{status},</if>
             <if test="updatetime != null ">#{updatetime},</if>
-            <if test="describe != null  and describe != ''">#{describe},</if>
-            <if test="pack != null  and pack != ''">#{pack},</if>
+            <if test="describe != null ">#{describe},</if>
+            <if test="pack != null ">#{pack},</if>
          </trim>
     </insert>
 
@@ -95,5 +95,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{sid}
         </foreach>
     </delete>
-    
+
+    <!-- 删除所有-->
+    <delete id="deleteAll">
+        delete from choose_number_column
+    </delete>
+
+
+
 </mapper>

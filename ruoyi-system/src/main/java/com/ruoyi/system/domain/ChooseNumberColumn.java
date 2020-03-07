@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 import java.util.Date;
 
 /**
- * 【请填写功能名称】对象 choose_number_column
+ *  choose_number_column
  * 
  * @author ruoyi
  * @date 2020-01-01

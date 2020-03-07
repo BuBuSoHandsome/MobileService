@@ -152,4 +152,24 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         // long sec = diff % nd % nh % nm / ns;
         return day + "天" + hour + "小时" + min + "分钟";
     }
+
+    public static Date getDateFromString(String dateString){
+        SimpleDateFormat format = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
+        String d = format.format(Long.parseLong(dateString));
+        Date date= null;
+        try {
+            date = format.parse(d);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            //转换出错存服务器时间
+            return new Date();
+        }
+        return date;
+    }
+
+    public static void main(String[] args) {
+        //2020-02-02 17:23:24
+        //Sun Feb 02 17:23:24 CST 2020
+        System.out.println(getDateFromString("1580635404000"));
+    }
 }

@@ -1,18 +1,18 @@
 # 项目相关配置
 ruoyi:
   # 名称
-  name: RuoYi
+  name: XingYing
   # 版本
   version: 4.1.0
   # 版权年份
-  copyrightYear: 2019
+  copyrightYear: 2020
   # 实例演示开关
   demoEnabled: false
   # 文件路径 示例（ Windows配置 E:\ruoyi\uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  #profile: D:\ruoyi\uploadPath
+  #profile: E:\ruoyi\uploadPath
   profile: /home/ruoyi/uploadPath
   # 获取ip地址开关
-  addressEnabled: true
+  addressEnabled: false
 
 # 开发环境配置
 server:

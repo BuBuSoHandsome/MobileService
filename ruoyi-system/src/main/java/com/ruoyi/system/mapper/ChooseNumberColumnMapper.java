@@ -58,4 +58,13 @@ public interface ChooseNumberColumnMapper
      * @return 结果
      */
     public int deleteChooseNumberColumnByIds(String[] sids);
+
+    /**
+     * 全部删除【选号卡类栏目】
+     *
+     * @return 结果
+     */
+    public int deleteAll();
+
+
 }
