@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import com.ruoyi.system.domain.mobileRequest.ChooseNumberbusinessRequest;
 import com.ruoyi.system.domain.mobileRequest.JDCheckAddressRequest;
+import com.ruoyi.system.domain.mobileRequest.QueryChooseNumberListRequest;
 
 import java.util.List;
 
@@ -19,5 +20,9 @@ public interface TestMobileService {
     public String chooseNumberBusiness(ChooseNumberbusinessRequest request);
 
     public String JDCheckAddress(JDCheckAddressRequest request);
+
+    public String queryChooseNumberList(QueryChooseNumberListRequest request);
+
+
 
 }

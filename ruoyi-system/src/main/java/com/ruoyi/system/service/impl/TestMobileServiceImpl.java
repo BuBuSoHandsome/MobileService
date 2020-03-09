@@ -8,6 +8,7 @@ import com.ruoyi.common.utils.moblie.MobileUtil;
 import com.ruoyi.system.domain.ChooseNumberColumn;
 import com.ruoyi.system.domain.mobileRequest.ChooseNumberbusinessRequest;
 import com.ruoyi.system.domain.mobileRequest.JDCheckAddressRequest;
+import com.ruoyi.system.domain.mobileRequest.QueryChooseNumberListRequest;
 import com.ruoyi.system.domain.mobileResponse.ChooseNumberColumnResponse;
 import com.ruoyi.system.mapper.ChooseNumberColumnMapper;
 import com.ruoyi.system.mapper.MobileUrlMapper;
@@ -89,6 +90,13 @@ public class TestMobileServiceImpl implements TestMobileService {
     @Override
     public String JDCheckAddress(JDCheckAddressRequest request) {
         String url = mobileUrlMapper.selectMobileUrlByEumn("JDCheckAddress").getUrl();
+        String body = MobileUtil.getBodyByClass(request);
+        return MobileUtil.getResponse(url,body);
+    }
+
+    @Override
+    public String queryChooseNumberList(QueryChooseNumberListRequest request) {
+        String url = mobileUrlMapper.selectMobileUrlByEumn("QueryChooseNumberList").getUrl();
         String body = MobileUtil.getBodyByClass(request);
         return MobileUtil.getResponse(url,body);
     }

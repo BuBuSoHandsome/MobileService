@@ -2,8 +2,15 @@ package com.ruoyi.system.domain.mobileRequest;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class JDCheckAddressRequest {
+
+/**
+ *  下单地址校验
+ */
+
+public class JDCheckAddressRequest implements Serializable {
 
     //省份编码
     private String provinceCode;
