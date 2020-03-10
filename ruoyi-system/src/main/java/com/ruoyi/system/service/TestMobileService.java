@@ -1,5 +1,7 @@
 package com.ruoyi.system.service;
 
+import com.ruoyi.system.domain.Order;
+import com.ruoyi.system.domain.mobileRequest.AirpickinstallnewOrderRequest;
 import com.ruoyi.system.domain.mobileRequest.ChooseNumberbusinessRequest;
 import com.ruoyi.system.domain.mobileRequest.JDCheckAddressRequest;
 import com.ruoyi.system.domain.mobileRequest.QueryChooseNumberListRequest;
@@ -22,6 +24,8 @@ public interface TestMobileService {
     public String JDCheckAddress(JDCheckAddressRequest request);
 
     public String queryChooseNumberList(QueryChooseNumberListRequest request);
+
+    public AirpickinstallnewOrderRequest getRequest(Order order);
 
 
 

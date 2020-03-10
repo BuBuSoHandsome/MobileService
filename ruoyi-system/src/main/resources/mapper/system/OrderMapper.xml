@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.OrderMapper">
+    
+    <resultMap type="Order" id="OrderResult">
+        <result property="fdId"    column="fd_id"    />
+        <result property="sid"    column="sid"    />
+        <result property="pack"    column="pack"    />
+        <result property="realname"    column="realName"    />
+        <result property="phone"    column="phone"    />
+        <result property="cardtype"    column="cardType"    />
+        <result property="cardid"    column="cardId"    />
+        <result property="provincecode"    column="provinceCode"    />
+        <result property="eparchycode"    column="eparchyCode"    />
+        <result property="citycode"    column="cityCode"    />
+        <result property="address"    column="address"    />
+        <result property="addressCity"    column="addressCity"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectOrderVo">
+        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, addressCity,status from `order`
+    </sql>
+
+    <select id="selectOrderList" parameterType="Order" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        <where>  
+            <if test="sid != null  and sid != ''"> and sid = #{sid}</if>
+            <if test="pack != null  and pack != ''"> and pack = #{pack}</if>
+            <if test="realname != null  and realname != ''"> and realName like concat('%', #{realname}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="cardtype != null  and cardtype != ''"> and cardType = #{cardtype}</if>
+            <if test="cardid != null  and cardid != ''"> and cardId = #{cardid}</if>
+            <if test="provincecode != null  and provincecode != ''"> and provinceCode = #{provincecode}</if>
+            <if test="eparchycode != null  and eparchycode != ''"> and eparchyCode = #{eparchycode}</if>
+            <if test="citycode != null  and citycode != ''"> and cityCode = #{citycode}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="addressCity != null  and addressCity != ''"> and addressCity = #{addressCity}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectOrderById" parameterType="String" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        where fd_id = #{fdId}
+    </select>
+        
+    <insert id="insertOrder" parameterType="Order">
+        insert into `order`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fdId != null  and fdId != ''">fd_id,</if>
+            <if test="sid != null  and sid != ''">sid,</if>
+            <if test="pack != null  and pack != ''">pack,</if>
+            <if test="realname != null  and realname != ''">realName,</if>
+            <if test="phone != null  and phone != ''">phone,</if>
+            <if test="cardtype != null  and cardtype != ''">cardType,</if>
+            <if test="cardid != null  and cardid != ''">cardId,</if>
+            <if test="provincecode != null  and provincecode != ''">provinceCode,</if>
+            <if test="eparchycode != null  and eparchycode != ''">eparchyCode,</if>
+            <if test="citycode != null  and citycode != ''">cityCode,</if>
+            <if test="address != null  and address != ''">address,</if>
+            <if test="addressCity != null  and addressCity != ''">addressCity,</if>
+            <if test="status != null  and status != ''">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fdId != null  and fdId != ''">#{fdId},</if>
+            <if test="sid != null  and sid != ''">#{sid},</if>
+            <if test="pack != null  and pack != ''">#{pack},</if>
+            <if test="realname != null  and realname != ''">#{realname},</if>
+            <if test="phone != null  and phone != ''">#{phone},</if>
+            <if test="cardtype != null  and cardtype != ''">#{cardtype},</if>
+            <if test="cardid != null  and cardid != ''">#{cardid},</if>
+            <if test="provincecode != null  and provincecode != ''">#{provincecode},</if>
+            <if test="eparchycode != null  and eparchycode != ''">#{eparchycode},</if>
+            <if test="citycode != null  and citycode != ''">#{citycode},</if>
+            <if test="address != null  and address != ''">#{address},</if>
+            <if test="addressCity != null  and addressCity != ''">#{addressCity},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrder" parameterType="Order">
+        update `order`
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sid != null  and sid != ''">sid = #{sid},</if>
+            <if test="pack != null  and pack != ''">pack = #{pack},</if>
+            <if test="realname != null  and realname != ''">realName = #{realname},</if>
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
+            <if test="cardtype != null  and cardtype != ''">cardType = #{cardtype},</if>
+            <if test="cardid != null  and cardid != ''">cardId = #{cardid},</if>
+            <if test="provincecode != null  and provincecode != ''">provinceCode = #{provincecode},</if>
+            <if test="eparchycode != null  and eparchycode != ''">eparchyCode = #{eparchycode},</if>
+            <if test="citycode != null  and citycode != ''">cityCode = #{citycode},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="addressCity != null  and addressCity != ''">addressCity = #{addressCity},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+        </trim>
+        where fd_id = #{fdId}
+    </update>
+
+    <delete id="deleteOrderById" parameterType="String">
+        delete from order where fd_id = #{fdId}
+    </delete>
+
+    <delete id="deleteOrderByIds" parameterType="String">
+        delete from order where fd_id in 
+        <foreach item="fdId" collection="array" open="(" separator="," close=")">
+            #{fdId}
+        </foreach>
+    </delete>
+    
+</mapper>

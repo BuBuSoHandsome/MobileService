@@ -195,7 +195,7 @@ public class testtest {
         System.out.println(respdesc);
         System.out.println(resptype);
 
-//        System.out.println(UUID.randomUUID().toString().replaceAll("-",""));
+        System.out.println(UUID.randomUUID().toString().replaceAll("-",""));
 
         String infos = JSONObject.parseObject(jsonObj.getString("result")).getString("infos")  ;
 

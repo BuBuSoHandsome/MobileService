@@ -99,6 +99,10 @@ public class ChooseNumberColumnServiceImpl implements IChooseNumberColumnService
 
     @Override
     public boolean testRedis(String key , String value) {
+
+
+
+
         return redisUtil.set(key, value);
     }
 }

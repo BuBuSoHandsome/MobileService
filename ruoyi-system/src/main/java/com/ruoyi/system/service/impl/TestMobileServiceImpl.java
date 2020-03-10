@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.moblie.MobileUtil;
 import com.ruoyi.system.domain.ChooseNumberColumn;
+import com.ruoyi.system.domain.Order;
+import com.ruoyi.system.domain.mobileRequest.AirpickinstallnewOrderRequest;
 import com.ruoyi.system.domain.mobileRequest.ChooseNumberbusinessRequest;
 import com.ruoyi.system.domain.mobileRequest.JDCheckAddressRequest;
 import com.ruoyi.system.domain.mobileRequest.QueryChooseNumberListRequest;
@@ -99,6 +101,29 @@ public class TestMobileServiceImpl implements TestMobileService {
         String url = mobileUrlMapper.selectMobileUrlByEumn("QueryChooseNumberList").getUrl();
         String body = MobileUtil.getBodyByClass(request);
         return MobileUtil.getResponse(url,body);
+    }
+
+    @Override
+    public AirpickinstallnewOrderRequest getRequest(Order order) {
+
+        AirpickinstallnewOrderRequest request = new AirpickinstallnewOrderRequest();
+
+        //渠道编码 工号必传
+        request.setWayid("GZ08EC200043");
+        request.setOperatorid("AGZC00000BYJ");
+
+        //号码归属地市编号
+        request.setAreacode(order.getEparchycode());
+
+
+        request.setUsername(order.getRealname());
+
+        request.setAddress(order.getAddress());
+
+
+
+
+        return null;
     }
 
 
