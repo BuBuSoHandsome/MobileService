@@ -1,9 +1,7 @@
 package com.ruoyi.web.controller;
 
-import com.ruoyi.system.domain.mobileRequest.ChooseNumberbusinessRequest;
-import com.ruoyi.system.domain.mobileRequest.JDCheckAddressRequest;
-import com.ruoyi.system.domain.mobileRequest.QueryChooseNumberListRequest;
-import com.ruoyi.system.domain.mobileRequest.QueryDiscountNumberListRequest;
+import com.ruoyi.system.domain.Order;
+import com.ruoyi.system.domain.mobileRequest.*;
 import com.ruoyi.system.domain.mobileResponse.QueryDiscountNumberListResponse;
 import com.ruoyi.system.service.TestMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,5 +70,13 @@ import org.springframework.web.bind.annotation.*;
         return testMobileService.getResponse(request);
     }
 
+
+    /**
+     * 生成下单接口的请求类
+     */
+    @PostMapping("getAirpickinstallnewOrder")
+    public AirpickinstallnewOrderRequest getAirpickinstallnewOrder(@RequestBody Order order){
+        return testMobileService.getRequest(order);
+    }
 
 }

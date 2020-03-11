@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.ChooseNumberColumn;
+import com.ruoyi.system.domain.Order;
 import com.ruoyi.system.domain.mobileResponse.ChooseNumberColumnResponse;
 import com.ruoyi.system.domain.mobileResponse.ChooseNumberbusinessResponse;
 import com.ruoyi.system.domain.mobileResponse.QueryChooseNumberListResponse;
@@ -317,6 +318,22 @@ public class testtest {
 //            System.out.println(jsonObject.getString("respcode"));
 //            System.out.println(jsonObject.getString("respdesc"));
 //        }
+
+//        Order order = new Order();
+//        order.setCitycode();
+//        order.setEparchycode()
+//
+//        order.setSid();
+//        order.setPack();
+//        order.setRealname();
+//        order.setPhone();
+//        order.setCardtype();
+//        order.setCardid();
+//
+ //        order.setProvince();
+//        order.setAddress();
+//        order.setAddressCity();
+
     }
 
 
