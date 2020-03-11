@@ -1,10 +1,8 @@
 package com.ruoyi.system.service;
 
 import com.ruoyi.system.domain.Order;
-import com.ruoyi.system.domain.mobileRequest.AirpickinstallnewOrderRequest;
-import com.ruoyi.system.domain.mobileRequest.ChooseNumberbusinessRequest;
-import com.ruoyi.system.domain.mobileRequest.JDCheckAddressRequest;
-import com.ruoyi.system.domain.mobileRequest.QueryChooseNumberListRequest;
+import com.ruoyi.system.domain.mobileRequest.*;
+import com.ruoyi.system.domain.mobileResponse.QueryDiscountNumberListResponse;
 
 import java.util.List;
 
@@ -27,6 +25,6 @@ public interface TestMobileService {
 
     public AirpickinstallnewOrderRequest getRequest(Order order);
 
-
+    public String getResponse(QueryDiscountNumberListRequest request);
 
 }

@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectOrderVo">
-        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, addressCity,status from `order`
+        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status from `order`
     </sql>
 
     <select id="selectOrderList" parameterType="Order" resultMap="OrderResult">
@@ -37,6 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="eparchycode != null  and eparchycode != ''"> and eparchyCode = #{eparchycode}</if>
             <if test="citycode != null  and citycode != ''"> and cityCode = #{citycode}</if>
             <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="province != null  and province != ''"> and address = #{province}</if>
             <if test="addressCity != null  and addressCity != ''"> and addressCity = #{addressCity}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
@@ -62,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="citycode != null  and citycode != ''">cityCode,</if>
             <if test="address != null  and address != ''">address,</if>
             <if test="addressCity != null  and addressCity != ''">addressCity,</if>
+            <if test="province != null  and province != ''">province,</if>
             <if test="status != null  and status != ''">status,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -76,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="eparchycode != null  and eparchycode != ''">#{eparchycode},</if>
             <if test="citycode != null  and citycode != ''">#{citycode},</if>
             <if test="address != null  and address != ''">#{address},</if>
+            <if test="province != null  and province != ''">#{province},</if>
             <if test="addressCity != null  and addressCity != ''">#{addressCity},</if>
             <if test="status != null  and status != ''">#{status},</if>
          </trim>
@@ -95,6 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="citycode != null  and citycode != ''">cityCode = #{citycode},</if>
             <if test="address != null  and address != ''">address = #{address},</if>
             <if test="addressCity != null  and addressCity != ''">addressCity = #{addressCity},</if>
+            <if test="province != null  and province != ''">province = #{province},</if>
             <if test="status != null  and status != ''">status = #{status},</if>
         </trim>
         where fd_id = #{fdId}

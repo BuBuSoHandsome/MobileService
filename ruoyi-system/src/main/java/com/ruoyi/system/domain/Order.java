@@ -84,6 +84,11 @@ public class Order extends BaseEntity {
     @Excel(name = "配送地址")
     private String address;
 
+    /**
+     * 配送省份
+     */
+    @Excel(name = "配送省份")
+    private String province;
 
     /**
      * 配送地址
@@ -96,4 +101,7 @@ public class Order extends BaseEntity {
      */
     @Excel(name = "订单状态", readConverterExp = "0：未下单，1：下单成功，2：下单失败")
     private String status;
+
+
+
 }

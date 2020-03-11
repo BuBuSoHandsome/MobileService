@@ -9,19 +9,19 @@ ruoyi:
   # 实例演示开关
   demoEnabled: false
   # 文件路径 示例（ Windows配置 E:\ruoyi\uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  profile: D:\ruoyi\uploadPath
-  #profile: /home/ruoyi/uploadPath
+  #profile: D:\ruoyi\uploadPath
+  profile: /home/ruoyi/uploadPath
   # 获取ip地址开关
   addressEnabled: false
 
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为80
-#  port: 443
-#  ssl:
-#    key-store: classpath:3402625_xingyingkeji.cn.pfx
-#    key-store-password: PGtx2cIq
-#    key-store-type: PKCS12
+  port: 443
+  ssl:
+    key-store: classpath:3402625_xingyingkeji.cn.pfx
+    key-store-password: PGtx2cIq
+    key-store-type: PKCS12
   servlet:
     # 应用的访问路径
     context-path: /

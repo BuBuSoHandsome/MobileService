@@ -3,6 +3,8 @@ package com.ruoyi.web.controller;
 import com.ruoyi.system.domain.mobileRequest.ChooseNumberbusinessRequest;
 import com.ruoyi.system.domain.mobileRequest.JDCheckAddressRequest;
 import com.ruoyi.system.domain.mobileRequest.QueryChooseNumberListRequest;
+import com.ruoyi.system.domain.mobileRequest.QueryDiscountNumberListRequest;
+import com.ruoyi.system.domain.mobileResponse.QueryDiscountNumberListResponse;
 import com.ruoyi.system.service.TestMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -60,6 +62,15 @@ import org.springframework.web.bind.annotation.*;
         return testMobileService.queryChooseNumberList(request);
     }
 
+    /**
+     * 选号查询号码可选优惠
+     * @param request
+     * @return
+     */
+    @PostMapping("QueryDiscountNumberList")
+    public String queryDiscountNumberList(@RequestBody QueryDiscountNumberListRequest request){
+        return testMobileService.getResponse(request);
+    }
 
 
 }
