@@ -1,8 +1,10 @@
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.enums.MobileUrl;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
+import com.ruoyi.common.utils.moblie.MobileUtil;
 import com.ruoyi.system.domain.ChooseNumberColumn;
 import com.ruoyi.system.domain.Order;
 import com.ruoyi.system.domain.mobileResponse.ChooseNumberColumnResponse;
@@ -319,20 +321,28 @@ public class testtest {
 //            System.out.println(jsonObject.getString("respdesc"));
 //        }
 
-//        Order order = new Order();
-//        order.setCitycode();
-//        order.setEparchycode()
-//
-//        order.setSid();
-//        order.setPack();
-//        order.setRealname();
-//        order.setPhone();
-//        order.setCardtype();
-//        order.setCardid();
-//
- //        order.setProvince();
-//        order.setAddress();
-//        order.setAddressCity();
+        Order order = new Order();
+
+
+
+        order.setSid("1000000003");
+        order.setPack("prod.10086000014560");
+        order.setRealname("小明");
+        order.setPhone("13023608552");
+        order.setCardtype("01");
+        order.setCardid("440183199209186532");
+        order.setProvincecode("200");
+        order.setCitycode("020");
+        order.setEparchycode("666");
+        order.setAddress("广东省广州市增城区滨海花园");
+        order.setProvince("广东省");
+        order.setAddressCity("广州市");
+        System.out.println(MobileUtil.getBodyByClass(order));
+
+        System.out.println(UUID.randomUUID().toString().replaceAll("-",""));
+
+
+        System.out.println(MobileUrl.JDCheckAddress.getUrl());
 
     }
 

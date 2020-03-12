@@ -93,6 +93,7 @@
         var editFlag = [[${@permission.hasPermi('system:order:edit')}]];
         var removeFlag = [[${@permission.hasPermi('system:order:remove')}]];
         var prefix = ctx + "system/order";
+        var datas0 = [[${@dict.getType('number_column')}]];
         var datas1 = [[${@dict.getType('order_cardType')}]];
         var datas2 = [[${@dict.getType('order_status')}]];
         $(function() {
@@ -113,15 +114,18 @@
                 },
                 {
                     field : 'sid', 
-                    title : '卡类编码'
+                    title : '卡类',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(datas0, value);
+                    }
                 },
-                {
-                    field : 'pack', 
-                    title : '套餐编码'
-                },
+                // {
+                //     field : 'pack',
+                //     title : '套餐编码'
+                // },
                 {
                     field : 'realname', 
-                    title : '真实姓名'
+                    title : '用户姓名'
                 },
                 {
                     field : 'phone', 

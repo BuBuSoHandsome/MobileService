@@ -1,6 +1,10 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+import java.util.UUID;
+
+import com.ruoyi.system.domain.ChooseNumberColumn;
+import com.ruoyi.system.mapper.ChooseNumberColumnMapper;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +23,8 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
+import javax.annotation.Resource;
+
 /**
  * 订单Controller
  * 
@@ -33,6 +39,9 @@ public class OrderController extends BaseController
 
     @Autowired
     private IOrderService orderService;
+
+    @Resource
+    private ChooseNumberColumnMapper chooseNumberColumnMapper;
 
     @RequiresPermissions("system:order:view")
     @GetMapping()
@@ -86,6 +95,9 @@ public class OrderController extends BaseController
     @ResponseBody
     public AjaxResult addSave(Order order)
     {
+        order.setFdId(UUID.randomUUID().toString().replaceAll("-",""));
+        ChooseNumberColumn chooseNumberColumn = chooseNumberColumnMapper.selectChooseNumberColumnById(Long.parseLong(order.getSid()));
+        order.setPack(chooseNumberColumn.getPack());
         return toAjax(orderService.insertOrder(order));
     }
 
@@ -109,6 +121,8 @@ public class OrderController extends BaseController
     @ResponseBody
     public AjaxResult editSave(Order order)
     {
+        ChooseNumberColumn chooseNumberColumn = chooseNumberColumnMapper.selectChooseNumberColumnById(Long.parseLong(order.getSid()));
+        order.setPack(chooseNumberColumn.getPack());
         return toAjax(orderService.updateOrder(order));
     }
 

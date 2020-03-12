@@ -1,6 +1,9 @@
 package com.ruoyi.system.domain.mobileRequest;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * Datetime:    2020/3/11   10:40
@@ -8,13 +11,8 @@ import lombok.Data;
  */
 
 @Data
-public class newOrderParams {
-
-    /**
-     * 主键
-     */
-    private String fdId;
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class newOrderParams implements Serializable {
     /**
      * 下单渠道（Boss渠道编码）很重要！
      */
@@ -48,7 +46,7 @@ public class newOrderParams {
     /**
      * 新购号码
      */
-    private Long servnumber;
+    private String servnumber;
 
     /**
      * 用户真实姓名
@@ -75,12 +73,12 @@ public class newOrderParams {
     /**
      * 订单金额
      */
-    private Double orderamount;
+    private String orderamount;
 
     /**
      * 优惠金额
      */
-    private Double deductcash;
+    private String deductcash;
 
     /**
      * 支付方式（0货到付款1在线支付2到厅支付3语音支付4不需要支付
@@ -181,7 +179,7 @@ public class newOrderParams {
     /**
      * 商品编码
      */
-    private String neworderparams;
+    private String offerId;
 
     /**
      * 录取地市

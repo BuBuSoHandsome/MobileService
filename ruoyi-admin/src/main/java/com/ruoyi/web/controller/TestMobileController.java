@@ -2,6 +2,7 @@ package com.ruoyi.web.controller;
 
 import com.ruoyi.system.domain.Order;
 import com.ruoyi.system.domain.mobileRequest.*;
+import com.ruoyi.system.domain.mobileResponse.AirpickinstallnewOrderResponse;
 import com.ruoyi.system.domain.mobileResponse.QueryDiscountNumberListResponse;
 import com.ruoyi.system.service.TestMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,11 @@ import org.springframework.web.bind.annotation.*;
     @PostMapping("getAirpickinstallnewOrder")
     public AirpickinstallnewOrderRequest getAirpickinstallnewOrder(@RequestBody Order order){
         return testMobileService.getRequest(order);
+    }
+
+    @PostMapping("airpickinstallnewOrder")
+    public AirpickinstallnewOrderResponse airpickinstallnewOrder (@RequestBody Order order){
+        return testMobileService.AirpickinstallnewOrder(order);
     }
 
 }

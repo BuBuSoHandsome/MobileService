@@ -3,16 +3,13 @@ package com.ruoyi.system.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.enums.MobileUrl;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.moblie.MobileUtil;
 import com.ruoyi.system.domain.ChooseNumberColumn;
-import com.ruoyi.system.domain.MobileUrl;
 import com.ruoyi.system.domain.Order;
 import com.ruoyi.system.domain.mobileRequest.*;
-import com.ruoyi.system.domain.mobileResponse.ChooseNumberColumnResponse;
-import com.ruoyi.system.domain.mobileResponse.ChooseNumberbusinessResponse;
-import com.ruoyi.system.domain.mobileResponse.QueryChooseNumberListResponse;
-import com.ruoyi.system.domain.mobileResponse.QueryDiscountNumberListResponse;
+import com.ruoyi.system.domain.mobileResponse.*;
 import com.ruoyi.system.mapper.ChooseNumberColumnMapper;
 import com.ruoyi.system.mapper.MobileUrlMapper;
 import com.ruoyi.system.mobile.MobileResponseService;
@@ -49,36 +46,36 @@ public class TestMobileServiceImpl implements TestMobileService {
     @Override
     @Transactional
     public String queryChooseNumberColumn() {
-        String url = mobileUrlMapper.selectMobileUrlByEumn("QueryChooseNumberColumn").getUrl();
-        Map<String,String> map = new HashMap<>();
-        map.put("channel","newWap");
+        String url = MobileUrl.QueryChooseNumberColumn.getUrl();
+        Map<String, String> map = new HashMap<>();
+        map.put("channel", "newWap");
         JSONObject itemJSONObj = JSONObject.parseObject(JSON.toJSONString(map));
         String body = itemJSONObj.toString();
 
-        JSONObject responsejsonObject = JSONObject.parseObject(MobileUtil.getResponse(url,body));
+        JSONObject responsejsonObject = JSONObject.parseObject(MobileUtil.getResponse(url, body));
         //返回状态为0
-        if("0".equals(responsejsonObject.getString("respcode"))){
-            String infos = JSONObject.parseObject(responsejsonObject.getString("result")).getString("infos")  ;
+        if ("0".equals(responsejsonObject.getString("respcode"))) {
+            String infos = JSONObject.parseObject(responsejsonObject.getString("result")).getString("infos");
             List<ChooseNumberColumnResponse> lists = JSONArray.parseArray(infos, ChooseNumberColumnResponse.class);
 
-           if(lists==null||lists.isEmpty()){
-               return "接口查询数据为空";
-           }
+            if (lists == null || lists.isEmpty()) {
+                return "接口查询数据为空";
+            }
 
             //每次insert前把表数据清空
             chooseNumberColumnMapper.deleteAll();
             //循环赋值更新
-            lists.stream().forEach(list->{
+            lists.stream().forEach(list -> {
                 ChooseNumberColumn chooseNumberColumn = new ChooseNumberColumn();
-                chooseNumberColumn.setChannel(list.getChannel()==null ? "":list.getChannel());
-                chooseNumberColumn.setConstraint(list.getConstraint() == null ? "":list.getConstraint());
-                chooseNumberColumn.setDescribe(list.getDescribe() ==null ? "": list.getDescribe()) ;
-                chooseNumberColumn.setPack(list.getPack() ==null ? "": list.getPack() );
-                chooseNumberColumn.setPic(list.getPic() ==null ? "": list.getPic());
-                chooseNumberColumn.setStatus(list.getStatus() ==null ? "": list.getStatus() );
-                chooseNumberColumn.setPosition(list.getPosition() ==null ? "": list.getPosition());
-                chooseNumberColumn.setText(list.getText() ==null ? "": list.getText());
-                chooseNumberColumn.setSid(list.getSid() ==null ? 00000 :list.getSid());
+                chooseNumberColumn.setChannel(list.getChannel() == null ? "" : list.getChannel());
+                chooseNumberColumn.setConstraint(list.getConstraint() == null ? "" : list.getConstraint());
+                chooseNumberColumn.setDescribe(list.getDescribe() == null ? "" : list.getDescribe());
+                chooseNumberColumn.setPack(list.getPack() == null ? "" : list.getPack());
+                chooseNumberColumn.setPic(list.getPic() == null ? "" : list.getPic());
+                chooseNumberColumn.setStatus(list.getStatus() == null ? "" : list.getStatus());
+                chooseNumberColumn.setPosition(list.getPosition() == null ? "" : list.getPosition());
+                chooseNumberColumn.setText(list.getText() == null ? "" : list.getText());
+                chooseNumberColumn.setSid(list.getSid() == null ? 00000 : list.getSid());
                 chooseNumberColumn.setupdatetime(DateUtils.getDateFromString(list.getUpdatetime()));
                 chooseNumberColumnMapper.insertChooseNumberColumn(chooseNumberColumn);
             });
@@ -91,21 +88,21 @@ public class TestMobileServiceImpl implements TestMobileService {
     public String chooseNumberBusiness(ChooseNumberbusinessRequest request) {
         String url = mobileUrlMapper.selectMobileUrlByEumn("ChooseNumberBusiness").getUrl();
         String body = MobileUtil.getBodyByClass(request);
-        return MobileUtil.getResponse(url,body);
+        return MobileUtil.getResponse(url, body);
     }
 
     @Override
     public String JDCheckAddress(JDCheckAddressRequest request) {
         String url = mobileUrlMapper.selectMobileUrlByEumn("JDCheckAddress").getUrl();
         String body = MobileUtil.getBodyByClass(request);
-        return MobileUtil.getResponse(url,body);
+        return MobileUtil.getResponse(url, body);
     }
 
     @Override
     public String queryChooseNumberList(QueryChooseNumberListRequest request) {
         String url = mobileUrlMapper.selectMobileUrlByEumn("QueryChooseNumberList").getUrl();
         String body = MobileUtil.getBodyByClass(request);
-        return MobileUtil.getResponse(url,body);
+        return MobileUtil.getResponse(url, body);
     }
 
     @Override
@@ -141,7 +138,6 @@ public class TestMobileServiceImpl implements TestMobileService {
         QueryDiscountNumberListResponse queryDiscountNumberListResponse = mobileResponseService.getQueryDiscountNumberList(queryDiscountNumberListRequest);
 
 
-
         AirpickinstallnewOrderRequest request = new AirpickinstallnewOrderRequest();
         newOrderParams newOrderParams = new newOrderParams();
         //渠道编码 工号必传
@@ -153,7 +149,7 @@ public class TestMobileServiceImpl implements TestMobileService {
         //号码归属地市名称
         newOrderParams.setAreaname(queryChooseNumberListResponse.getCityname());
         //新购号码
-        newOrderParams.setServnumber(Long.parseLong(queryChooseNumberListResponse.getMobileno()));
+        newOrderParams.setServnumber(queryChooseNumberListResponse.getMobileno());
 
 
         //品牌
@@ -161,20 +157,19 @@ public class TestMobileServiceImpl implements TestMobileService {
         //受理方式 代客下单
         newOrderParams.setAccepttype("2");
         //此处判断是否支持京东配送 支持4 不支持则0
-        if(jdCheck){
+        if (jdCheck) {
             newOrderParams.setReceivetype("4");
-        }else{
+        } else {
             newOrderParams.setReceivetype("0");
         }
         //订单金额
-        newOrderParams.setOrderamount(Double.parseDouble(queryDiscountNumberListResponse.getPrice()));
+        newOrderParams.setOrderamount(queryDiscountNumberListResponse.getPrice());
         //支付方式
         newOrderParams.setPayway("1");
 
         //配送省份
         newOrderParams.setProvince(order.getProvince());
-        //订单id
-        newOrderParams.setOrderid(UUID.randomUUID().toString().replaceAll("-",""));
+
         //真实姓名
         newOrderParams.setUsername(order.getRealname());
         //配送地址
@@ -187,6 +182,27 @@ public class TestMobileServiceImpl implements TestMobileService {
         newOrderParams.setCertype(order.getCardtype());
         //证件号码
         newOrderParams.setCerno(order.getCardid());
+
+
+        //主套餐id
+        newOrderParams.setMainprodid(chooseNumberbusinessResponse.getPackageCode());
+        //主套餐名称
+        newOrderParams.setMainprodname(chooseNumberbusinessResponse.getPackageName());
+
+        //营销方案编码
+        newOrderParams.setGoodsid(queryDiscountNumberListResponse.getProductid());
+        //营销方案名称
+        newOrderParams.setGoodsname(queryDiscountNumberListResponse.getSolution_name());
+        //内含话费
+        newOrderParams.setCharge(queryDiscountNumberListResponse.getAccount());
+        //活动id
+        newOrderParams.setOffercompid(queryDiscountNumberListResponse.getSolution_id());
+        //订单id
+        newOrderParams.setOrderid(UUID.randomUUID().toString().replaceAll("-", ""));
+        //商品编码
+        newOrderParams.setOfferId(queryChooseNumberListResponse.getCommid());
+
+
         //配卡方式
         newOrderParams.setOfflinecard("0");
         request.setNewOrderParams(newOrderParams);
@@ -194,22 +210,24 @@ public class TestMobileServiceImpl implements TestMobileService {
     }
 
 
-
-
     @Override
     public String getResponse(QueryDiscountNumberListRequest request) {
         String url = mobileUrlMapper.selectMobileUrlByEumn("QueryDiscountNumberList").getUrl();
         String body = MobileUtil.getBodyByClass(request);
-        return MobileUtil.getResponse(url,body);
+        return MobileUtil.getResponse(url, body);
+    }
+
+    @Override
+    public AirpickinstallnewOrderResponse AirpickinstallnewOrder(Order order) {
+        return mobileResponseService.getAirpickinstallnewOrder(order);
     }
 
 
     @Override
     public String testGetUrl(String eumn) {
-        System.out.println("标识："+eumn);
+        System.out.println("标识：" + eumn);
         return mobileUrlMapper.selectMobileUrlByEumn(eumn).getUrl();
     }
-
 
 
 }

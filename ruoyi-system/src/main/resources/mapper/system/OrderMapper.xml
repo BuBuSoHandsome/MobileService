@@ -105,11 +105,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteOrderById" parameterType="String">
-        delete from order where fd_id = #{fdId}
+        delete from `order` where fd_id = #{fdId}
     </delete>
 
     <delete id="deleteOrderByIds" parameterType="String">
-        delete from order where fd_id in 
+        delete from `order` where fd_id in
         <foreach item="fdId" collection="array" open="(" separator="," close=")">
             #{fdId}
         </foreach>
