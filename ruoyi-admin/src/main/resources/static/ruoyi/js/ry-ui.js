@@ -338,6 +338,46 @@ var table = {
     				$("#" + table.options.id).bootstrapTable('refresh', params);
     			}
     		},
+			//订单模块使用 下单
+			installOrder: function() {
+				table.set();
+				var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+				if (rows.length == 0) {
+					$.modal.alertWarning("请至少选择一条记录");
+					return;
+				}
+				var rowsStauts = $.common.isEmpty(table.options.uniqueId) ? $.table.selectTenColumns() : $.table.selectTenColumns(table.options.uniqueId);
+				for(var i=0;i<rowsStauts.length;i++){
+					if(rowsStauts[i]==1||rowsStauts[i]==2){
+						$.modal.alertWarning("只能对未下单的记录进行下单，请重新选择！");
+						return;
+					}
+				}
+				$.modal.confirm("确认要下单选中的" + rows.length + "条数据吗?", function() {
+					var url = table.options.installOrderUrl;
+					var data = { "ids": rows.join() };
+					$.operate.submit(url, "post", "json", data);
+				});
+			},
+			//订单模块使用 更新物流信息
+			checkOrderStatus: function() {
+				table.set();
+				var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+				if (rows.length == 0) {
+					$.modal.alertWarning("请至少选择一条记录");
+					return;
+				}
+				var rowsStauts = $.common.isEmpty(table.options.uniqueId) ? $.table.selectTenColumns() : $.table.selectTenColumns(table.options.uniqueId);
+				for(var i=0;i<rowsStauts.length;i++){
+					if(rowsStauts[i]==0){
+						$.modal.alertWarning("只能对已下单的记录进行更新，请重新选择！");
+						return;
+					}
+				}
+				var url = table.options.checkOrderStatusUrl;
+				var data = { "ids": rows.join() };
+				$.operate.submit(url, "post", "json", data);
+			},
     		// 导出数据
     		exportExcel: function(formId) {
     			table.set();
@@ -472,6 +512,23 @@ var table = {
             	}
             	return $.common.uniqueFn(rows);
             },
+
+			// 查询第十个首列值（不熟悉thyemleaf语法）
+			selectTenColumns: function() {
+				var rows = $.map($("#" + table.options.id).bootstrapTable('getSelections'), function (row) {
+					return row[table.options.columns[10].field];
+				});
+				if ($.common.isNotEmpty(table.options.rememberSelected) && table.options.rememberSelected) {
+					var selectedRows = table.rememberSelecteds[table.options.id];
+					if($.common.isNotEmpty(selectedRows)) {
+						rows = $.map(selectedRows, function (row) {
+							return row[table.options.columns[10].field];
+						});
+					}
+				}
+				return rows;
+			},
+
             // 回显数据字典
             selectDictLabel: function(datas, value) {
             	var actions = [];

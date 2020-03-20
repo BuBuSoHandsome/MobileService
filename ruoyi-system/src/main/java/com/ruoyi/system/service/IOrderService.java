@@ -58,4 +58,25 @@ public interface IOrderService
      * @return 结果
      */
     public int deleteOrderById(String fdId);
+
+    /**
+     * 线上下单
+     * @param ids
+     * @return
+     */
+    public String installOrder(String ids);
+
+    /**
+     * 更新订单物流
+     * @param ids
+     * @return
+     */
+    public String refreshOrderStatus(String ids);
+
+    /**
+     * 导入订单数据
+     * @return
+     */
+    public String importOrder(List<Order> orderList);
+
 }

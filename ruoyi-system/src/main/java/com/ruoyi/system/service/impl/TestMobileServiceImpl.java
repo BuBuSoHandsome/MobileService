@@ -107,7 +107,6 @@ public class TestMobileServiceImpl implements TestMobileService {
 
     @Override
     public AirpickinstallnewOrderRequest getRequest(Order order) {
-
         //查询选号列表
         QueryChooseNumberListRequest queryChooseNumberListRequest = new QueryChooseNumberListRequest();
         queryChooseNumberListRequest.setSid(order.getSid());
@@ -115,14 +114,10 @@ public class TestMobileServiceImpl implements TestMobileService {
         queryChooseNumberListRequest.setTag("0");
         queryChooseNumberListRequest.setPackagecode(order.getPack());
         QueryChooseNumberListResponse queryChooseNumberListResponse = mobileResponseService.getQueryChooseNumberList(queryChooseNumberListRequest);
-
-
         //查询放号单品业务信息能力
         ChooseNumberbusinessRequest chooseNumberbusinessRequest = new ChooseNumberbusinessRequest();
         chooseNumberbusinessRequest.setTypecode(order.getPack());
         ChooseNumberbusinessResponse chooseNumberbusinessResponse = mobileResponseService.getChooseNumberbusiness(chooseNumberbusinessRequest);
-
-
         //京东地址校验是否配送
         JDCheckAddressRequest jdCheckAddressRequest = new JDCheckAddressRequest();
         jdCheckAddressRequest.setAddress(order.getAddress());
@@ -130,81 +125,69 @@ public class TestMobileServiceImpl implements TestMobileService {
         jdCheckAddressRequest.setEparchyCode(order.getEparchycode());
         jdCheckAddressRequest.setCityCode(order.getCitycode());
         boolean jdCheck = mobileResponseService.JDCheakAddress(jdCheckAddressRequest);
-
-
         //选号查询号码可选优惠
         QueryDiscountNumberListRequest queryDiscountNumberListRequest = new QueryDiscountNumberListRequest();
         queryDiscountNumberListRequest.setMobileno(queryChooseNumberListResponse.getMobileno());
         QueryDiscountNumberListResponse queryDiscountNumberListResponse = mobileResponseService.getQueryDiscountNumberList(queryDiscountNumberListRequest);
-
-
         AirpickinstallnewOrderRequest request = new AirpickinstallnewOrderRequest();
         newOrderParams newOrderParams = new newOrderParams();
         //渠道编码 工号必传
         newOrderParams.setWayid("GZ08EC200043");
-        newOrderParams.setOperatorid("AGZC00000BYJ");
-
+        newOrderParams.setOperatorId("AGZC00000BYJ");
         //号码归属地市编码
-        newOrderParams.setAreacode(queryChooseNumberListResponse.getRegion());
+        newOrderParams.setAreaCode(queryChooseNumberListResponse.getRegion());
         //号码归属地市名称
-        newOrderParams.setAreaname(queryChooseNumberListResponse.getCityname());
+        newOrderParams.setAreaName(queryChooseNumberListResponse.getCityname());
         //新购号码
         newOrderParams.setServnumber(queryChooseNumberListResponse.getMobileno());
-
-
         //品牌
         newOrderParams.setBrand(queryDiscountNumberListResponse.getBrand());
         //受理方式 代客下单
-        newOrderParams.setAccepttype("2");
+        newOrderParams.setAcceptType("2");
         //此处判断是否支持京东配送 支持4 不支持则0
-        if (jdCheck) {
-            newOrderParams.setReceivetype("4");
-        } else {
-            newOrderParams.setReceivetype("0");
+        if(jdCheck){
+            newOrderParams.setReceiveType("4");
+        }else{
+            newOrderParams.setReceiveType("0");
         }
         //订单金额
-        newOrderParams.setOrderamount(queryDiscountNumberListResponse.getPrice());
+        newOrderParams.setOrderAmount(queryDiscountNumberListResponse.getPrice());
         //支付方式
-        newOrderParams.setPayway("1");
-
-        //配送省份
-        newOrderParams.setProvince(order.getProvince());
-
+        newOrderParams.setPayWay("1");
+        //配送省份 省内不用填
+        if(!"200".equals(order.getProvincecode())){
+            newOrderParams.setProvince(order.getProvince());
+        }
         //真实姓名
-        newOrderParams.setUsername(order.getRealname());
+        newOrderParams.setUserName(order.getRealname());
         //配送地址
         newOrderParams.setAddress(order.getAddress());
         //配送地市中文
-        newOrderParams.setAddresscity(order.getAddressCity());
+        newOrderParams.setAddressCity(order.getAddressCity());
         //联系方式
         newOrderParams.setTelno(order.getPhone());
         //证件类型
-        newOrderParams.setCertype(order.getCardtype());
+        newOrderParams.setCerType(order.getCardtype());
         //证件号码
-        newOrderParams.setCerno(order.getCardid());
-
-
+        newOrderParams.setCerNo(order.getCardid());
         //主套餐id
         newOrderParams.setMainprodid(chooseNumberbusinessResponse.getPackageCode());
         //主套餐名称
         newOrderParams.setMainprodname(chooseNumberbusinessResponse.getPackageName());
-
         //营销方案编码
-        newOrderParams.setGoodsid(queryDiscountNumberListResponse.getProductid());
+        newOrderParams.setGoodsId(queryDiscountNumberListResponse.getProductid());
         //营销方案名称
-        newOrderParams.setGoodsname(queryDiscountNumberListResponse.getSolution_name());
+        newOrderParams.setGoodsName(queryDiscountNumberListResponse.getSolution_name());
         //内含话费
         newOrderParams.setCharge(queryDiscountNumberListResponse.getAccount());
         //活动id
-        newOrderParams.setOffercompid(queryDiscountNumberListResponse.getSolution_id());
+        newOrderParams.setOfferCompId(queryDiscountNumberListResponse.getSolution_id());
         //订单id
-        newOrderParams.setOrderid(UUID.randomUUID().toString().replaceAll("-", ""));
+        newOrderParams.setOrderId(order.getFdId());
         //商品编码
         newOrderParams.setOfferId(queryChooseNumberListResponse.getCommid());
-
-
         //配卡方式
-        newOrderParams.setOfflinecard("0");
+        newOrderParams.setOfflineCard("0");
         request.setNewOrderParams(newOrderParams);
         return request;
     }
@@ -212,14 +195,19 @@ public class TestMobileServiceImpl implements TestMobileService {
 
     @Override
     public String getResponse(QueryDiscountNumberListRequest request) {
-        String url = mobileUrlMapper.selectMobileUrlByEumn("QueryDiscountNumberList").getUrl();
+        String url = MobileUrl.QueryDiscountNumberList.getUrl();
         String body = MobileUtil.getBodyByClass(request);
         return MobileUtil.getResponse(url, body);
     }
 
     @Override
-    public AirpickinstallnewOrderResponse AirpickinstallnewOrder(Order order) {
+    public Boolean AirpickinstallnewOrder(Order order) {
         return mobileResponseService.getAirpickinstallnewOrder(order);
+    }
+
+    @Override
+    public DSAirpickinstallQueryOrderResponse getOrderMsg(DSAirpickinstallQueryOrderRequest request) {
+        return mobileResponseService.getOrderMsg(request);
     }
 
 

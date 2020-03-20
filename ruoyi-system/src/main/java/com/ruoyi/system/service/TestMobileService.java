@@ -3,9 +3,8 @@ package com.ruoyi.system.service;
 import com.ruoyi.system.domain.Order;
 import com.ruoyi.system.domain.mobileRequest.*;
 import com.ruoyi.system.domain.mobileResponse.AirpickinstallnewOrderResponse;
-import com.ruoyi.system.domain.mobileResponse.QueryDiscountNumberListResponse;
+import com.ruoyi.system.domain.mobileResponse.DSAirpickinstallQueryOrderResponse;
 
-import java.util.List;
 
 /**
  * Datetime:    2020/2/27   15:36
@@ -28,6 +27,8 @@ public interface TestMobileService {
 
     public String getResponse(QueryDiscountNumberListRequest request);
 
-    public AirpickinstallnewOrderResponse AirpickinstallnewOrder (Order order);
+    public Boolean AirpickinstallnewOrder (Order order);
+
+    public DSAirpickinstallQueryOrderResponse getOrderMsg(DSAirpickinstallQueryOrderRequest request);
 
 }

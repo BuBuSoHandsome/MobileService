@@ -1,5 +1,7 @@
 package com.ruoyi.quartz.task;
 
+import com.ruoyi.system.service.TestMobileService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.utils.StringUtils;
 
@@ -11,6 +13,10 @@ import com.ruoyi.common.utils.StringUtils;
 @Component("ryTask")
 public class RyTask
 {
+
+    @Autowired
+    private TestMobileService testMobileService;
+
     public void ryMultipleParams(String s, Boolean b, Long l, Double d, Integer i)
     {
         System.out.println(StringUtils.format("执行多参方法： 字符串类型{}，布尔类型{}，长整型{}，浮点型{}，整形{}", s, b, l, d, i));
@@ -32,5 +38,11 @@ public class RyTask
             System.out.println("这也忒帅了吧");
         }
     }
+
+    //更新一次 选号卡类栏目
+    public void refreshChooseNumberColumn(){
+        System.out.println(testMobileService.queryChooseNumberColumn());
+    }
+
 
 }

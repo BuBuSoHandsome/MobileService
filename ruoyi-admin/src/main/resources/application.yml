@@ -9,7 +9,7 @@ ruoyi:
   # 实例演示开关
   demoEnabled: false
   # 文件路径 示例（ Windows配置 E:\ruoyi\uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  #profile: D:\ruoyi\uploadPath
+  #profile: E:\ruoyi\uploadPath
   profile: /home/ruoyi/uploadPath
   # 获取ip地址开关
   addressEnabled: false
@@ -76,9 +76,12 @@ spring:
       enabled: true
   # Redis
   redis:
-    host: 192.168.3.28
+    #内网
+    host: 172.16.119.18
+    #外网
+    #host: 47.98.203.60
     port: 6379
-    password:
+    password: xingying
     timeout: 30000
     jedis:
       pool:

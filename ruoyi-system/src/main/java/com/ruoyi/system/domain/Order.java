@@ -5,9 +5,15 @@ package com.ruoyi.system.domain;
  * Author:      bjl
  */
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.Data;
+
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 订单对象 order
@@ -16,8 +22,7 @@ import lombok.Data;
  * @date 2020-03-10
  */
 @Data
-public class Order extends BaseEntity {
-    private static final long serialVersionUID = 1L;
+public class Order {
 
     /**
      * 主键
@@ -51,19 +56,18 @@ public class Order extends BaseEntity {
     /**
      * 证件类型（01：身份证）
      */
-    @Excel(name = "证件类型", readConverterExp = "0=1：身份证")
     private String cardtype;
 
     /**
      * 证件号码
      */
-    @Excel(name = "证件号码")
+    @Excel(name = "身份证号码")
     private String cardid;
 
     /**
-     * 省份编码（200 ：广东省）
+     * 省份编码
      */
-    @Excel(name = "省份编码", readConverterExp = "200：广东省")
+    @Excel(name = "省份编码")
     private String provincecode;
 
     /**
@@ -75,7 +79,7 @@ public class Order extends BaseEntity {
     /**
      * 区县编码
      */
-    @Excel(name = "区县编码")
+    @Excel(name = "区县编码[可不填]")
     private String citycode;
 
     /**
@@ -93,15 +97,35 @@ public class Order extends BaseEntity {
     /**
      * 配送地址
      */
-    @Excel(name = "配送地市中文")
+    @Excel(name = "配送地市")
     private String addressCity;
 
     /**
      * 订单状态（0：未下单，1：下单成功，2：下单失败）
      */
-    @Excel(name = "订单状态", readConverterExp = "0：未下单，1：下单成功，2：下单失败")
     private String status;
 
+    /**
+     * 创建时间
+     */
+    @Excel(name = "下单时间")
+    private String createTime;
 
 
+    /** 请求参数 */
+    private Map<String, Object> params;
+
+    public Map<String, Object> getParams()
+    {
+        if (params == null)
+        {
+            params = new HashMap<>();
+        }
+        return params;
+    }
+
+    public void setParams(Map<String, Object> params)
+    {
+        this.params = params;
+    }
 }

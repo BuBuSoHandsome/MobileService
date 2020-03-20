@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.OrderLogisticsMapper">
+    
+    <resultMap type="OrderLogistics" id="OrderLogisticsResult">
+        <result property="fdId"    column="fd_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="orderType"    column="order_type"    />
+        <result property="orderBigType"    column="order_big_type"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="operatorId"    column="operator_id"    />
+        <result property="chnlCode"    column="chnl_code"    />
+        <result property="wayId"    column="way_id"    />
+        <result property="areaName"    column="area_name"    />
+        <result property="areaCode"    column="area_code"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="finishTime"    column="finish_time"    />
+        <result property="username"    column="userName"    />
+        <result property="servnumber"    column="servnumber"    />
+        <result property="orderRemark"    column="order_remark"    />
+        <result property="expressno"    column="expressno"    />
+    </resultMap>
+
+    <sql id="selectOrderLogisticsVo">
+        select fd_id, order_id, order_type, order_big_type, order_status, operator_id, chnl_code, way_id, area_name, area_code, create_time, finish_time, userName, servnumber, order_remark, expressno from order_logistics
+    </sql>
+
+    <select id="selectOrderLogisticsList" parameterType="OrderLogistics" resultMap="OrderLogisticsResult">
+        <include refid="selectOrderLogisticsVo"/>
+        <where>  
+            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="orderType != null  and orderType != ''"> and order_type = #{orderType}</if>
+            <if test="orderBigType != null  and orderBigType != ''"> and order_big_type = #{orderBigType}</if>
+            <if test="orderStatus != null  and orderStatus != ''"> and order_status = #{orderStatus}</if>
+            <if test="operatorId != null  and operatorId != ''"> and operator_id = #{operatorId}</if>
+            <if test="chnlCode != null  and chnlCode != ''"> and chnl_code = #{chnlCode}</if>
+            <if test="wayId != null  and wayId != ''"> and way_id = #{wayId}</if>
+            <if test="areaName != null  and areaName != ''"> and area_name like concat('%', #{areaName}, '%')</if>
+            <if test="areaCode != null  and areaCode != ''"> and area_code = #{areaCode}</if>
+            <if test="finishTime != null  and finishTime != ''"> and finish_time = #{finishTime}</if>
+            <if test="username != null  and username != ''"> and userName like concat('%', #{username}, '%')</if>
+            <if test="servnumber != null  and servnumber != ''"> and servnumber = #{servnumber}</if>
+            <if test="orderRemark != null  and orderRemark != ''"> and order_remark = #{orderRemark}</if>
+            <if test="expressno != null  and expressno != ''"> and expressno = #{expressno}</if>
+        </where>
+    </select>
+    
+    <select id="selectOrderLogisticsById" parameterType="String" resultMap="OrderLogisticsResult">
+        <include refid="selectOrderLogisticsVo"/>
+        where fd_id = #{fdId}
+    </select>
+        
+    <insert id="insertOrderLogistics" parameterType="OrderLogistics">
+        insert into order_logistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fdId != null  and fdId != ''">fd_id,</if>
+            <if test="orderId != null  and orderId != ''">order_id,</if>
+            <if test="orderType != null  and orderType != ''">order_type,</if>
+            <if test="orderBigType != null  and orderBigType != ''">order_big_type,</if>
+            <if test="orderStatus != null  and orderStatus != ''">order_status,</if>
+            <if test="operatorId != null  and operatorId != ''">operator_id,</if>
+            <if test="chnlCode != null  and chnlCode != ''">chnl_code,</if>
+            <if test="wayId != null  and wayId != ''">way_id,</if>
+            <if test="areaName != null  and areaName != ''">area_name,</if>
+            <if test="areaCode != null  and areaCode != ''">area_code,</if>
+            <if test="createTime != null  and createTime != ''">create_time,</if>
+            <if test="finishTime != null  and finishTime != ''">finish_time,</if>
+            <if test="username != null  and username != ''">userName,</if>
+            <if test="servnumber != null  and servnumber != ''">servnumber,</if>
+            <if test="orderRemark != null  and orderRemark != ''">order_remark,</if>
+            <if test="expressno != null  and expressno != ''">expressno,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fdId != null  and fdId != ''">#{fdId},</if>
+            <if test="orderId != null  and orderId != ''">#{orderId},</if>
+            <if test="orderType != null  and orderType != ''">#{orderType},</if>
+            <if test="orderBigType != null  and orderBigType != ''">#{orderBigType},</if>
+            <if test="orderStatus != null  and orderStatus != ''">#{orderStatus},</if>
+            <if test="operatorId != null  and operatorId != ''">#{operatorId},</if>
+            <if test="chnlCode != null  and chnlCode != ''">#{chnlCode},</if>
+            <if test="wayId != null  and wayId != ''">#{wayId},</if>
+            <if test="areaName != null  and areaName != ''">#{areaName},</if>
+            <if test="areaCode != null  and areaCode != ''">#{areaCode},</if>
+            <if test="createTime != null  and createTime != ''">#{createTime},</if>
+            <if test="finishTime != null  and finishTime != ''">#{finishTime},</if>
+            <if test="username != null  and username != ''">#{username},</if>
+            <if test="servnumber != null  and servnumber != ''">#{servnumber},</if>
+            <if test="orderRemark != null  and orderRemark != ''">#{orderRemark},</if>
+            <if test="expressno != null  and expressno != ''">#{expressno},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrderLogistics" parameterType="OrderLogistics">
+        update order_logistics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null  and orderId != ''">order_id = #{orderId},</if>
+            <if test="orderType != null  and orderType != ''">order_type = #{orderType},</if>
+            <if test="orderBigType != null  and orderBigType != ''">order_big_type = #{orderBigType},</if>
+            <if test="orderStatus != null  and orderStatus != ''">order_status = #{orderStatus},</if>
+            <if test="operatorId != null  and operatorId != ''">operator_id = #{operatorId},</if>
+            <if test="chnlCode != null  and chnlCode != ''">chnl_code = #{chnlCode},</if>
+            <if test="wayId != null  and wayId != ''">way_id = #{wayId},</if>
+            <if test="areaName != null  and areaName != ''">area_name = #{areaName},</if>
+            <if test="areaCode != null  and areaCode != ''">area_code = #{areaCode},</if>
+            <if test="createTime != null  and createTime != ''">create_time = #{createTime},</if>
+            <if test="finishTime != null  and finishTime != ''">finish_time = #{finishTime},</if>
+            <if test="username != null  and username != ''">userName = #{username},</if>
+            <if test="servnumber != null  and servnumber != ''">servnumber = #{servnumber},</if>
+            <if test="orderRemark != null  and orderRemark != ''">order_remark = #{orderRemark},</if>
+            <if test="expressno != null  and expressno != ''">expressno = #{expressno},</if>
+        </trim>
+        where fd_id = #{fdId}
+    </update>
+
+    <delete id="deleteOrderLogisticsById" parameterType="String">
+        delete from order_logistics where fd_id = #{fdId}
+    </delete>
+
+    <delete id="deleteOrderLogisticsByIds" parameterType="String">
+        delete from order_logistics where fd_id in 
+        <foreach item="fdId" collection="array" open="(" separator="," close=")">
+            #{fdId}
+        </foreach>
+    </delete>
+    
+</mapper>

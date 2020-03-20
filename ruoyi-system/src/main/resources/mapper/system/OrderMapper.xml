@@ -18,10 +18,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="address"    column="address"    />
         <result property="addressCity"    column="addressCity"    />
         <result property="status"    column="status"    />
+        <result property="createTime"    column="createTime"    />
     </resultMap>
 
     <sql id="selectOrderVo">
-        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status from `order`
+        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status,createTime from `order`
     </sql>
 
     <select id="selectOrderList" parameterType="Order" resultMap="OrderResult">
@@ -40,9 +41,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="province != null  and province != ''"> and address = #{province}</if>
             <if test="addressCity != null  and addressCity != ''"> and addressCity = #{addressCity}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="createTime != null"> and status = #{createTime}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(createTime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(createTime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
         </where>
     </select>
-    
+
+    <select id="selectOrderListByIds" parameterType="String" resultMap="OrderResult">
+        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status,createTime from `order` where status='0' and fd_id in
+        <foreach item="fdId" collection="array" open="(" separator="," close=")">
+            #{fdId}
+        </foreach>
+    </select>
+
     <select id="selectOrderById" parameterType="String" resultMap="OrderResult">
         <include refid="selectOrderVo"/>
         where fd_id = #{fdId}
@@ -62,9 +77,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="eparchycode != null  and eparchycode != ''">eparchyCode,</if>
             <if test="citycode != null  and citycode != ''">cityCode,</if>
             <if test="address != null  and address != ''">address,</if>
-            <if test="addressCity != null  and addressCity != ''">addressCity,</if>
             <if test="province != null  and province != ''">province,</if>
+            <if test="addressCity != null  and addressCity != ''">addressCity,</if>
             <if test="status != null  and status != ''">status,</if>
+            <if test="createTime != null ">createTime,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="fdId != null  and fdId != ''">#{fdId},</if>
@@ -81,6 +97,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="province != null  and province != ''">#{province},</if>
             <if test="addressCity != null  and addressCity != ''">#{addressCity},</if>
             <if test="status != null  and status != ''">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
          </trim>
     </insert>
 

@@ -3,6 +3,7 @@ package com.ruoyi.common.utils;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import com.ruoyi.common.core.text.StrFormatter;
 
@@ -409,11 +410,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
             "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5",
             "6", "7", "8", "9", "0" };
 
-    public static void main(String[] args) {
-        String str1 = generateRandomString(32);
-        System.out.println(str1.toUpperCase());
-    }
-
     /**
      *
      * 根据指定的长度生成的含有大小写字母及数字的字符串
@@ -431,5 +427,24 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
         return sb.toString();
     }
 
+
+    /**
+     * 生成8位UUID
+     * @return 8位UUID
+     */
+    public static String generateShortUuid() {
+        StringBuffer shortBuffer = new StringBuffer();
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        for (int i = 0; i < 12; i++) {
+            String str = uuid.substring(i * 2, i * 2 + 2);
+            int x = Integer.parseInt(str, 16);
+            shortBuffer.append(STR_ARR[x % 0x3E]);
+        }
+        return shortBuffer.toString().toUpperCase();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(generateShortUuid());
+    }
 
 }

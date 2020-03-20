@@ -3,6 +3,7 @@ package com.ruoyi.common.enums;
 /**
  * Datetime:    2020/3/12   11:45
  * Author:      bjl
+ * 移动接口服务地址
  */
 
 public enum  MobileUrl {
@@ -17,7 +18,9 @@ public enum  MobileUrl {
 
     QueryChooseNumberList("https://221.179.11.204:443/eaop/rest/BSS/commodity/querychoosenumberlist/v1.1.1"),
 
-    AirpickinstallnewOrder("https://221.179.11.204:443/eaop/rest/OrderCenter/resource/AirpickinstallnewOrder/v1.1.1");
+    AirpickinstallnewOrder("https://221.179.11.204:443/eaop/rest/OrderCenter/resource/AirpickinstallnewOrder/v1.1.1"),
+
+    DSAirpickinstallQueryOrder("https://221.179.11.204:443/eaop/rest/OrderCenter/resource/dsairpickinstallqueryorder/v1.1.1");
 
     private final String url;
 

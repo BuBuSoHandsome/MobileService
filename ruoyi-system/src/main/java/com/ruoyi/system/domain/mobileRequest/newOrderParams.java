@@ -21,27 +21,27 @@ public class newOrderParams implements Serializable {
     /**
      * 子店铺ID
      */
-    private String subsshopid;
+    private String subsShopId;
 
     /**
      * 操作员ID（BOSS工号计酬相关）
      */
-    private String operatorid;
+    private String operatorId;
 
     /**
      * 操作员名称
      */
-    private String operatorname;
+    private String operatorName;
 
     /**
      * 号码归属地市编码
      */
-    private String areacode;
+    private String areaCode;
 
     /**
      * 号码归属地市名称
      */
-    private String areaname;
+    private String areaName;
 
     /**
      * 新购号码
@@ -51,7 +51,7 @@ public class newOrderParams implements Serializable {
     /**
      * 用户真实姓名
      */
-    private String username;
+    private String userName;
 
     /**
      * 品牌
@@ -62,29 +62,29 @@ public class newOrderParams implements Serializable {
      * 受理方式（1-自助2-代客下单3-预约
      * 此处填2）
      */
-    private String accepttype;
+    private String acceptType;
 
     /**
      * 收货方式（0-自动（移动套餐业务无需收货）1-快递2-上门服务3-到店自提 4-京东上门服务
      * 此处填4）
      */
-    private String receivetype;
+    private String receiveType;
 
     /**
      * 订单金额
      */
-    private String orderamount;
+    private String orderAmount;
 
     /**
      * 优惠金额
      */
-    private String deductcash;
+    private String deductCash;
 
     /**
      * 支付方式（0货到付款1在线支付2到厅支付3语音支付4不需要支付
      * 此处填1）
      */
-    private String payway;
+    private String payWay;
 
     /**
      * 联系方式
@@ -94,17 +94,17 @@ public class newOrderParams implements Serializable {
     /**
      * 证件号码
      */
-    private String cerno;
+    private String cerNo;
 
     /**
      * 证件类型（01-身份证）
      */
-    private String certype;
+    private String cerType;
 
     /**
      * 邮政编码
      */
-    private String postcode;
+    private String postCode;
 
     /**
      * 配送省份（如果是广东省可以不填）
@@ -114,12 +114,12 @@ public class newOrderParams implements Serializable {
     /**
      * 配送地市
      */
-    private String addresscity;
+    private String addressCity;
 
     /**
      * 配送区域（如果是广东省可以不填）
      */
-    private String addressarea;
+    private String addressArea;
 
     /**
      * 配送地址
@@ -129,17 +129,17 @@ public class newOrderParams implements Serializable {
     /**
      * 配送地址经度
      */
-    private String addresslongitude;
+    private String addressLongitude;
 
     /**
      * 配送地址维度
      */
-    private String addresslatitude;
+    private String addressLatitude;
 
     /**
      * 推荐人号码
      */
-    private String referencenumber;
+    private String referenceNumber;
 
     /**
      * 主套餐ID
@@ -154,12 +154,12 @@ public class newOrderParams implements Serializable {
     /**
      * 营销方案编码
      */
-    private String goodsid;
+    private String goodsId;
 
     /**
      * 营销方案名称
      */
-    private String goodsname;
+    private String goodsName;
 
     /**
      * 内含话费
@@ -169,12 +169,12 @@ public class newOrderParams implements Serializable {
     /**
      * 活动ID
      */
-    private String offercompid;
+    private String offerCompId;
 
     /**
      * 订单ID
      */
-    private String orderid;
+    private String orderId;
 
     /**
      * 商品编码
@@ -184,17 +184,17 @@ public class newOrderParams implements Serializable {
     /**
      * 录取地市
      */
-    private String admissioncity;
+    private String admissionCity;
 
     /**
      * 录取学校
      */
-    private String admissionuniversity;
+    private String admissionUniversity;
 
     /**
      * 被录取专业
      */
-    private String admissionmajor;
+    private String admissionMajor;
 
     /**
      * 配卡方式（0-省仓线上配卡（默认值）
@@ -204,5 +204,5 @@ public class newOrderParams implements Serializable {
      * 4-外部电商不支持上门（转省仓配卡）
      * ）
      */
-    private String offlinecard;
+    private String offlineCard;
 }

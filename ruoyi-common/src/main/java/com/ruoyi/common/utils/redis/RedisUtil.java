@@ -115,6 +115,27 @@ public final class RedisUtil {
             return false;
         }
     }
+
+    /**
+     * setnx 如果已经存在缓存则返回false ， 不会覆盖存在的key
+     * @param key
+     * @param value
+     * @param time
+     * @return
+     */
+    public boolean setIfAbsent(String key, Object value, long time) {
+        try {
+            if (time > 0) {
+               return redisTemplate.opsForValue().setIfAbsent(key, value, time, TimeUnit.SECONDS);
+            } else {
+               return redisTemplate.opsForValue().setIfAbsent(key, value);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     /**
      * 递增
      * @param key 键

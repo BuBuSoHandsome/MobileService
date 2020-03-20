@@ -167,6 +167,20 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         return date;
     }
 
+    public static String getNowTime(){
+        SimpleDateFormat format = new SimpleDateFormat(DateUtils.YYYY_MM_DD_HH_MM_SS);
+        return format.format(new Date());
+    }
+
+    /**
+     * 返回date类型的当前时间
+     * @return
+     */
+    public static Date getServerTime(){
+        return new java.sql.Timestamp(new Date().getTime());
+    }
+
+
     public static void main(String[] args) {
         //2020-02-02 17:23:24
         //Sun Feb 02 17:23:24 CST 2020
