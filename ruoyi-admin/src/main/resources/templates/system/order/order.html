@@ -52,10 +52,10 @@
                                 <!--<p>区县编码：</p>-->
                                 <!--<input type="text" name="citycode"/>-->
                             <!--</li>-->
-                            <!--<li>-->
-                                <!--<p>配送地址：</p>-->
-                                <!--<input type="text" name="address"/>-->
-                            <!--</li>-->
+                            <li>
+                                <p>备注：</p>
+                                <input type="text" name="remark"/>
+                            </li>
                             <li>
                                 <p>订单状态：</p>
                                 <select name="status" th:with="type=${@dict.getType('order_status')}">
@@ -141,10 +141,6 @@
                         return $.table.selectDictLabel(datas0, value);
                     }
                 },
-                // {
-                //     field : 'pack',
-                //     title : '套餐编码'
-                // },
                 {
                     field : 'realname', 
                     title : '用户姓名'
@@ -165,18 +161,6 @@
                     title : '证件号码'
                 },
                 {
-                    field : 'province',
-                    title : '配送省份'
-                },
-                // {
-                //     field : 'eparchycode',
-                //     title : '地市编码'
-                // },
-                {
-                    field : 'addressCity',
-                    title : '配送地市名称'
-                },
-                {
                     field : 'address', 
                     title : '配送地址'
                 },
@@ -191,6 +175,10 @@
                     field : 'createTime',
                     title : '下单时间',
                     sortable: true
+                },
+                {
+                    field : 'remark',
+                    title : '备注'
                 },
                 {
                     title: '操作',

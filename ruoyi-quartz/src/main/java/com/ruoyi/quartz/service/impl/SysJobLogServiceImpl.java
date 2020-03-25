@@ -8,6 +8,8 @@ import com.ruoyi.quartz.domain.SysJobLog;
 import com.ruoyi.quartz.mapper.SysJobLogMapper;
 import com.ruoyi.quartz.service.ISysJobLogService;
 
+import javax.annotation.Resource;
+
 /**
  * 定时任务调度日志信息 服务层
  * 
@@ -16,7 +18,7 @@ import com.ruoyi.quartz.service.ISysJobLogService;
 @Service
 public class SysJobLogServiceImpl implements ISysJobLogService
 {
-    @Autowired
+    @Resource
     private SysJobLogMapper jobLogMapper;
 
     /**
@@ -51,6 +53,10 @@ public class SysJobLogServiceImpl implements ISysJobLogService
     @Override
     public void addJobLog(SysJobLog jobLog)
     {
+        //移动服务定时任务日志无需入库
+        if(jobLog.getInvokeTarget().indexOf("mobileTask")>-1){
+            return;
+        }
         jobLogMapper.insertJobLog(jobLog);
     }
 

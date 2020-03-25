@@ -1,16 +1,13 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
-import java.util.UUID;
 
-import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.moblie.MobileUtil;
 import com.ruoyi.system.domain.OrderLogistics;
 import com.ruoyi.system.domain.mobileRequest.DSAirpickinstallQueryOrderRequest;
 import com.ruoyi.system.domain.mobileResponse.DSAirpickinstallQueryOrderResponse;
 import com.ruoyi.system.mapper.OrderLogisticsMapper;
-import com.ruoyi.system.service.TestMobileService;
+import com.ruoyi.system.service.MobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -43,7 +40,7 @@ public class OrderServiceImpl implements IOrderService
     private OrderLogisticsMapper orderLogisticsMapper;
 
     @Autowired
-    private TestMobileService testMobileService;
+    private MobileService mobileService;
 
     /**
      * 查询订单
@@ -127,11 +124,11 @@ public class OrderServiceImpl implements IOrderService
         List<Order> orders = orderMapper.selectOrderListByIds(Convert.toStrArray(ids));
         Integer num  = 0;
         for (Order order:orders){
-            if(testMobileService.AirpickinstallnewOrder(order)){
+            if(mobileService.AirpickinstallnewOrder(order)){
                 num ++;
             }
         }
-        return "本次成功下单 "+num+" 记录，详情请查询系统日志";
+        return "本次下单 "+orders.size()+" 记录，成功"+ num +"条， 详情请查询系统日志";
     }
 
     /**
@@ -145,21 +142,28 @@ public class OrderServiceImpl implements IOrderService
         Integer num = 0;
         for (int i =0;i<idS.length;i++){
             int finalI = i;
-            DSAirpickinstallQueryOrderResponse response = testMobileService.getOrderMsg(
+            DSAirpickinstallQueryOrderResponse response = mobileService.getOrderMsg(
                     new DSAirpickinstallQueryOrderRequest(){{ setOrderId(idS[finalI]);
             }});
-            OrderLogistics orderLogistics = new OrderLogistics();
-            BeanUtils.copyProperties(response, orderLogistics);
-            orderLogistics.setFdId(idS[finalI]);
-            orderLogisticsMapper.deleteOrderLogisticsById(idS[finalI]);
-            int nums = orderLogisticsMapper.insertOrderLogistics(orderLogistics);
-            num += nums;
-        }
-        return "本次成功更新 "+num+" 记录，详情请查询系统日志";
-    }
+            if("激活成功".equals(response.getOrderRemark())){
+                //更新订单表状态
+                orderMapper.updateOrder(new Order(){{
+                    setFdId(idS[finalI]);
+                    setStatus("3");
+                }});
+            }
+     OrderLogistics orderLogistics = new OrderLogistics();
+     BeanUtils.copyProperties(response, orderLogistics);
+     orderLogistics.setFdId(idS[finalI]);
+     orderLogisticsMapper.deleteOrderLogisticsById(idS[finalI]);
+     int nums = orderLogisticsMapper.insertOrderLogistics(orderLogistics);
+     num += nums;
+     }
+     return "本次成功更新 "+num+" 记录，详情请查询系统日志";
+     }
 
 
-    /**
+     /**
      * 订单数据导入
      * @param orderList
      * @return

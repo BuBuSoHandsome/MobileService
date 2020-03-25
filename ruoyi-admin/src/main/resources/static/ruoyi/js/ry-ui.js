@@ -340,16 +340,17 @@ var table = {
     		},
 			//订单模块使用 下单
 			installOrder: function() {
+            	debugger;
 				table.set();
 				var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
 				if (rows.length == 0) {
 					$.modal.alertWarning("请至少选择一条记录");
 					return;
 				}
-				var rowsStauts = $.common.isEmpty(table.options.uniqueId) ? $.table.selectTenColumns() : $.table.selectTenColumns(table.options.uniqueId);
+				var rowsStauts = $.common.isEmpty(table.options.uniqueId) ? $.table.selectStatusColumns() : $.table.selectStatusColumns(table.options.uniqueId);
 				for(var i=0;i<rowsStauts.length;i++){
-					if(rowsStauts[i]==1||rowsStauts[i]==2){
-						$.modal.alertWarning("只能对未下单的记录进行下单，请重新选择！");
+					if(rowsStauts[i]==1){
+						$.modal.alertWarning("不能对下单成功的记录进行下单，请重新选择！");
 						return;
 					}
 				}
@@ -367,10 +368,10 @@ var table = {
 					$.modal.alertWarning("请至少选择一条记录");
 					return;
 				}
-				var rowsStauts = $.common.isEmpty(table.options.uniqueId) ? $.table.selectTenColumns() : $.table.selectTenColumns(table.options.uniqueId);
+				var rowsStauts = $.common.isEmpty(table.options.uniqueId) ? $.table.selectStatusColumns() : $.table.selectStatusColumns(table.options.uniqueId);
 				for(var i=0;i<rowsStauts.length;i++){
-					if(rowsStauts[i]==0){
-						$.modal.alertWarning("只能对已下单的记录进行更新，请重新选择！");
+					if(rowsStauts[i]!=1){
+						$.modal.alertWarning("只能对下单成功的记录进行更新，请重新选择！");
 						return;
 					}
 				}
@@ -514,9 +515,9 @@ var table = {
             },
 
 			// 查询第十个首列值（不熟悉thyemleaf语法）
-			selectTenColumns: function() {
+			selectStatusColumns: function() {
 				var rows = $.map($("#" + table.options.id).bootstrapTable('getSelections'), function (row) {
-					return row[table.options.columns[10].field];
+					return row[table.options.columns[8].field];
 				});
 				if ($.common.isNotEmpty(table.options.rememberSelected) && table.options.rememberSelected) {
 					var selectedRows = table.rememberSelecteds[table.options.id];

@@ -18,11 +18,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="address"    column="address"    />
         <result property="addressCity"    column="addressCity"    />
         <result property="status"    column="status"    />
-        <result property="createTime"    column="createTime"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="remark"    column="remark"    />
     </resultMap>
 
     <sql id="selectOrderVo">
-        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status,createTime from `order`
+        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status,create_time,remark from `order`
     </sql>
 
     <select id="selectOrderList" parameterType="Order" resultMap="OrderResult">
@@ -41,18 +42,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="province != null  and province != ''"> and address = #{province}</if>
             <if test="addressCity != null  and addressCity != ''"> and addressCity = #{addressCity}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
-            <if test="createTime != null"> and status = #{createTime}</if>
+            <if test="createTime != null"> and create_time = #{createTime}</if>
+            <if test="remark != null  and remark != ''"> and remark = #{remark}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                and date_format(createTime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
             </if>
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                and date_format(createTime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+                and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
             </if>
         </where>
     </select>
 
+    <select id="selectOrderList10" resultMap="OrderResult">
+        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status,create_time,remark from `order` WHERE status='0' LIMIT 10
+    </select>
+
+
+    <select id="selectOrderIds" parameterType="Order" resultType="java.lang.String">
+        select fd_id from `order`
+        <where>
+            <if test="pack != null  and pack != ''"> and pack = #{pack}</if>
+            <if test="province != null  and province != ''"> and address = #{province}</if>
+            <if test="addressCity != null  and addressCity != ''"> and addressCity = #{addressCity}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+
     <select id="selectOrderListByIds" parameterType="String" resultMap="OrderResult">
-        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status,createTime from `order` where status='0' and fd_id in
+        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status,create_time from `order` where status!='1' and fd_id in
         <foreach item="fdId" collection="array" open="(" separator="," close=")">
             #{fdId}
         </foreach>
@@ -80,8 +98,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="province != null  and province != ''">province,</if>
             <if test="addressCity != null  and addressCity != ''">addressCity,</if>
             <if test="status != null  and status != ''">status,</if>
-            <if test="createTime != null ">createTime,</if>
-         </trim>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="fdId != null  and fdId != ''">#{fdId},</if>
             <if test="sid != null  and sid != ''">#{sid},</if>
@@ -117,6 +135,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addressCity != null  and addressCity != ''">addressCity = #{addressCity},</if>
             <if test="province != null  and province != ''">province = #{province},</if>
             <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
         </trim>
         where fd_id = #{fdId}
     </update>

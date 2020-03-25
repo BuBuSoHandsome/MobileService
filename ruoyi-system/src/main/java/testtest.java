@@ -1,6 +1,7 @@
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.enums.MobileUrl;
 import com.ruoyi.common.utils.DateUtils;
@@ -436,8 +437,31 @@ public class testtest {
 //
 //            System.out.println(request.getOrderId());
 
+                Order order = new Order();
 
-        System.out.println(Md5Utils.hash("nwyj123456"));
+                order.setSid("1000000019");
+                order.setPack("prod.10086000025892");
+                order.setRealname("小明");
+                order.setPhone("13922376556");
+                order.setCardid("441324198711170909");
+                order.setAddress("广东省广州市增城区滨海花园");
+
+                System.out.println(MobileUtil.getBodyByClass(order));
+
+        AjaxResult successResult = AjaxResult.success("成功");
+
+        AjaxResult warnResult = AjaxResult.warn("失败");
+
+
+        System.out.println(MobileUtil.getBodyByClass(successResult));
+
+        System.out.println(MobileUtil.getBodyByClass(warnResult));
+
+
+
+//        String jsonString = "{\"result\":{\"data\":{\"resultMsg\":\"始发地址信息及发货仓无效\",\"resultCode\":\"E0001\"},\"code\":\"0\",\"msg\":\"成功\"},\"respcode\":\"E0001\",\"respdesc\":\"始发地址信息及发货仓无效\",\"resptype\":\"600\"}";
+//        JSONObject jsonObject = JSONObject.parseObject(jsonString);
+//        System.out.println(jsonObject.getString("respdesc"));
 
 
     }

@@ -1,9 +1,11 @@
 package com.ruoyi.system.service;
 
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.domain.Order;
 import com.ruoyi.system.domain.mobileRequest.*;
 import com.ruoyi.system.domain.mobileResponse.AirpickinstallnewOrderResponse;
 import com.ruoyi.system.domain.mobileResponse.DSAirpickinstallQueryOrderResponse;
+import com.ruoyi.system.domain.mobileResponse.JDCheckAddressResponse;
 
 
 /**
@@ -11,7 +13,7 @@ import com.ruoyi.system.domain.mobileResponse.DSAirpickinstallQueryOrderResponse
  * Author:      bjl
  */
 
-public interface TestMobileService {
+public interface MobileService {
 
     public String testGetUrl(String eumn);
 
@@ -19,16 +21,16 @@ public interface TestMobileService {
 
     public String chooseNumberBusiness(ChooseNumberbusinessRequest request);
 
-    public String JDCheckAddress(JDCheckAddressRequest request);
+    public JDCheckAddressResponse JDCheckAddress(JDCheckAddressRequest request);
 
     public String queryChooseNumberList(QueryChooseNumberListRequest request);
-
-    public AirpickinstallnewOrderRequest getRequest(Order order);
 
     public String getResponse(QueryDiscountNumberListRequest request);
 
     public Boolean AirpickinstallnewOrder (Order order);
 
     public DSAirpickinstallQueryOrderResponse getOrderMsg(DSAirpickinstallQueryOrderRequest request);
+
+    public String JDCheckAddress2 (String address);
 
 }

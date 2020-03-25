@@ -1,11 +1,10 @@
-package com.ruoyi.web.controller;
+package com.ruoyi.web.controller.system;
 
 import com.ruoyi.system.domain.Order;
 import com.ruoyi.system.domain.mobileRequest.*;
-import com.ruoyi.system.domain.mobileResponse.AirpickinstallnewOrderResponse;
 import com.ruoyi.system.domain.mobileResponse.DSAirpickinstallQueryOrderResponse;
-import com.ruoyi.system.domain.mobileResponse.QueryDiscountNumberListResponse;
-import com.ruoyi.system.service.TestMobileService;
+import com.ruoyi.system.domain.mobileResponse.JDCheckAddressResponse;
+import com.ruoyi.system.service.MobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,19 +16,19 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("mobile")
-    public class TestMobileController {
+    public class MobileController {
 
     @Autowired
-    private TestMobileService testMobileService;
+    private MobileService mobileService;
 
     @RequestMapping("/testGetUrl")
     public String testGetUrl( String eumn){
-        return testMobileService.testGetUrl(eumn);
+        return mobileService.testGetUrl(eumn);
     }
 
     @RequestMapping("/queryChooseNumberColumn")
     public String queryChooseNumberColumn(){
-        return testMobileService.queryChooseNumberColumn();
+        return mobileService.queryChooseNumberColumn();
     }
 
     /**
@@ -39,7 +38,7 @@ import org.springframework.web.bind.annotation.*;
      */
     @PostMapping("/chooseNumberBusiness")
     public String chooseNumberBusiness(@RequestBody ChooseNumberbusinessRequest request){
-        return testMobileService.chooseNumberBusiness(request);
+        return mobileService.chooseNumberBusiness(request);
     }
 
     /**
@@ -48,8 +47,18 @@ import org.springframework.web.bind.annotation.*;
      * @return
      */
     @PostMapping("/JDCheckAddress")
-    public String JDCheckAddress(@RequestBody JDCheckAddressRequest request){
-        return testMobileService.JDCheckAddress(request);
+    public JDCheckAddressResponse JDCheckAddress(@RequestBody JDCheckAddressRequest request){
+        return mobileService.JDCheckAddress(request);
+    }
+
+    /**
+     * 京东物流地址校验 根据地址校验
+     * @param address
+     * @return
+     */
+    @RequestMapping("/JDCheckAddress2")
+    public String JDCheckAddress2(@RequestParam String address){
+        return mobileService.JDCheckAddress2(address);
     }
 
     /**
@@ -59,7 +68,7 @@ import org.springframework.web.bind.annotation.*;
      */
     @PostMapping("queryChooseNumberList")
     public String queryChooseNumberList(@RequestBody QueryChooseNumberListRequest request){
-        return testMobileService.queryChooseNumberList(request);
+        return mobileService.queryChooseNumberList(request);
     }
 
     /**
@@ -69,25 +78,16 @@ import org.springframework.web.bind.annotation.*;
      */
     @PostMapping("QueryDiscountNumberList")
     public String queryDiscountNumberList(@RequestBody QueryDiscountNumberListRequest request){
-        return testMobileService.getResponse(request);
-    }
-
-
-    /**
-     * 生成下单接口的请求类
-     */
-    @PostMapping("getAirpickinstallnewOrder")
-    public AirpickinstallnewOrderRequest getAirpickinstallnewOrder(@RequestBody Order order){
-        return testMobileService.getRequest(order);
+        return mobileService.getResponse(request);
     }
 
     @PostMapping("airpickinstallnewOrder")
     public Boolean airpickinstallnewOrder (@RequestBody Order order){
-        return testMobileService.AirpickinstallnewOrder(order);
+        return mobileService.AirpickinstallnewOrder(order);
     }
 
     @PostMapping("getOrderMsg")
     public DSAirpickinstallQueryOrderResponse getOrderMsg(@RequestBody DSAirpickinstallQueryOrderRequest request){
-        return testMobileService.getOrderMsg(request);
+        return mobileService.getOrderMsg(request);
     }
 }

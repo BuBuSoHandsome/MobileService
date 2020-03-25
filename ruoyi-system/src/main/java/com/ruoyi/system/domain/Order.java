@@ -5,13 +5,9 @@ package com.ruoyi.system.domain;
  * Author:      bjl
  */
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.Data;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,19 +63,16 @@ public class Order {
     /**
      * 省份编码
      */
-    @Excel(name = "省份编码")
     private String provincecode;
 
     /**
      * 地市编码
      */
-    @Excel(name = "地市编码")
     private String eparchycode;
 
     /**
      * 区县编码
      */
-    @Excel(name = "区县编码[可不填]")
     private String citycode;
 
     /**
@@ -95,13 +88,13 @@ public class Order {
     private String province;
 
     /**
-     * 配送地址
+     * 配送城市
      */
-    @Excel(name = "配送地市")
+    @Excel(name = "配送城市")
     private String addressCity;
 
     /**
-     * 订单状态（0：未下单，1：下单成功，2：下单失败）
+     * 订单状态（0：未下单，1：下单成功，2：下单失败 ，3：激活成功）
      */
     private String status;
 
@@ -111,6 +104,11 @@ public class Order {
     @Excel(name = "下单时间")
     private String createTime;
 
+    /**
+     * 备注
+     */
+    @Excel(name = "备注")
+    private String remark;
 
     /** 请求参数 */
     private Map<String, Object> params;

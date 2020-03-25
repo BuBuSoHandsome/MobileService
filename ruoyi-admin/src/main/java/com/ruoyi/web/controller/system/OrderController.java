@@ -11,7 +11,7 @@ import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.domain.mobileRequest.DSAirpickinstallQueryOrderRequest;
 import com.ruoyi.system.domain.mobileResponse.DSAirpickinstallQueryOrderResponse;
 import com.ruoyi.system.mapper.ChooseNumberColumnMapper;
-import com.ruoyi.system.service.TestMobileService;
+import com.ruoyi.system.service.MobileService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,7 +45,7 @@ public class OrderController extends BaseController
     private IOrderService orderService;
 
     @Autowired
-    private TestMobileService testMobileService;
+    private MobileService mobileService;
 
     @Resource
     private ChooseNumberColumnMapper chooseNumberColumnMapper;
@@ -163,7 +163,7 @@ public class OrderController extends BaseController
      */
     @PostMapping("getOrderMsg")
     public DSAirpickinstallQueryOrderResponse getOrderMsg(@RequestBody DSAirpickinstallQueryOrderRequest request){
-        return testMobileService.getOrderMsg(request);
+        return mobileService.getOrderMsg(request);
     }
 
     /**

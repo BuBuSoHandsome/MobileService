@@ -1,6 +1,6 @@
 package com.ruoyi.quartz.task;
 
-import com.ruoyi.system.service.TestMobileService;
+import com.ruoyi.system.service.MobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.utils.StringUtils;
@@ -15,7 +15,7 @@ public class RyTask
 {
 
     @Autowired
-    private TestMobileService testMobileService;
+    private MobileService mobileService;
 
     public void ryMultipleParams(String s, Boolean b, Long l, Double d, Integer i)
     {
@@ -41,7 +41,7 @@ public class RyTask
 
     //更新一次 选号卡类栏目
     public void refreshChooseNumberColumn(){
-        System.out.println(testMobileService.queryChooseNumberColumn());
+        System.out.println(mobileService.queryChooseNumberColumn());
     }
 
 

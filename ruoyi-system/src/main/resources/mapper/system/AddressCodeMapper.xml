@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AddressCodeMapper">
+    
+    <resultMap type="AddressCode" id="AddressCodeResult">
+        <result property="fdId"    column="fd_id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+        <result property="parentCode"    column="parent_code"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectAddressCodeVo">
+        select fd_id, name, code, parent_code, type from address_code
+    </sql>
+
+    <select id="selectAddressCodeList" parameterType="AddressCode" resultMap="AddressCodeResult">
+        <include refid="selectAddressCodeVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="parentCode != null  and parentCode != ''"> and parent_code = #{parentCode}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectAddressCodeById" parameterType="Long" resultMap="AddressCodeResult">
+        <include refid="selectAddressCodeVo"/>
+        where fd_id = #{fdId}
+    </select>
+
+    <select id="selectAddressCodeByName" parameterType="String" resultMap="AddressCodeResult">
+        <include refid="selectAddressCodeVo"/>
+        where name = #{name}
+    </select>
+
+    <insert id="insertAddressCode" parameterType="AddressCode" useGeneratedKeys="true" keyProperty="fdId">
+        insert into address_code
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="code != null  and code != ''">code,</if>
+            <if test="parentCode != null  and parentCode != ''">parent_code,</if>
+            <if test="type != null  and type != ''">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="code != null  and code != ''">#{code},</if>
+            <if test="parentCode != null  and parentCode != ''">#{parentCode},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAddressCode" parameterType="AddressCode">
+        update address_code
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="code != null  and code != ''">code = #{code},</if>
+            <if test="parentCode != null  and parentCode != ''">parent_code = #{parentCode},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+        </trim>
+        where fd_id = #{fdId}
+    </update>
+
+    <delete id="deleteAddressCodeById" parameterType="Long">
+        delete from address_code where fd_id = #{fdId}
+    </delete>
+
+    <delete id="deleteAddressCodeByIds" parameterType="String">
+        delete from address_code where fd_id in 
+        <foreach item="fdId" collection="array" open="(" separator="," close=")">
+            #{fdId}
+        </foreach>
+    </delete>
+    
+</mapper>

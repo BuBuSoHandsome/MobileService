@@ -27,11 +27,28 @@ public interface OrderMapper
      */
     public List<Order> selectOrderList(Order order);
 
+    /**
+     * 查询十条订单 每次
+     * @return
+     */
+    public List<Order> selectOrderList10();
+
+
+    /**
+     * 批量查询订单ids
+     * @param order
+     * @return
+     */
+    public List<String> selectOrderIds(Order order);
+
 
     /**
      * 批量查询byIds
      */
     public List<Order> selectOrderListByIds(String[] ids);
+
+
+
 
 
     /**
