@@ -85,10 +85,21 @@ public class MobileTask {
                 queryChooseNumberListString.getString("result")).getString( "infos"), QueryChooseNumberListResponse.class);
         //成功状态下，可能没有号码选
         if(null==numberLists||numberLists.isEmpty()){
-            log.info("下单失败，宝藏卡无号码，稍等重新尝试获取号码。。。");
+            log.info("下单失败，宝藏卡无号码，稍等重新尝试获取号码。。");
             return;
         }
-        List<Order> orderList = orderMapper.selectOrderList10();
+        //暂时默认2分钟下单一次  如果一次查询超过10个号码 则取10条订单记录 ， 低于10个号码则取 查出的号码记录为下单数量
+        Integer orderNum = 0;
+        if(numberLists.size()>=10){
+            orderNum = 10;
+        }else{
+            orderNum = numberLists.size();
+        }
+        List<Order> orderList = orderMapper.selectOrderList10(orderNum);
+        if(null == orderList||orderList.isEmpty()){
+            log.info("系统没有未下单的订单");
+            return;
+        }
         Integer num  = 0;
         for (Order order:orderList){
             if(mobileService.AirpickinstallnewOrder(order)){

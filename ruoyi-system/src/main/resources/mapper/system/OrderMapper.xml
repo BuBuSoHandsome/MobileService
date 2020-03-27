@@ -39,11 +39,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="eparchycode != null  and eparchycode != ''"> and eparchyCode = #{eparchycode}</if>
             <if test="citycode != null  and citycode != ''"> and cityCode = #{citycode}</if>
             <if test="address != null  and address != ''"> and address = #{address}</if>
-            <if test="province != null  and province != ''"> and address = #{province}</if>
+            <if test="province != null  and province != ''"> and province = #{province}</if>
             <if test="addressCity != null  and addressCity != ''"> and addressCity = #{addressCity}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="createTime != null"> and create_time = #{createTime}</if>
-            <if test="remark != null  and remark != ''"> and remark = #{remark}</if>
+            <if test="remark != null  and remark != ''"> and remark like concat('%', #{remark}, '%')</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
                 and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
             </if>
@@ -53,8 +53,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="selectOrderList10" resultMap="OrderResult">
-        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status,create_time,remark from `order` WHERE status='0' LIMIT 10
+    <select id="selectOrderList10"  parameterType="java.lang.Integer" resultMap="OrderResult">
+        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status,create_time,remark from `order` WHERE status='0' LIMIT #{nums}
     </select>
 
 

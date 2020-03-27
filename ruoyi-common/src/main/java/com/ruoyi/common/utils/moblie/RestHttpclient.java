@@ -116,8 +116,7 @@ public class RestHttpclient {
 	            StringEntity entity = new StringEntity(body, "application/json", "UTF-8");
 	        	 postMethod.setEntity(entity);
 
-	        	 log.info("请求头："+MobileUtil.getBodyByClass(header));
-				 log.info("请求报文体："+body);
+	        	 log.info("请求报文："+body);
 
 	        	 HttpResponse response = httpclient.execute(postMethod);
 	        	 
@@ -126,7 +125,9 @@ public class RestHttpclient {
 	        	 if(staus==200){
 		        	 HttpEntity responseBody = response.getEntity();
 		        	 String responseEntity = EntityUtils.toString(responseBody,"UTF-8");
-		        	 log.info("请求报文体："+responseEntity);
+
+		        	 log.info("返回报文："+ responseEntity);
+
 		        	 return responseEntity;
 	        	 }else{
 	        		 return "状态码:"+staus;

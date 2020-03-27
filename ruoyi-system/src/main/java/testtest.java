@@ -17,10 +17,7 @@ import com.ruoyi.system.domain.mobileResponse.*;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class testtest {
 
@@ -437,25 +434,48 @@ public class testtest {
 //
 //            System.out.println(request.getOrderId());
 
-                Order order = new Order();
+//                Order order = new Order();
+//
+//                order.setSid("1000000019");
+//                order.setPack("prod.10086000025892");
+//                order.setRealname("小明");
+//                order.setPhone("13922376556");
+//                order.setCardid("441324198711170909");
+//                order.setAddress("广东省广州市增城区滨海花园");
+//
+//                System.out.println(MobileUtil.getBodyByClass(order));
+//
+//        AjaxResult successResult = AjaxResult.success("成功");
+//
+//        AjaxResult warnResult = AjaxResult.warn("失败");
+//
+//
+//        System.out.println(MobileUtil.getBodyByClass(successResult));
+//
+//        System.out.println(MobileUtil.getBodyByClass(warnResult));
 
-                order.setSid("1000000019");
-                order.setPack("prod.10086000025892");
-                order.setRealname("小明");
-                order.setPhone("13922376556");
-                order.setCardid("441324198711170909");
-                order.setAddress("广东省广州市增城区滨海花园");
-
-                System.out.println(MobileUtil.getBodyByClass(order));
-
-        AjaxResult successResult = AjaxResult.success("成功");
-
-        AjaxResult warnResult = AjaxResult.warn("失败");
 
 
-        System.out.println(MobileUtil.getBodyByClass(successResult));
+        List<String> stringList = new LinkedList<>();
 
-        System.out.println(MobileUtil.getBodyByClass(warnResult));
+        stringList.add("1");
+        stringList.add("2");
+        stringList.add("3");
+        stringList.add("4");
+        stringList.add("15");
+        stringList.add("16");
+        stringList.add("99");
+
+        Collections.reverse(stringList);
+
+        for (int i=0;i<stringList.size();i++){
+            System.out.println(stringList.get(i));
+        }
+
+
+
+
+
 
 
 

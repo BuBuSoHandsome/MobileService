@@ -31,7 +31,7 @@ public interface OrderMapper
      * 查询十条订单 每次
      * @return
      */
-    public List<Order> selectOrderList10();
+    public List<Order> selectOrderList10(int nums);
 
 
     /**

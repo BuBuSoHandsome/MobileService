@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -91,6 +92,8 @@ public class MobileResponseService {
             throw new RuntimeException("下单失败，该卡选号号码列表为空--卡编码为（"+request.getPackagecode()+")");
         }
         QueryChooseNumberListResponse response = new QueryChooseNumberListResponse();
+        //倒序list集合 尽量拿到后面的号码不会被抢
+        Collections.reverse(numberLists);
         for(QueryChooseNumberListResponse listResponse:numberLists){
             if(null!=listResponse && "50".equals(listResponse.getCommtype())){
                 if(redisUtil.hasKey(RedisEnum.SERVNUMBER+":"+listResponse.getMobileno())){
@@ -202,6 +205,8 @@ public class MobileResponseService {
                 setStatus("2");
                 setRemark("不支持京东配送:"+jdCheck.getMsg());
                 setCreateTime(DateUtils.getNowTime());
+                setProvince(jdCheckAddressRequest.getAddressProvince());
+                setAddressCity(jdCheckAddressRequest.getAddrssCity());
             }});
             return false;
         }
@@ -217,8 +222,6 @@ public class MobileResponseService {
         ChooseNumberbusinessRequest chooseNumberbusinessRequest = new ChooseNumberbusinessRequest();
         chooseNumberbusinessRequest.setTypecode(order.getPack());
         ChooseNumberbusinessResponse chooseNumberbusinessResponse = this.getChooseNumberbusiness(chooseNumberbusinessRequest);
-
-
 
         //选号查询号码可选优惠
         QueryDiscountNumberListRequest queryDiscountNumberListRequest = new QueryDiscountNumberListRequest();
