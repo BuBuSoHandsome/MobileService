@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('数据统计')" />
+
+    <th:block th:include="include :: select2-css" />
+
+    <link rel="stylesheet" th:href="@{/css/statistics/statistics.css}">
+
+</head>
+
+
+
+<body class="gray-bg">
+<div style="padding: 10px 20px;">
+
+     <div class="row">
+         <div class="col-sm-12">
+             <div class="xy-panel xy-panel-success">
+                 <div class="xy-panel-heading">
+                     全国各省订单统计
+                 </div>
+                 <div class="xy-panel-body">
+                     <div class="ctrl-btn">
+                         <div class="input-group date" style="width: 140px;">
+                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                             <input type="text" class="form-control" id="order-date" placeholder="yyyy-MM">
+                         </div>
+                     </div>
+                     <div class="echart" id="provinceOrderChart" style="width: 100%;height: 300px;">
+                     </div>
+                 </div>
+             </div>
+         </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="xy-panel xy-panel-success">
+                <div class="xy-panel-heading">订单成交统计</div>
+                <div class="xy-panel-body">
+                    <div class="ctrl-btn">
+                        <div class="input-group date" style="width: 140px;">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" class="form-control" id="orderTrend-date" placeholder="yyyy">
+                        </div>
+                        <div>
+                            <select id="provinceSelect">
+                                <option value="">全部</option>
+                                <option th:each="province:${province}" th:text="${province.name}" th:value="${province.code}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="orderTrend" class="echart" style="width: 100%;height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="xy-panel xy-panel-success">
+                <div class="xy-panel-heading">订单状态统计</div>
+                <div class="xy-panel-body">
+                    <div class="ctrl-btn">
+                        <div class="input-group date" style="width: 140px;">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" class="form-control" id="order-status-date" placeholder="yyyy-MM">
+                        </div>
+                    </div>
+                    <div class="echart" id="orderStatusChart"  style="width: 100%;height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="xy-panel xy-panel-success">
+                <div class="xy-panel-heading">下单时间段统计</div>
+                <div class="xy-panel-body">
+                    <div class="ctrl-btn">
+                        <div class="input-group date" style="width: 240px;">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" class="form-control" id="hour-date" placeholder="yyyy-MM-dd yyyy-MM-dd">
+                        </div>
+                    </div>
+                    <div id="hourChart" class="echart" style="width: 100%;height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: select2-js" />
+    <th:block th:include="include :: echarts-js" />
+    <script th:src="@{/ajax/libs/report/echarts/macarons.js}"></script>
+    <script th:src="@{/js/statistics/statistics.js}"></script>
+
+    <script th:inline="javascript">
+
+
+
+    </script>
+</body>
+</html>
