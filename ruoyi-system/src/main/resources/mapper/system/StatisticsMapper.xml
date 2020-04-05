@@ -12,7 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 and SUBSTR(create_time from 1 for 7) = #{date}
             </if>
         </where>
-       group by province
+       group by t2.code, province,date
        order by t2.code,date
    </select>
 
@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             and SUBSTR(t2.create_time from 1 for 7) = #{date}
         </if>
         where dict_type = 'order_status'
-        group by dict_value
+        group by statusId,statusName
         order by t1.dict_value
     </select>
 
@@ -43,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="orderTrend" resultType="java.util.Map" parameterType="String">
-        select DATE_FORMAT(CREATE_TIME,'%m-%d') date,count(*) num from `order`
+        select DATE_FORMAT(CREATE_TIME,'%Y-%m-%d') date,count(*) num from `order`
         <where>
             <if test="year != null and year != ''">
                 and YEAR(create_time) = #{year}
@@ -52,7 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 and province = #{provinceName}
             </if>
         </where>
-        GROUP BY  DATE_FORMAT(CREATE_TIME,'%Y-%m-%d') ORDER BY CREATE_TIME
+        GROUP BY date ORDER BY date
     </select>
 
 
