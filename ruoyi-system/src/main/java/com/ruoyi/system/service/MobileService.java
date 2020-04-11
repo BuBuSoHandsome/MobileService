@@ -27,10 +27,15 @@ public interface MobileService {
 
     public String getResponse(QueryDiscountNumberListRequest request);
 
-    public Boolean AirpickinstallnewOrder (Order order);
+    public Boolean AirpickinstallnewOrder(Order order);
 
     public DSAirpickinstallQueryOrderResponse getOrderMsg(DSAirpickinstallQueryOrderRequest request);
 
-    public String JDCheckAddress2 (String address);
+    public String JDCheckAddress2(String address);
+
+    public String getExpressTrace(QryExpressTraceRequest request);
+
+    public AjaxResult addBZCardOrder(Order order);
 
 }
+

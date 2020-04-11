@@ -3,6 +3,7 @@ package com.ruoyi.common.utils;
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -182,8 +183,30 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
 
 
     public static void main(String[] args) {
-        //2020-02-02 17:23:24
-        //Sun Feb 02 17:23:24 CST 2020
-        System.out.println(getDateFromString("1580635404000"));
+        String time = "2020-03-18 17:34:29";
+        System.out.println(isLastTwoWeeks(time));
     }
+
+    /**
+     * 判断时间是否超过当前系统时间两周
+     * @param dateTime
+     * @return
+     */
+    public static Boolean isLastTwoWeeks(String dateTime){
+        Date beforeDate = null;
+        try {
+            beforeDate = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).parse(dateTime);
+        } catch (ParseException e) {
+            return false;
+        }
+        Calendar nowCalendar = Calendar.getInstance();
+        nowCalendar.setTime(new Date());
+        nowCalendar.add(Calendar.DAY_OF_MONTH, -14);
+        Date before14days = nowCalendar.getTime();
+        if(before14days.getTime()>=beforeDate.getTime()){
+            return true;
+        }
+        return false;
+    }
+
 }

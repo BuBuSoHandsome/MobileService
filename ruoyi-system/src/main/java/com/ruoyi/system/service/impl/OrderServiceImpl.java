@@ -2,6 +2,7 @@ package com.ruoyi.system.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.OrderLogistics;
 import com.ruoyi.system.domain.mobileRequest.DSAirpickinstallQueryOrderRequest;
@@ -145,8 +146,15 @@ public class OrderServiceImpl implements IOrderService
             DSAirpickinstallQueryOrderResponse response = mobileService.getOrderMsg(
                     new DSAirpickinstallQueryOrderRequest(){{ setOrderId(idS[finalI]);
             }});
+            if(DateUtils.isLastTwoWeeks(response.getCreateTime())){
+                //更新订单表状态 改为拒收状态
+                orderMapper.updateOrder(new Order(){{
+                    setFdId(idS[finalI]);
+                    setStatus("4");
+                }});
+            }
             if("激活成功".equals(response.getOrderRemark())){
-                //更新订单表状态
+                //更新订单表状态 改为激活成功
                 orderMapper.updateOrder(new Order(){{
                     setFdId(idS[finalI]);
                     setStatus("3");

@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Collections;
@@ -32,6 +33,7 @@ import java.util.UUID;
 
 
 @Service
+@Transactional
 public class MobileResponseService {
 
     private static final Logger log = LoggerFactory.getLogger(MobileResponseService.class);
@@ -148,6 +150,12 @@ public class MobileResponseService {
         return  response;
     }
 
+    public String getExpressTrace(QryExpressTraceRequest request){
+        String url = MobileUrl.QryExpressTrace.getUrl();
+        String body = MobileUtil.getBodyByClass(request);
+        String jsonString = MobileUtil.getResponse(url, body);
+        return jsonString;
+    }
 
     public  DSAirpickinstallQueryOrderResponse getOrderMsg(DSAirpickinstallQueryOrderRequest request){
         String url = MobileUrl.DSAirpickinstallQueryOrder.getUrl();
@@ -166,6 +174,11 @@ public class MobileResponseService {
                     .replaceAll("时", ":").replaceAll("分", ":").replaceAll("秒", "");
             dsAirpickinstallQueryOrderResponse.setCreateTime(createTime);
         }
+        if(null!=jsonObject1.getString("finishTime")){
+            String finishTime = jsonObject1.getString("finishTime").replaceAll("年", "-").replaceAll("月", "-").replaceAll("日","")
+                    .replaceAll("时", ":").replaceAll("分", ":").replaceAll("秒", "");
+            dsAirpickinstallQueryOrderResponse.setFinishTime(finishTime);
+        }
         dsAirpickinstallQueryOrderResponse.setOperatorId(jsonObject1.getString("operatorId")==null ? "":jsonObject1.getString("operatorId"));
         dsAirpickinstallQueryOrderResponse.setOrderType(jsonObject1.getString("orderType")==null ? "":jsonObject1.getString("orderType"));
         dsAirpickinstallQueryOrderResponse.setAreaCode(jsonObject1.getString("areaCode")==null ? "":jsonObject1.getString("areaCode"));
@@ -174,7 +187,6 @@ public class MobileResponseService {
         dsAirpickinstallQueryOrderResponse.setWayId(jsonObject1.getString("wayid")==null ? "":jsonObject1.getString("wayid"));
         dsAirpickinstallQueryOrderResponse.setAreaName(jsonObject1.getString("areaName")==null ? "":jsonObject1.getString("areaName"));
         dsAirpickinstallQueryOrderResponse.setUsername(jsonObject1.getString("userName")==null ? "":jsonObject1.getString("userName"));
-        dsAirpickinstallQueryOrderResponse.setFinishTime(jsonObject1.getString("finishTime")==null ? "":jsonObject1.getString("finishTime"));
         dsAirpickinstallQueryOrderResponse.setChnlCode(jsonObject1.getString("chnlCode")==null ? "":jsonObject1.getString("chnlCode"));
         dsAirpickinstallQueryOrderResponse.setOrderBigType(jsonObject1.getString("orderBigType") == null ? "":jsonObject1.getString("orderBigType"));
         dsAirpickinstallQueryOrderResponse.setServnumber(jsonObject1.getString("servnumber") == null ? "":jsonObject1.getString("servnumber"));
@@ -182,7 +194,6 @@ public class MobileResponseService {
         dsAirpickinstallQueryOrderResponse.setExpressno(jsonObject1.getString("expressno")==null ? "暂无物流单号" : jsonObject1.getString("expressno"));
         return dsAirpickinstallQueryOrderResponse;
     }
-
 
 
     public Boolean getAirpickinstallnewOrder(Order order){
@@ -229,8 +240,15 @@ public class MobileResponseService {
         QueryDiscountNumberListResponse queryDiscountNumberListResponse = this.getQueryDiscountNumberList(queryDiscountNumberListRequest);
 
         //渠道编码 工号必传
-        newOrderParams.setWayid("GZ08EC200043");
-        newOrderParams.setOperatorId("AGZC00000BYJ");
+//        newOrderParams.setWayid("GZ08EC200043");
+//        newOrderParams.setOperatorId("AGZZC1000YHJ");
+
+        /**
+         * 乐恒渠道
+         */
+        newOrderParams.setWayid("GZ00EC192561");
+        newOrderParams.setOperatorId("AGZC00000DRR");
+
         //号码归属地市编码
         newOrderParams.setAreaCode("200");
         //号码归属地市名称

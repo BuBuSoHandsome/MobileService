@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.system;
 
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.domain.Order;
 import com.ruoyi.system.domain.mobileRequest.*;
 import com.ruoyi.system.domain.mobileResponse.DSAirpickinstallQueryOrderResponse;
@@ -90,4 +91,16 @@ import org.springframework.web.bind.annotation.*;
     public DSAirpickinstallQueryOrderResponse getOrderMsg(@RequestBody DSAirpickinstallQueryOrderRequest request){
         return mobileService.getOrderMsg(request);
     }
+
+    @PostMapping("getExpressTrace")
+    public String getExpressTrace(@RequestBody QryExpressTraceRequest request){
+        return mobileService.getExpressTrace(request);
+    }
+
+    @PostMapping("sendOrder")
+    public AjaxResult addBZCardOrder(@RequestBody Order order){
+        return mobileService.addBZCardOrder(order);
+    }
+
+
 }

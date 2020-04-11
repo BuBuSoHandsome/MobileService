@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.MobileUrl;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.moblie.MobileUtil;
 import com.ruoyi.system.domain.ChooseNumberColumn;
 import com.ruoyi.system.domain.Order;
@@ -15,6 +16,7 @@ import com.ruoyi.system.mapper.ChooseNumberColumnMapper;
 import com.ruoyi.system.mapper.MobileUrlMapper;
 import com.ruoyi.system.mobile.AddressResolutionService;
 import com.ruoyi.system.mobile.MobileResponseService;
+import com.ruoyi.system.service.IOrderService;
 import com.ruoyi.system.service.MobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +50,10 @@ public class MobileServiceImpl implements MobileService {
     @Autowired
     private AddressResolutionService addressResolutionService;
 
+    @Autowired
+    private IOrderService orderService;
+
     @Override
-    @Transactional
     public String queryChooseNumberColumn() {
         String url = MobileUrl.QueryChooseNumberColumn.getUrl();
         Map<String, String> map = new HashMap<>();
@@ -127,12 +131,31 @@ public class MobileServiceImpl implements MobileService {
 
     @Override
     public String JDCheckAddress2(String address) {
-        String url = mobileUrlMapper.selectMobileUrlByEumn("JDCheckAddress").getUrl();
+        String url = MobileUrl.JDCheckAddress.getUrl();
         JDCheckAddressRequest request = addressResolutionService.addressResolution(address);
         String body = MobileUtil.getBodyByClass(request);
         return MobileUtil.getResponse(url, body);
     }
 
+    @Override
+    public String getExpressTrace(QryExpressTraceRequest request) {
+        return mobileResponseService.getExpressTrace(request);
+    }
+
+    @Override
+    public AjaxResult addBZCardOrder(Order order) {
+        if(order==null){
+            return AjaxResult.error("订单发送失败");
+        }
+        order.setFdId(StringUtils.generateRandomString(12).toUpperCase());
+        order.setCardtype("01");
+        order.setSid("1000000019");
+        order.setPack("prod.10086000025892");
+        if(orderService.insertOrder(order)>0){
+            return AjaxResult.success("订单发送成功");
+        }
+        return AjaxResult.error("订单发送失败");
+    }
 
     @Override
     public String testGetUrl(String eumn) {

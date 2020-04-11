@@ -3,6 +3,7 @@ package com.ruoyi.quartz.task;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.enums.MobileUrl;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.moblie.MobileUtil;
 import com.ruoyi.system.domain.Order;
 import com.ruoyi.system.domain.OrderLogistics;
@@ -49,6 +50,14 @@ public class MobileTask {
             DSAirpickinstallQueryOrderResponse response = mobileService.getOrderMsg(
                     new DSAirpickinstallQueryOrderRequest(){{ setOrderId(orderIds.get(finalI));
                     }});
+
+            if(DateUtils.isLastTwoWeeks(response.getCreateTime())){
+                //更新订单表状态 改为拒收状态
+                orderMapper.updateOrder(new Order(){{
+                    setFdId(orderIds.get(finalI));
+                    setStatus("4");
+                }});
+            }
             if("激活成功".equals(response.getOrderRemark())){
                 //更新订单表状态
                 orderMapper.updateOrder(new Order(){{

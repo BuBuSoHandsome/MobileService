@@ -20,7 +20,9 @@ public enum  MobileUrl {
 
     AirpickinstallnewOrder("https://221.179.11.204:443/eaop/rest/OrderCenter/resource/AirpickinstallnewOrder/v1.1.1"),
 
-    DSAirpickinstallQueryOrder("https://221.179.11.204:443/eaop/rest/OrderCenter/resource/dsairpickinstallqueryorder/v1.1.1");
+    DSAirpickinstallQueryOrder("https://221.179.11.204:443/eaop/rest/OrderCenter/resource/dsairpickinstallqueryorder/v1.1.1"),
+
+    QryExpressTrace("https://221.179.11.204:443/eaop/rest/JD/service/qryexpresstrace/v1.1.1");
 
     private final String url;
 

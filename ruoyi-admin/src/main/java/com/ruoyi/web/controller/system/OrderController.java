@@ -1,13 +1,9 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
-import java.util.UUID;
 
-import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.ChooseNumberColumn;
-import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.domain.mobileRequest.DSAirpickinstallQueryOrderRequest;
 import com.ruoyi.system.domain.mobileResponse.DSAirpickinstallQueryOrderResponse;
 import com.ruoyi.system.mapper.ChooseNumberColumnMapper;
@@ -173,7 +169,7 @@ public class OrderController extends BaseController
      */
     @PostMapping("/refreshOrderStatus")
     @ResponseBody
-    public AjaxResult checkOrderStatus(String ids){
+    public AjaxResult refreshOrderStatus(String ids){
         return success(orderService.refreshOrderStatus(ids));
     }
 
