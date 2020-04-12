@@ -5,15 +5,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.system.mapper.StatisticsMapper">
 
    <select id="provinceOrder" resultType="java.util.Map" parameterType="String">
-        select t2.code,province,count(*) count, date_format(create_time,'%Y-%m')date from `order` t1
-        left join `address_code` t2 on t1.province = t2.name
+        select t2.code,province,count(*) count from `order` t1
+        join `address_code` t2 on t1.province = t2.name
         <where>
             <if test="date != null and date != ''">
                 and SUBSTR(create_time from 1 for 7) = #{date}
             </if>
         </where>
-       group by t2.code, province,date
-       order by t2.code,date
+       group by t2.code, province
+       order by t2.code
    </select>
 
     <select id="orderStatus" resultType="java.util.Map" parameterType="String">

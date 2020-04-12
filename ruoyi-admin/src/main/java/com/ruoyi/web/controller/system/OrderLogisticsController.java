@@ -1,6 +1,9 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.Order;
+import com.ruoyi.system.service.IOrderService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +36,9 @@ public class OrderLogisticsController extends BaseController
 
     @Autowired
     private IOrderLogisticsService orderLogisticsService;
+
+    @Autowired
+    private IOrderService orderService;
 
     @RequiresPermissions("system:logistics:view")
     @GetMapping()
@@ -123,4 +129,19 @@ public class OrderLogisticsController extends BaseController
     {
         return toAjax(orderLogisticsService.deleteOrderLogisticsByIds(ids));
     }
+
+    /*
+    * 查看订单物流详情
+    * */
+    @GetMapping("/logisticsDetail/{orderId}")
+    public String logisticsDetail(@PathVariable("orderId") String orderId, ModelMap mmap)
+    {
+        Order order = orderService.selectOrderById(orderId);
+        OrderLogistics orderLogistics = orderLogisticsService.selectOrderLogisticsById(orderId);
+        mmap.put("orderLogistics", orderLogistics);
+        mmap.put("order",order);
+        return prefix + "/logisticsDetail";
+    }
+
+
 }

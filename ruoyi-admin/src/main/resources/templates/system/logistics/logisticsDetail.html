@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('订单物流详情')" />
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        box-sizing: border-box;
+    }
+    .container{
+        padding: 10px;
+    }
+    .timeAxisCont{
+        display: flex;
+        justify-content: center;
+    }
+    .timeAxisUl{
+        padding: 20px 0;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: flex-start;
+        font-size: 15px;
+    }
+    .timeAxisUl .timeAxisHeader{
+        width: 100%;
+        display: flex;
+        flex-flow: row nowrap;
+        color: #aaa;
+    }
+    .timeAxisUl .timeAxisHeader .line{
+        border-right: 2px dotted #aaa;
+    }
+    .timeAxisUl .timeAxisHeader.end{
+        color: #1890ff;
+        font-weight: bold;
+    }
+    .timeAxisUl .timeAxisHeader.end .line{
+        border-right: 2px solid #aaa;
+    }
+    .timeAxisUl .timeAxisHeader .line .point{
+        position: relative;
+        top: -8px;
+        left: -4px;
+        height: 34px;
+        width: 26px;
+        background: url("[[@{/}]]img/marker2.png") no-repeat center;
+    }
+    .timeAxisUl .timeAxisHeader.end .line .point{
+        background: url("[[@{/}]]img/marker1.png") no-repeat center;
+    }
+
+    .timeAxisUl li{
+        width: 100%;
+        display: flex;
+        color: #aaa;
+        flex-flow: row nowrap;
+    }
+
+    .timeAxisUl .time{
+        flex: 0 0 120px;
+        padding: 0px 5px 30px 10px;
+        text-align: right;
+        font-size: 13px;
+    }
+    .timeAxisUl .line{
+        width: 10px;
+        flex:0 0 10px;
+        border-right: 2px solid #aaa;
+    }
+
+    .timeAxisUl li:last-child .line{
+        border: none;
+    }
+    .timeAxisUl .line .point{
+        position: relative;
+        top: -1px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: url([[@{/}]]img/icon3.png) no-repeat center;
+    }
+    .timeAxisUl .content{
+        flex: 1 1 auto;
+        padding:0px 10px 30px 20px;
+    }
+    .timeAxisUl li.active{
+        color: #1890ff;
+        font-weight: bold;
+    }
+    .timeAxisUl li.active .line .point{
+        background: url([[@{/}]]img/icon1.png) no-repeat center;
+    }
+
+    .logisticsInfo table{
+        margin: 10px auto 20px;
+        font-size: 14px;
+        color: #555;
+        border-collapse: collapse;
+        border: 1px solid #7ecff0;
+    }
+
+    .logisticsInfo table th{
+        width: 100px;
+        padding: 0 10px;
+        background: #f7fefe;
+        text-align: center;
+    }
+    .logisticsInfo table td{
+        padding: 5px 10px;
+        width: 120px;
+    }
+    .logisticsLogo{
+        width: 50px;
+    }
+
+
+</style>
+
+
+
+<body>
+     <div class="container-div">
+
+         <div class="logisticsInfo">
+             <table border="1">
+                 <tr>
+                     <th><img class="logisticsLogo" th:src="@{/img/jd_express.jpg}" alt="" /></th><td class="expressno"></td>
+                     <th>收货地址</th><td colspan="3">[[${order.address}]]</td>
+                 </tr>
+                 <tr>
+                     <th>订单编号</th><td>[[${order.fdId}]]</td>
+                     <th>用户姓名</th><td>[[${order.realname}]]</td>
+                     <th>手机号码</th><td>[[${order.phone}]]</td>
+                 </tr>
+
+             </table>
+         </div>
+         <div class="timeAxisCont">
+             <ul class="timeAxisUl">
+                 <!--物流详情-->
+             </ul>
+         </div>
+
+
+
+
+     </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+
+        var orderId = location.pathname.substr(location.pathname.lastIndexOf('/')+1);
+        getLogisticsData()
+        var orderData = [[${order}]];
+        var orderLogisticsData = [[${orderLogistics}]];
+        function getLogisticsData(){
+            $.ajax({
+                url:'/mobile/getExpressTrace',
+                type:'post',
+                contentType: 'application/json',
+                data: JSON.stringify({orderid:orderId,servnumber: '',expressno:'',certid:'', telno:''}),
+                success:function(data){
+                    dealData(data);
+                }
+            })
+        }
+        //var result = '{"result":{"data":[{"remark":"null","telno":"16675530148","goods":"null","expressno":"JDVC03282160146","servnumber":"19872974018","orderid":"0QBJMQEMTEO9","traceinfo":[{"content":"货物已拒收，拒收原因：生鲜报废","operationtime":"2020-04-01 18:56:21"},{"content":"订单已再投，再投原因：【用户不方便办理】","operationtime":"2020-04-01 08:58:57"},{"content":"配送员开始配送，请您准备收货，配送员，徐南，手机号，13922876411","operationtime":"2020-04-01 08:50:12"},{"content":"订单已再投，再投原因：【用户不方便办理】","operationtime":"2020-03-31 20:46:19"},{"content":"配送员开始配送，请您准备收货，配送员，徐南，手机号，13922876411","operationtime":"2020-03-31 08:13:56"},{"content":"订单已再投，再投原因：【用户不方便办理】","operationtime":"2020-03-30 08:07:30"},{"content":"配送员开始配送，请您准备收货，配送员，徐南，手机号，13922876411","operationtime":"2020-03-30 08:05:45"},{"content":"订单已再投，再投原因：【用户不方便办理】","operationtime":"2020-03-29 16:55:31"},{"content":"配送员开始配送，请您准备收货，配送员，徐南，手机号，13922876411","operationtime":"2020-03-29 09:12:51"},{"content":"订单已再投，再投原因：【用户不方便办理】","operationtime":"2020-03-28 20:26:11"},{"content":"配送员开始配送，请您准备收货，配送员，徐南，手机号，13922876411","operationtime":"2020-03-28 06:53:27"},{"content":"运单无法正常派送，原因：【用户不方便现场办理】，已发起协商再投，待寄件方审核","operationtime":"2020-03-27 18:54:49"},{"content":"配送员开始配送，请您准备收货，配送员，徐南，手机号，13922876411","operationtime":"2020-03-27 08:14:37"},{"content":"货物已分配，等待配送","operationtime":"2020-03-27 07:19:32"},{"content":"货物已完成分拣，离开【深圳观澜分拨中心】","operationtime":"2020-03-27 05:10:41"},{"content":"货物已到达【深圳观澜分拨中心】","operationtime":"2020-03-27 04:53:32"}]}]},"respcode":"0","respdesc":"成功！","resptype":"0"}'
+        function dealData(result){
+            var data = JSON.parse(result);
+            if(data.respcode != '0') {
+                $.modal.msgWarning(data.respdesc);
+                return false;
+            };
+            var data = data.result.data[0];
+            $('.expressno').html(data.expressno);
+            var traceinfo = data.traceinfo;
+            var classStatus = '';
+            if((traceinfo[0].content).indexOf('签收')!= -1){
+                classStatus = 'end';
+            }
+            var time = '';
+            if(orderLogisticsData.finishTime){
+                time = orderLogisticsData.finishTime.replace(/['年','月']/g,'-').replace(/['时','分']/g,':').replace(/['日','秒']/g,'');
+                time = time.split(' ')[0] + '<br />' + time.split(' ')[1];
+            }
+            var html = '<div class="timeAxisHeader '+ classStatus +'">' +
+                       '    <div class="time">' + time + '</div>' +
+                       '    <div class="line"><div class="point"></div></div>' +
+                       '    <div class="content">收货地址：' + orderData.address +
+                       '    </div>' +
+                       '</div>'
+            for(var i=0; i<traceinfo.length; i++){
+                var active = '';
+                if(classStatus == '' && i == 0){
+                    active = 'active';
+                }
+                html += '<li class="'+ active +'">' +
+                     '    <div class="time">' +
+                              traceinfo[i].operationtime.split(' ')[0] +'<br />' + traceinfo[i].operationtime.split(' ')[1] +
+                     '    </div>' +
+                     '    <div class="line"><div class="point"></div></div>' +
+                     '    <div class="content">' + traceinfo[i].content +' </div>' +
+                     '</li>'
+            }
+            $('.timeAxisUl').html(html);
+        }
+    </script>
+</body>
+</html>
