@@ -17,41 +17,14 @@
                                     <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
                                 </select>
                             </li>
-                            <!--<li>-->
-                                <!--<p>套餐编码：</p>-->
-                                <!--<input type="text" name="pack"/>-->
-                            <!--</li>-->
                             <li>
                                 <p>真实姓名：</p>
                                 <input type="text" name="realname"/>
                             </li>
-                            <!--<li>-->
-                                <!--<p>联系方式：</p>-->
-                                <!--<input type="text" name="phone"/>-->
-                            <!--</li>-->
-                            <!--<li>-->
-                                <!--<p>证件类型：</p>-->
-                                <!--<select name="cardType" th:with="type=${@dict.getType('order_cardType')}">-->
-                                    <!--<option value="">所有</option>-->
-                                    <!--<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>-->
-                                <!--</select>-->
-                            <!--</li>-->
-                            <!--<li>-->
-                                <!--<p>证件号码：</p>-->
-                                <!--<input type="text" name="cardid"/>-->
-                            <!--</li>-->
                             <li>
                                 <p>省份：</p>
                                 <input type="text" name="province"/>
                             </li>
-                            <!--<li>-->
-                                <!--<p>地市编码：</p>-->
-                                <!--<input type="text" name="eparchycode"/>-->
-                            <!--</li>-->
-                            <!--<li>-->
-                                <!--<p>区县编码：</p>-->
-                                <!--<input type="text" name="citycode"/>-->
-                            <!--</li>-->
                             <li>
                                 <p>备注：</p>
                                 <input type="text" name="remark"/>
@@ -182,17 +155,24 @@
                 },
                 {
                     title: '操作',
-                    align: 'center',
-                    formatter: function(value, row, index) {
+                        align: 'center',
+                        formatter: function(value, row, index) {
                         var actions = [];
-                         actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.fdId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                         actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.fdId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        actions.push('<a class="btn btn-warning btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="logisticsDetail(\''+ row.fdId +'\',\''+row.status+'\')"><i class="fa fa-search"></i>物流详情</a> ');
                         return actions.join('');
-                    }
-                }]
+                }
+            }]
             };
             $.table.init(options);
         });
+
+        function logisticsDetail(orderId,status){
+            if(status==2||status==0){
+                $.modal.alertWarning("只能对下单成功的记录进行查询，请重新选择！");
+                return;
+            }
+            $.modal.open('订单物流详情',ctx + 'system/logistics/logisticsDetail/' + orderId );
+        }
     </script>
      <!-- 导入区域 -->
      <script id="importTpl" type="text/template">
