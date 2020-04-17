@@ -21,6 +21,7 @@ import com.ruoyi.system.service.MobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -52,6 +53,12 @@ public class MobileServiceImpl implements MobileService {
 
     @Autowired
     private IOrderService orderService;
+
+    @Value("${channel.wayid}")
+    private String wayid;
+
+    @Value("${channel.operatorId}")
+    private String operatorId;
 
     @Override
     public String queryChooseNumberColumn() {
@@ -158,10 +165,20 @@ public class MobileServiceImpl implements MobileService {
     }
 
     @Override
+    public String testReadValueChannel(String field) {
+        if(field!=null&&"wayid".equals(field)){
+            return wayid;
+        }else{
+            return operatorId;
+        }
+    }
+
+    @Override
     public String testGetUrl(String eumn) {
         System.out.println("标识：" + eumn);
         return mobileUrlMapper.selectMobileUrlByEumn(eumn).getUrl();
     }
+
 
 
 }

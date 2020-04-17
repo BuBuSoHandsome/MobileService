@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,12 @@ public class MobileResponseService {
 
     private static final Logger log = LoggerFactory.getLogger(MobileResponseService.class);
 
+
+    @Value("${channel.wayid}")
+    private String wayid;
+
+    @Value("${channel.operatorId}")
+    private String operatorId;
 
     @Resource
     private OrderMapper orderMapper;
@@ -240,14 +247,8 @@ public class MobileResponseService {
         QueryDiscountNumberListResponse queryDiscountNumberListResponse = this.getQueryDiscountNumberList(queryDiscountNumberListRequest);
 
         //渠道编码 工号必传
-//        newOrderParams.setWayid("GZ08EC200043");
-//        newOrderParams.setOperatorId("AGZZC1000YHJ");
-
-        /**
-         * 乐恒渠道
-         */
-        newOrderParams.setWayid("GZ00EC192561");
-        newOrderParams.setOperatorId("AGZC00000DRR");
+        newOrderParams.setWayid(wayid);
+        newOrderParams.setOperatorId(operatorId);
 
         //号码归属地市编码
         newOrderParams.setAreaCode("200");
@@ -299,6 +300,7 @@ public class MobileResponseService {
         newOrderParams.setOfferId(queryChooseNumberListResponse.getCommid());
 
         request.setNewOrderParams(newOrderParams);
+
         String jsonString = MobileUtil.getResponse(
                 MobileUrl.AirpickinstallnewOrder.getUrl(),
                 MobileUtil.getBodyByClass(request));

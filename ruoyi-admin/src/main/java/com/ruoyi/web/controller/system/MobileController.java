@@ -102,5 +102,10 @@ import org.springframework.web.bind.annotation.*;
         return mobileService.addBZCardOrder(order);
     }
 
+    @RequestMapping("testReadValueChannel")
+    public String testReadValueChannel(@RequestParam String field){
+        return mobileService.testReadValueChannel(field);
+    }
+
 
 }

@@ -455,22 +455,22 @@ public class testtest {
 //        System.out.println(MobileUtil.getBodyByClass(warnResult));
 
 
-
-        List<String> stringList = new LinkedList<>();
-
-        stringList.add("1");
-        stringList.add("2");
-        stringList.add("3");
-        stringList.add("4");
-        stringList.add("15");
-        stringList.add("16");
-        stringList.add("99");
-
-        Collections.reverse(stringList);
-
-        for (int i=0;i<stringList.size();i++){
-            System.out.println(stringList.get(i));
-        }
+//        集合倒序
+//        List<String> stringList = new LinkedList<>();
+//
+//        stringList.add("1");
+//        stringList.add("2");
+//        stringList.add("3");
+//        stringList.add("4");
+//        stringList.add("15");
+//        stringList.add("16");
+//        stringList.add("99");
+//
+//        Collections.reverse(stringList);
+//
+//        for (int i=0;i<stringList.size();i++){
+//            System.out.println(stringList.get(i));
+//        }
 
 
 
