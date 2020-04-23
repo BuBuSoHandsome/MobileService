@@ -14,6 +14,7 @@ import com.ruoyi.system.domain.mobileResponse.QueryChooseNumberListResponse;
 import com.ruoyi.system.mapper.OrderLogisticsMapper;
 import com.ruoyi.system.mapper.OrderMapper;
 import com.ruoyi.system.service.MobileService;
+import net.sf.ehcache.util.NamedThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -21,7 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component("mobileTask")
 public class MobileTask {
@@ -37,6 +42,53 @@ public class MobileTask {
     @Autowired
     private MobileService mobileService;
 
+    //内部任务类
+    class refreshOrderTask implements Callable<Integer> {
+
+        private List<String> orderIds;
+
+        public refreshOrderTask(List<String> orderIds){
+            this.orderIds = orderIds;
+        }
+
+        @Override
+        public Integer call() throws Exception {
+            Integer num = 0;
+            for (int i=0;i<orderIds.size();i++){
+                int finalI = i;
+                DSAirpickinstallQueryOrderResponse response = mobileService.getOrderMsg(
+                        new DSAirpickinstallQueryOrderRequest(){{ setOrderId(orderIds.get(finalI));
+                        }});
+
+                if(DateUtils.isLastTwoWeeks(response.getCreateTime())){
+                    //更新订单表状态 改为拒收状态
+                    orderMapper.updateOrder(new Order(){{
+                        setFdId(orderIds.get(finalI));
+                        setStatus("4");
+                    }});
+                }
+                if("激活成功".equals(response.getOrderRemark())){
+                    //更新订单表状态
+                    orderMapper.updateOrder(new Order(){{
+                        setFdId(orderIds.get(finalI));
+                        setStatus("3");
+                    }});
+                }
+                OrderLogistics orderLogistics = new OrderLogistics();
+                BeanUtils.copyProperties(response, orderLogistics);
+                orderLogistics.setFdId(orderIds.get(finalI));
+                orderLogisticsMapper.deleteOrderLogisticsById(orderIds.get(finalI));
+                int nums = orderLogisticsMapper.insertOrderLogistics(orderLogistics);
+                num += nums;
+            }
+            return num;
+        }
+    }
+
+
+    /**
+     * 通过线程池去创建线程异步更新 提升效率
+     */
     public void refreshOrderMsg(){
         List<String> orderIds = orderMapper.selectOrderIds(new Order(){{
             setStatus("1");
@@ -44,39 +96,29 @@ public class MobileTask {
         if(null == orderIds || orderIds.isEmpty()){
             return;
         }
-        Integer num = 0;
-        for (int i=0;i<orderIds.size();i++){
-            int finalI = i;
-            DSAirpickinstallQueryOrderResponse response = mobileService.getOrderMsg(
-                    new DSAirpickinstallQueryOrderRequest(){{ setOrderId(orderIds.get(finalI));
-                    }});
-
-            if(DateUtils.isLastTwoWeeks(response.getCreateTime())){
-                //更新订单表状态 改为拒收状态
-                orderMapper.updateOrder(new Order(){{
-                    setFdId(orderIds.get(finalI));
-                    setStatus("4");
-                }});
+        int stepNum = countStep(orderIds.size());
+        //通过分段拆分list
+        List<List<String>> splitList = Stream.iterate(0, n -> n + 1).
+                limit(stepNum).parallel().map(a -> orderIds.stream().skip(a * MAX_NUMBER).
+                limit(MAX_NUMBER).parallel().collect(Collectors.toList())).collect(Collectors.toList());
+        ThreadPoolExecutor pool = null;
+        try{
+            pool = new ThreadPoolExecutor(
+                    stepNum+1,stepNum+1 ,60L, TimeUnit.SECONDS,new ArrayBlockingQueue(orderIds.size()),new NamedThreadFactory("更新订单物流"));
+            ArrayList<Future<Integer>> futures = new ArrayList<>();
+            for(int i=0;i<splitList.size();i++){
+                refreshOrderTask refreshOrderTask = new refreshOrderTask(splitList.get(i));
+                Future<Integer> f = pool.submit(refreshOrderTask);
+                futures.add(f);
             }
-            if("激活成功".equals(response.getOrderRemark())){
-                //更新订单表状态
-                orderMapper.updateOrder(new Order(){{
-                    setFdId(orderIds.get(finalI));
-                    setStatus("3");
-                }});
-            }
-            OrderLogistics orderLogistics = new OrderLogistics();
-            BeanUtils.copyProperties(response, orderLogistics);
-            orderLogistics.setFdId(orderIds.get(finalI));
-            orderLogisticsMapper.deleteOrderLogisticsById(orderIds.get(finalI));
-            int nums = orderLogisticsMapper.insertOrderLogistics(orderLogistics);
-            num += nums;
+            log.info("本次成功更新 "+orderIds.size()+" 物流记录，详情请查询系统日志");
+        }finally {
+            pool.shutdown();
         }
-        log.info("本次成功更新 "+num+" 物流记录，详情请查询系统日志");
     }
 
 
-    public void installBZOrder(){
+    public void installBzOrder(){
         JSONObject queryChooseNumberListString = JSONObject.parseObject(
                 MobileUtil.getResponse(
                         MobileUrl.QueryChooseNumberList.getUrl(),
@@ -117,4 +159,17 @@ public class MobileTask {
         }
         log.info("本次下单 "+orderList.size()+" 记录，成功"+ num +"条，详情请查询系统日志");
     }
+
+
+    private static final Integer MAX_NUMBER =  30;
+
+    private static Integer countStep(Integer size){
+        if(size<=0){
+            throw  new RuntimeException();
+        }
+        return (size+MAX_NUMBER -1)/MAX_NUMBER;
+    }
 }
+
+
+
