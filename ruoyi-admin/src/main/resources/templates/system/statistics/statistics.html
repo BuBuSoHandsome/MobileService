@@ -2,98 +2,533 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <th:block th:include="include :: header('数据统计')" />
-
     <th:block th:include="include :: select2-css" />
-
     <link rel="stylesheet" th:href="@{/css/statistics/statistics.css}">
-
 </head>
-
-
-
-<body class="gray-bg">
-<div style="padding: 10px 20px;">
-
-     <div class="row">
-         <div class="col-sm-12">
-             <div class="xy-panel xy-panel-success">
-                 <div class="xy-panel-heading">
-                     全国各省订单统计
-                 </div>
-                 <div class="xy-panel-body">
-                     <div class="ctrl-btn">
-                         <div class="input-group date" style="width: 140px;">
-                             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                             <input type="text" class="form-control" id="order-date" placeholder="yyyy-MM">
-                         </div>
-                     </div>
-                     <div class="echart" id="provinceOrderChart" style="width: 100%;height: 300px;">
-                     </div>
-                 </div>
-             </div>
-         </div>
+<body>
+<div>
+    <div style="position: absolute;top: 1px;right: 10px;vertical-align: center;z-index: 2;">
+        <a class="btn btn-success btn-outline btn-xs" onclick="statistics2()">切换统计模式</a>
     </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="xy-panel xy-panel-success">
-                <div class="xy-panel-heading">订单成交统计</div>
-                <div class="xy-panel-body">
-                    <div class="ctrl-btn">
-                        <div class="input-group date" style="width: 140px;">
-                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <input type="text" class="form-control" id="orderTrend-date" placeholder="yyyy">
-                        </div>
-                        <div>
-                            <select id="provinceSelect">
-                                <option value="">全部</option>
-                                <option th:each="province:${province}" th:text="${province.name}" th:value="${province.code}"></option>
-                            </select>
-                        </div>
+    <div class="fixed-head">
+        <div class="require-choose">
+            <div class="require-item">
+                <div class="time-group">
+                    <div class="btn-group">
+                        <a class="fast-day btn-item" type="today">今天</a>
+                        <a class="fast-day btn-item" type="yestoday">昨天</a>
+                        <a class="fast-day btn-item" type="day7">过去7天</a>
+                        <a class="fast-day btn-item" type="day30">过去30天</a>
                     </div>
-                    <div id="orderTrend" class="echart" style="width: 100%;height: 300px;"></div>
+                    <input type="text" class="form-control" id="date" placeholder="开始 到 结束" style="min-width: 160px;">
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="xy-panel xy-panel-success">
-                <div class="xy-panel-heading">订单状态统计</div>
-                <div class="xy-panel-body">
-                    <div class="ctrl-btn">
-                        <div class="input-group date" style="width: 140px;">
-                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <input type="text" class="form-control" id="order-status-date" placeholder="yyyy-MM">
-                        </div>
-                    </div>
-                    <div class="echart" id="orderStatusChart"  style="width: 100%;height: 300px;"></div>
+            <div class="require-item">
+                <div class="area-con">
+                    <span class="text">地区选择</span>
+                    <select name="provinceSelect" id="provinceSelect" class="select2">
+                        <option value="">全国</option>
+                        <option th:each="province:${province}" th:text="${province.name}" th:value="${province.code}"></option>
+                    </select>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="xy-panel xy-panel-success">
-                <div class="xy-panel-heading">下单时间段统计</div>
-                <div class="xy-panel-body">
-                    <div class="ctrl-btn">
-                        <div class="input-group date" style="width: 240px;">
-                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <input type="text" class="form-control" id="hour-date" placeholder="yyyy-MM-dd yyyy-MM-dd">
-                        </div>
-                    </div>
-                    <div id="hourChart" class="echart" style="width: 100%;height: 300px;"></div>
-                </div>
+            <div class="require-item search-group">
+                <a class="btn btn-warning" onclick="clearForm();">清除</a>
+                <a class="btn btn-primary" onclick="getChartData()">统计</a>
             </div>
         </div>
     </div>
+    <div class="chart-container">
+        <div class="chart-wrap">
+            <div class="chart-wrap-item">
+                <div class="chart" id="province-chart"></div>
+            </div>
+        </div>
+        <div class="chart-wrap">
+            <div class="chart-wrap-item">
+                <div class="chart" id="order-status-chart"></div>
+            </div>
 
-
+            <div class="chart-wrap-item">
+                <div class="chart" id="hour-chart"></div>
+            </div>
+            <div class="chart-wrap-item">
+                <div class="chart" id="simType"></div>
+            </div>
+        </div>
+    </div>
 </div>
     <th:block th:include="include :: footer" />
     <th:block th:include="include :: select2-js" />
     <th:block th:include="include :: echarts-js" />
     <script th:src="@{/ajax/libs/report/echarts/macarons.js}"></script>
-    <script th:src="@{/js/statistics/statistics.js}"></script>
 
     <script th:inline="javascript">
+        var prefix = ctx + "system/statistics";
+
+        $(function () {
+            $('#provinceSelect').select2();
+            layui.use('laydate', function() {
+                var laydate = layui.laydate;
+                laydate.render({
+                    elem: '#date',
+                    max: new Date().getTime(),
+                    range: true,
+                    theme: 'molv',
+                });
+            });
+            dayItem();
+            //$('.fast-day').eq(3).click();
+            getChartData();
+        });
+        function statistics2(){
+            location.href = prefix + '/statistics2';
+        }
+
+        function getFromData(){
+            var date = $('#date').val();
+            var provinceName = $('#provinceSelect').find('option:selected').text();
+            var startTime = '', endTime = '',endTime2 = '';
+            if(date != ''){
+                startTime = date.split(' - ')[0];
+                endTime2 = date.split(' - ')[1];
+                var end =  new Date(new Date(endTime2).getTime()+ 60*60*24*1000);
+                endTime = dateFt('yyyy-MM-dd',end);
+            }
+            return {
+                startTime:startTime,
+                endTime:endTime,
+                endTimeShow:endTime2,
+                provinceId:$('#provinceSelect').val(),
+                provinceName:provinceName=='全国'?'':provinceName,
+            }
+        }
+
+        function clearForm(){
+            $('.fast-day').removeClass('active');
+            $('#date').val('');
+            $('#provinceSelect').val('').select2();
+        }
+
+        function dayItem(){
+            $('.fast-day').on('click',function(){
+                $(this).addClass('active').siblings().removeClass('active');
+                var type = $(this).attr('type');
+                var today = new Date();
+                var startTime = '';
+                var endTime = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+                switch (type) {
+                    case 'today':
+                        $('#date').val(getBefortDay(0) + ' - ' + getBefortDay(0));
+                        break;
+                    case 'yestoday':
+                        $('#date').val(getBefortDay(1) + ' - ' + getBefortDay(1));
+                        break;
+                    case 'day7':
+                        $('#date').val(getBefortDay(8) + ' - ' + getBefortDay(1));
+                        break;
+                    case 'day30':
+                        $('#date').val(getBefortDay(31) + ' - ' + getBefortDay(1));
+                        break;
+                }
+            });
+        }
+        function getBefortDay(num,day){
+            day = day || new Date();
+            var beforeDay = new Date(day.getTime() - 60*60*24*1000 * num);
+            return dateFt('yyyy-MM-dd',beforeDay);
+        }
+
+        function getChartData() {
+            console.log(getFromData())
+            $.ajax({
+                url:prefix + '/allChartData',
+                type:'get',
+                data:getFromData(),
+                success:function(data){
+                    //console.log(data);
+                    provinceOrderChart(data.eachProvince);
+                    orderStatusChart(data.orderChart,data.orderLChart);
+                    hourChart(data.eachHour);
+                    simTypeChart(data.simType);
+                }
+            });
+        }
+
+        //全国各省统计
+        function provinceOrderChart(eachProvince){
+            var provinceArr = [];
+            var bd = [],bgData = [];
+            $.each(eachProvince,function(idx,item){
+                provinceArr.push({value:item.num,name:item.name,id:item.code});
+                bd.push(item.num);
+            });
+            var max = Math.max.apply(null, bd);
+            for (var i = 0; i < bd.length; i++) {
+                bgData.push(max); //取得最大值
+            }
+            var startTime = getFromData().startTime,endTime = getFromData().endTimeShow;
+            var provinceOrderChart = echarts.init(document.getElementById('province-chart'));
+            var option = {
+                title:{
+                    text:'全国各省订单统计',
+                    subtext:(startTime == endTime)?endTime:startTime+ ' ~ ' + endTime,
+                    itemGap:3,
+                    x:'center',
+                    textStyle:{
+                        fontSize: '15',
+                        color:'#444',
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'line'
+                    },
+                    formatter:function(params) {
+                        return '<div><span style="width:8px;height: 8px;display:inline-block;border-radius: 50%;background: '+ params[1].color +';"></span> '+params[1].name + ': ' + params[1].value+' 单</div>';
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 30
+                    },
+                    data:  (function(data) {
+                        var arr = [];
+                        data.forEach(function(items) {
+                            arr.push(items.name);
+                        });
+                        return arr;
+                    })(provinceArr)
+                },
+                yAxis: {
+                    type: 'value',
+                    max:max,
+                    splitNumber : 10,
+                    splitLine: {
+                        show: false, // 是否显示分割线
+                    }
+                },
+                grid:{
+                    top:40,
+                    left:50,
+                    right:30
+                },
+                series: [
+                    {
+                        type: 'bar',
+                        barGap: "-100%",
+                        label: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                color: '#f3f3f3'
+                            },
+                            emphasis: {
+                                color: '#f3f3f3'
+                            },
+                        },
+
+                        data:bgData, // 载入背景数据
+                        z: 0
+                    },
+                    {
+                        type: 'bar',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'inside',
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                color: function(params) {
+                                    var colorList = ['#60c3f7','#60ebf7','#60f7cb','#60f79c','#c0f760','#f5f760','#f7d260','#f760d5','#6080f7','#f760f2','#c760f7','#9560f7','#60a3f7','#e316f0','#ab16f0','#6816f0','#1672f0','#16c9f0','#16f0d9','#16f091','#16f05e','#a6f016','#f0de16','#f0bf16','#f06816','#f0168c','#f016d9','#ba16f0','#6816f0','#04c6e3','#04e3b1'];
+                                    return colorList[params.dataIndex]
+                                },
+                            }
+                        },
+                        data: provinceArr,
+                        z: 1
+                    }
+                ]
+            };
+            provinceOrderChart.setOption(option);
+            $(window).resize(provinceOrderChart.resize);
+        }
+
+
+
+        //订单状态统计
+        function orderStatusChart(orderData,orderLData){
+            var order = [], orderL = [];
+            $.each(orderData,function(idx,item){
+                order.push({value:item.num,name:item.statusName,id:item.statusId})
+            });
+            $.each(orderLData,function(idx,item){
+                orderL.push({value:item.num,name:item.status});
+            });
+            var startTime = getFromData().startTime,endTime=getFromData().endTimeShow;
+            var area = getFromData().provinceName?getFromData().provinceName:'全国';
+            var orderStatusChart = echarts.init(document.getElementById('order-status-chart'));
+            var option = {
+                title:{
+                    text:'订单与物流状态',
+                    subtext:(startTime==endTime?endTime:startTime+'~' + endTime) + ' 地区：'+ area,
+                    itemGap:3,
+                    x:'center',
+                    textStyle:{
+                        fontSize: '15',
+                        color:'#444',
+                    }
+                },
+                color: ['#2ec7c9', '#b6a2de', '#ffb980', '#5ab1ef', '#d87a80','#588dd5', '#FFEA01', '#B8D07C', '#fca4bb', '#dc69aa'],
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                },
+                series: [
+                    {
+                        name: '订单状态',
+                        type: 'pie',
+                        radius: ['60%', '75%'],
+                        center: ['50%', '60%'],
+                        data: order,
+                        label: {
+                            normal: {
+                                formatter: '{b}：{c}单\n占比：{d}%',
+                            }
+                        },
+                    },
+                    {
+
+                        name: '订单物流状态',
+                        type: 'pie',
+                        radius: [0, '50%'],
+                        center: ['50%', '60%'],
+                        itemStyle: {
+                            normal: {
+                                borderColor: '#ccc',
+                                borderWidth: 2
+                            }
+                        },
+                        label: {
+                            normal: {
+                                position: 'inner',
+                                formatter: '{b}：{c}单\n占比：{d}%'
+                            }
+                        },
+                        data: orderL
+                    }
+                ]
+            };
+            orderStatusChart.setOption(option);
+            $(window).resize(orderStatusChart.resize);
+        }
+
+        function hourChart(data){
+            var hourData = [];
+            $.each(data,function(idx,item){
+                hourData.push({name:item.hour+'点',value:item.num})
+            });
+            var chart = echarts.init(document.getElementById('hour-chart'),'macarons');
+            var startTime = getFromData().startTime,endTime=getFromData().endTimeShow;
+            var area = getFromData().provinceName?getFromData().provinceName:'全国';
+            var hasData = (data.length!=0);
+            var option = {
+                title: {
+                    textStyle: {
+                        fontSize: hasData?15:20,
+                        color:'#444',
+                    },
+                    itemGap:3,
+                    subtext:(startTime==endTime?endTime:startTime+'~' + endTime) + ' 地区：'+ area,
+                    text: hasData?'各时段下单统计':'暂无数据',
+                    left: 'center',
+                    top: hasData?'':'center',
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'line'
+                    }
+                },
+                xAxis: {
+                    show:hasData,
+                    type: 'category',
+                    name:'时段',
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 40
+                    },
+                    data: (function(data) {
+                        var arr = [];
+                        data.forEach(function(items) {
+                            arr.push(items.name);
+                        });
+                        return arr;
+                    })(hourData)
+                },
+                yAxis: {
+                    show: hasData,
+                    type: 'value',
+                    name:'订单量',
+                    splitNumber : 10,
+                    splitLine: {
+                        show: true, // 是否显示分割线
+                    }
+                },
+                grid:{
+                    top:50,
+                    left:60,
+                    right:60
+                },
+                series: [{
+                    data: hourData,
+                    type: 'bar',
+                    color:'#a37df0',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'inside'
+                        }
+                    },
+                    markLine: {
+                        lineStyle:{
+                            color:'#f0883f',
+                            width:2,
+                        },
+                        data: [
+                            {type: 'average', name: '平均值',label: {formatter: '{b}:{c}'}}
+                        ]
+                    }
+                }]
+            };
+            chart.setOption(option);
+            $(window).resize(chart.resize);
+        }
+
+        function simTypeChart(data){
+            var nameArr = [],allNum = [], successNum = [],successRate = [];
+            for(var i=0; i<data.length; i++){
+                nameArr.push(data[i].text);
+                allNum.push(data[i].allNum);
+                successNum.push(data[i].successNum);
+                successRate.push(data[i].allNum=='0'?0:Number((data[i].successNum/data[i].allNum).toFixed(2)*100))
+            }
+            var chart = echarts.init(document.getElementById('simType'),'macarons');
+            var startTime = getFromData().startTime,endTime = getFromData().endTimeShow;
+            var area = getFromData().provinceName?getFromData().provinceName:'全国';
+            var option = {
+                title:{
+                    text:'套餐卡类型订单统计',
+                    subtext:(startTime==endTime?endTime:startTime+'~' + endTime) + ' 地区：'+ area,
+                    itemGap:3,
+                    x:'center',
+                    textStyle:{
+                        fontSize: '15',
+                        color:'#444',
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    },
+                    formatter:function(params) {
+                        var h = '<div>'+params[0].name+'</div>\n' +
+                            '<div> <span style="width:8px;height: 8px;display:inline-block;border-radius: 50%;background:'+params[0].color+';"></span>'+ params[0].seriesName+ '：'+ params[0].data +'</div>\n' +
+                            '<div> <span style="width:8px;height: 8px;display:inline-block;border-radius: 50%;background:'+params[1].color+';"></span>'+ params[1].seriesName+ '：'+ params[1].data +'</div>\n' +
+                            '<div> <span style="width:8px;height: 8px;display:inline-block;border-radius: 50%;background:'+params[2].color+';"></span>'+ params[2].seriesName+ '：'+ params[2].data +'%</div>\n'
+                        return h;
+                    }
+                },
+                legend: {
+                    type: 'scroll',
+                    right: 0
+                },
+                xAxis: {
+                    type: 'category',
+                    name:'套餐类型',
+                    nameGap :30,
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 20
+                    },
+                    data: nameArr
+                },
+                yAxis:[
+                    {
+                        type: 'value',
+                        name: '订单量',
+                        axisLabel: {
+                            formatter: '{value}'
+                        }
+                    },
+                    {
+                        type: 'value',
+                        name: '成功率',
+                        min:0,
+                        max:100,
+                        axisLabel: {
+                            formatter: '{value}%'
+                        }
+                    }
+
+                ],
+                series: [
+                    {
+                        name:'总订单量',
+                        data: allNum,
+                        color:'#596fb3',
+                        type: 'bar',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'insideTop',
+                            }
+                        }
+                    },
+                    {
+                        name:'订单成功量',
+                        data: successNum,
+                        color:'#1ab394',
+                        type: 'bar',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'insideTop',
+                            }
+                        }
+                    },
+                    {
+                        name:'订单成功率',
+                        data: successRate,
+                        color:'#f7a54a',
+                        yAxisIndex: 1,
+                        type: 'line',
+                        smooth:true,
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'top',
+                                formatter: '{c}%',
+                            }
+                        },
+                    },
+
+                ]
+            };
+
+
+            chart.setOption(option);
+            $(window).resize(chart.resize);
+        }
 
 
 

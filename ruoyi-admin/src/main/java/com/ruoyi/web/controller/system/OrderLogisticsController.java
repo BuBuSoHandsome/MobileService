@@ -37,9 +37,6 @@ public class OrderLogisticsController extends BaseController
     @Autowired
     private IOrderLogisticsService orderLogisticsService;
 
-    @Autowired
-    private IOrderService orderService;
-
     @RequiresPermissions("system:logistics:view")
     @GetMapping()
     public String logistics()
@@ -129,19 +126,5 @@ public class OrderLogisticsController extends BaseController
     {
         return toAjax(orderLogisticsService.deleteOrderLogisticsByIds(ids));
     }
-
-    /*
-    * 查看订单物流详情
-    * */
-    @GetMapping("/logisticsDetail/{orderId}")
-    public String logisticsDetail(@PathVariable("orderId") String orderId, ModelMap mmap)
-    {
-        Order order = orderService.selectOrderById(orderId);
-        OrderLogistics orderLogistics = orderLogisticsService.selectOrderLogisticsById(orderId);
-        mmap.put("orderLogistics", orderLogistics);
-        mmap.put("order",order);
-        return prefix + "/logisticsDetail";
-    }
-
 
 }

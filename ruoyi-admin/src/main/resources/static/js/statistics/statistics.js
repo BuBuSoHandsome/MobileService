@@ -123,9 +123,31 @@ function provinceOrderChart(provinceName,provinceNum){
                     position: 'top'
                 }
             },
-            backgroundStyle: {
+            /*backgroundStyle: {
                 color: 'rgb(220, 220, 220)'
-            }
+            },*/
+            itemStyle: {
+                normal: {
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1, // 相当于2点的位置 A(0, 0)  B(1, 0)
+                        [
+                            {offset: 0, color: '#5ee4f8'}, // 柱图渐变色
+                            {offset: 0.5, color: '#2cc3f8'}, // 柱图渐变色
+                            {offset: 1, color: '#1e97f8'}, // 柱图渐变色
+                        ]
+                    )
+                },
+                emphasis: {
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1,
+                        [
+                            {offset: 0, color: '#1e97f8'}, // 柱图高亮渐变色
+                            {offset: 0.7, color: '#2cc3f8'}, // 柱图高亮渐变色
+                            {offset: 1, color: '#5ee4f8'} // 柱图高亮渐变色
+                        ]
+                    )
+                }
+            },
         }]
     };
     provinceOrderChart.setOption(option);
@@ -270,10 +292,10 @@ function orderTrendChart(date,num){
                 saveAsImage: {show: true}
             }
         },
-        legend: {
+       /* legend: {
             bottom:0,
             data: ['订单量', '增长率']
-        },
+        },*/
         xAxis: [
             {
                 type: 'category',
@@ -283,6 +305,7 @@ function orderTrendChart(date,num){
                 },
                 axisLabel: {
                     interval: 0,
+                    rotate: 30
                 },
                 axisLine:{
                     show:true,
@@ -299,13 +322,13 @@ function orderTrendChart(date,num){
                     formatter: '{value}'
                 }
             },
-            {
+            /*{
                 type: 'value',
                 name: '增长率',
                 axisLabel: {
                     formatter: '{value}%'
                 }
-            },
+            },*/
 
         ],
         series: [
@@ -320,7 +343,7 @@ function orderTrendChart(date,num){
                 },
                 data: num,
             },
-            {
+            /*{
                 name: '增长率',
                 type: 'line',
                 smooth: true,
@@ -339,7 +362,7 @@ function orderTrendChart(date,num){
                         return  (((item - num[i-1])/num[i-1])*100).toFixed(1);
                     }
                 })
-            },
+            },*/
         ]
     };
     orderTrend.setOption(option);

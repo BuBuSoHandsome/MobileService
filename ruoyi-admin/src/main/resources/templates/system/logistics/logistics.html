@@ -180,7 +180,7 @@
                     field : 'expressno', 
                     title : '物流单号'
                 },
-                {
+                /*{
                     title: '操作',
                     align: 'center',
                     formatter: function(value, row, index) {
@@ -188,16 +188,10 @@
                         actions.push('<a class="btn btn-warning btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="logisticsDetail(\''+ row.orderId +'\')"><i class="fa fa-search"></i>物流详情</a> ');
                         return actions.join('');
                     }
-                }]
+                }*/]
             };
             $.table.init(options);
         });
-
-
-
-        function logisticsDetail(orderId){
-            $.modal.open('订单物流详情',prefix + '/logisticsDetail/' + orderId );
-        }
     </script>
 </body>
 </html>

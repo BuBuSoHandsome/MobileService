@@ -15,4 +15,7 @@ public interface IStatisticsService {
 
     public List<Map<String,Object>> getProvinceList();
 
+
+    public Map<String,Object>getAllChartData(String startTime, String endTime, String provinceId,String provinceName);
+
 }

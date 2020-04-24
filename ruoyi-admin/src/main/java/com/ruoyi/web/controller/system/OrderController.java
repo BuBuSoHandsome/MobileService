@@ -4,9 +4,11 @@ import java.util.List;
 
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.ChooseNumberColumn;
+import com.ruoyi.system.domain.OrderLogistics;
 import com.ruoyi.system.domain.mobileRequest.DSAirpickinstallQueryOrderRequest;
 import com.ruoyi.system.domain.mobileResponse.DSAirpickinstallQueryOrderResponse;
 import com.ruoyi.system.mapper.ChooseNumberColumnMapper;
+import com.ruoyi.system.service.IOrderLogisticsService;
 import com.ruoyi.system.service.MobileService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,9 @@ public class OrderController extends BaseController
 
     @Autowired
     private MobileService mobileService;
+
+    @Autowired
+    private IOrderLogisticsService orderLogisticsService;
 
     @Resource
     private ChooseNumberColumnMapper chooseNumberColumnMapper;
@@ -196,6 +201,21 @@ public class OrderController extends BaseController
     {
         ExcelUtil<Order> util = new ExcelUtil<Order>(Order.class);
         return util.importTemplateExcel("线上放号订单数据");
+    }
+
+    /*
+     * 查看订单物流详情
+     * */
+
+    //@RequiresPermissions("system:order:logisticsDetail")
+    @GetMapping("/logisticsDetail/{orderId}")
+    public String logisticsDetail(@PathVariable("orderId") String orderId, ModelMap mmap)
+    {
+        Order order = orderService.selectOrderById(orderId);
+        OrderLogistics orderLogistics = orderLogisticsService.selectOrderLogisticsById(orderId);
+        mmap.put("orderLogistics", orderLogistics);
+        mmap.put("order",order);
+        return prefix + "/logisticsDetail";
     }
 
 

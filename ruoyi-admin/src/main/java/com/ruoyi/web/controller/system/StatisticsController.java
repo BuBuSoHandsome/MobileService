@@ -29,6 +29,14 @@ public class StatisticsController {
         return prefix + "/statistics";
     }
 
+    //@RequiresPermissions("system:statistics2:view")
+    @GetMapping("/statistics2")
+    public String statistics2(ModelMap mmap)
+    {
+        mmap.put("province", iStatisticsService.getProvinceList());//全国各省的数据
+        return prefix + "/statistics2";
+    }
+
 
     /*
     * 全国各省订单统计
@@ -64,6 +72,13 @@ public class StatisticsController {
     @ResponseBody
     public List<Map<String,Object>> orderTrend(String year,String provinceId,String provinceName){
         return iStatisticsService.orderTrend(year,provinceName);
+    }
+
+
+    @GetMapping("/allChartData")
+    @ResponseBody
+    public Map<String,Object>allChartData(String startTime, String endTime, String provinceId,String provinceName){
+        return iStatisticsService.getAllChartData(startTime,endTime,provinceId,provinceName);
     }
 
 }

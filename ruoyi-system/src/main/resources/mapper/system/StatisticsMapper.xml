@@ -59,5 +59,127 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="getProvinceList" resultType="java.util.Map">
         select * from address_code where type = '1' ORDER BY code
     </select>
-    
+
+
+    <select id="getEachProvinceChart" parameterType="String" resultType="java.util.Map">
+        select t1.code,t1.name, IFNULL(t2.num,0) num from address_code t1
+        left join
+        (
+            select province ,count(province) num from `order`
+            <where>
+                <if test="startTime !='' and startTime != null">
+                    and create_time >= #{startTime}
+                </if>
+                <if test="endTime !='' and endTime != null">
+                    and create_time &lt; #{endTime}
+                </if>
+            </where>
+            group by province
+        ) t2 on t1.name = t2.province
+        where t1.type = '1'
+        order by t1.code
+    </select>
+
+
+
+
+    <select id="getOrderStatusChart" parameterType="String" resultType="java.util.Map">
+        select t1.dict_value statusId ,t1.dict_label statusName,ifnull(t2.num,0)num from sys_dict_data t1
+        left join
+        (
+            select count(status) num, status from `order`
+            <where>
+                <if test="startTime !='' and startTime != null">
+                    and create_time >= #{startTime}
+                </if>
+                <if test="endTime !='' and endTime != null">
+                    and create_time &lt; #{endTime}
+                </if>
+                <if test="provinceName !='' and provinceName != null">
+                    and province = #{provinceName}
+                </if>
+            </where>
+            GROUP BY status
+        ) t2 on t1.dict_value = t2.status
+        where dict_type = 'order_status'
+        order by t1.dict_value
+    </select>
+
+    <select id="orderLogisticsStatusChart" parameterType="String" resultType="java.util.Map">
+          select t1.order_status status ,count(order_status) num from order_logistics t1
+          left join `order` t2 on t1.order_id = t2.fd_id
+        <where>
+            <if test="startTime !='' and startTime != null">
+                and t1.create_time >= #{startTime}
+            </if>
+            <if test="endTime !='' and endTime != null">
+                and t1.create_time &lt; #{endTime}
+            </if>
+            <if test="provinceName !='' and provinceName != null">
+                and t2.province = #{provinceName}
+            </if>
+        </where>
+          group by order_status
+    </select>
+
+
+
+    <select id="getEachhourChart" parameterType="String" resultType="java.util.Map">
+        select (case hour(create_time) when 0 then 24 else hour(create_time) end) hour,count(*) num
+        FROM `order`
+        <where>
+            <if test="startTime !='' and startTime != null">
+                and create_time >= #{startTime}
+            </if>
+            <if test="endTime !='' and endTime != null">
+                and create_time &lt; #{endTime}
+            </if>
+            <if test="provinceName !='' and provinceName != null">
+                and province = #{provinceName}
+            </if>
+        </where>
+        group by hour(create_time) order by hour;
+    </select>
+
+
+    <select id="simTypeChart" parameterType="String" resultType="java.util.Map">
+        select t1.text , t1.pack, IFNULL(allNum,0)allNum, IFNULL(successNum,0)successNum from choose_number_column t1
+        left join
+        (
+            select pack,count(pack) allNum from `order`
+            <where>
+                <if test="startTime !='' and startTime != null">
+                    and create_time >= #{startTime}
+                </if>
+                <if test="endTime !='' and endTime != null">
+                    and create_time &lt; #{endTime}
+                </if>
+                <if test="provinceName !='' and provinceName != null">
+                    and province = #{provinceName}
+                </if>
+            </where>
+            group by pack
+
+        )t2 on t1.pack = t2.pack
+        left join
+        (
+            select pack, count(*)successNum from `order`
+            <where>
+                status = '1'
+                <if test="startTime !='' and startTime != null">
+                    and create_time >= #{startTime}
+                </if>
+                <if test="endTime !='' and endTime != null">
+                    and create_time &lt; #{endTime}
+                </if>
+                <if test="provinceName !='' and provinceName != null">
+                    and province = #{provinceName}
+                </if>
+            </where>
+            group by pack
+        ) t3 on t1.pack = t3.pack
+
+    </select>
+
+
 </mapper>
