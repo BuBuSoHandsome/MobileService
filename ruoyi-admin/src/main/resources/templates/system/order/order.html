@@ -155,23 +155,30 @@
                 },
                 {
                     title: '操作',
-                        align: 'center',
-                        formatter: function(value, row, index) {
+                    align: 'center',
+                    formatter: function(value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-warning btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="logisticsDetail(\''+ row.fdId +'\',\''+row.status+'\')"><i class="fa fa-search"></i>物流详情</a> ');
+                        var status = row.status;
+                        if(status == 1 || status == 3 || status == 4) {
+                            actions.push('<a class="btn btn-warning btn-xs" href="javascript:void(0)" onclick="logisticsDetail(\'' + row.fdId + '\')"><i class="fa fa-search"></i>物流详情</a> ');
+                        }
                         return actions.join('');
-                }
-            }]
+                    }
+                }]
             };
             $.table.init(options);
         });
 
-        function logisticsDetail(orderId,status){
+       /* function logisticsDetail(orderId,status){
             if(status==2||status==0){
                 $.modal.alertWarning("只能对下单成功的记录进行查询，请重新选择！");
                 return;
             }
             $.modal.open('订单物流详情',ctx + 'system/logistics/logisticsDetail/' + orderId );
+        }*/
+
+        function logisticsDetail(orderId){
+            $.modal.open('订单物流详情',prefix + '/logisticsDetail/' + orderId );
         }
     </script>
      <!-- 导入区域 -->
