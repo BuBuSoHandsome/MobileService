@@ -34,7 +34,7 @@ import java.util.UUID;
 
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class MobileResponseService {
 
     private static final Logger log = LoggerFactory.getLogger(MobileResponseService.class);
@@ -58,13 +58,16 @@ public class MobileResponseService {
     @Autowired
     private RedisUtil redisUtil;
 
+    private static String SUCCESS_CODE = "0";
+    
+
     public QueryDiscountNumberListResponse getQueryDiscountNumberList(QueryDiscountNumberListRequest request){
         String jsonString = MobileUtil.getResponse(
                 MobileUrl.QueryDiscountNumberList.getUrl(),
                 MobileUtil.getBodyByClass(request));
-        JSONObject jsonObj = JSONObject.parseObject(jsonString);//转JSONObject对象
+        JSONObject jsonObj = JSONObject.parseObject(jsonString);
         String brand = JSONObject.parseObject(jsonObj.getString("result")).getString("brand") ;
-        if(null==jsonObj.getString("respcode")||!"0".equals(jsonObj.getString("respcode"))){
+        if(null==jsonObj.getString("respcode")||!SUCCESS_CODE.equals(jsonObj.getString("respcode"))){
             log.info("查询选号查询号码可选优惠异常:"+jsonObj.toJSONString());
         }
         String infos = JSONObject.parseObject(jsonObj.getString("result")).getString("infos").replaceAll("\\[","").replaceAll("\\]","");
@@ -91,7 +94,7 @@ public class MobileResponseService {
                         MobileUtil.getBodyByClass(request)));
         //获取选号号码列表失败
         if(null==queryChooseNumberListString||null==queryChooseNumberListString.getString("respcode")
-                ||!"0".equals(queryChooseNumberListString.getString("respcode"))){
+                ||!SUCCESS_CODE.equals(queryChooseNumberListString.getString("respcode"))){
             log.info("查询选号号码列表异常:"+queryChooseNumberListString.toJSONString());
         }
         List<QueryChooseNumberListResponse> numberLists = JSONArray.parseArray(JSONObject.parseObject(
@@ -126,7 +129,7 @@ public class MobileResponseService {
                 MobileUtil.getBodyByClass(request));
         JSONObject jsonObject = JSONObject.parseObject(jsonString);
         //0 可以配送 1 无法配送
-        if(null!=jsonObject && "0".equals(jsonObject.getString("respcode")) && "可以京配".equals(jsonObject.getString("respdesc"))){
+        if(null!=jsonObject && SUCCESS_CODE.equals(jsonObject.getString("respcode")) && "可以京配".equals(jsonObject.getString("respdesc"))){
             response.setCode("0");
             response.setMsg("可以京配");
             return response;
@@ -143,8 +146,7 @@ public class MobileResponseService {
                 MobileUrl.ChooseNumberBusiness.getUrl(),
                 MobileUtil.getBodyByClass(request));
         JSONObject jsonObject = JSONObject.parseObject(jsonString);
-//        System.out.println("状态码："+jsonObject.getString("respcode"));
-        if(null == jsonObject.getString("respcode") || !"0".equals(jsonObject.getString("respcode"))){
+        if(null == jsonObject.getString("respcode") || !SUCCESS_CODE.equals(jsonObject.getString("respcode"))){
             log.info("查询放号单品业务信息能力异常:"+jsonObject.toJSONString());
         }
         String infos = jsonObject.getJSONObject("result").getString("businessinfo").replaceAll("\\[","").replaceAll("\\]","");
@@ -169,13 +171,12 @@ public class MobileResponseService {
         String body = MobileUtil.getBodyByClass(request);
         String jsonString = MobileUtil.getResponse(url, body);
         JSONObject jsonObject = JSONObject.parseObject(jsonString);
-        if(null==jsonObject  || !"0".equals(jsonObject.getString("respcode")) || !"0".equals(jsonObject.getString("resptype"))){
+        if(null==jsonObject  || !SUCCESS_CODE.equals(jsonObject.getString("respcode")) || !SUCCESS_CODE.equals(jsonObject.getString("resptype"))){
              log.info("查询物流信息异常:"+jsonObject.toJSONString());
         }
         JSONArray jsonArray = JSONArray.parseArray(jsonObject.getJSONObject("result").getString("order"));
         JSONObject jsonObject1 = jsonArray.getJSONObject(0);
         DSAirpickinstallQueryOrderResponse dsAirpickinstallQueryOrderResponse = new DSAirpickinstallQueryOrderResponse();
-        //格式化时间
         if(null!=jsonObject1.getString("createTime")){
             String createTime = jsonObject1.getString("createTime").replaceAll("年", "-").replaceAll("月", "-").replaceAll("日","")
                     .replaceAll("时", ":").replaceAll("分", ":").replaceAll("秒", "");
@@ -211,24 +212,27 @@ public class MobileResponseService {
         JDCheckAddressRequest jdCheckAddressRequest = addressResolutionService.addressResolution(order.getAddress());
         JDCheckAddressResponse jdCheck = this.JDCheakAddress(jdCheckAddressRequest);
         /**
-         * 此处判断是否支持京东配送  不支持京东配送则不再调用
+         * 此处判断是否支持京东配送  不支持京东配送则使用省仓调用
          * 支持   ReceiveType = 4  OfflineCard = 3
          */
-        if(null!=jdCheck&&"0".equals(jdCheck.getCode())){
+        if(null!=jdCheck&&SUCCESS_CODE.equals(jdCheck.getCode())){
             newOrderParams.setReceiveType("4");
             newOrderParams.setOfflineCard("3");
+            newOrderParams.setAcceptType("2");
         }else{
-            orderMapper.updateOrder(new Order(){{
-                setFdId(order.getFdId());
-                setStatus("2");
-                setRemark("不支持京东配送:"+jdCheck.getMsg());
-                setCreateTime(DateUtils.getNowTime());
-                setProvince(jdCheckAddressRequest.getAddressProvince());
-                setAddressCity(jdCheckAddressRequest.getAddrssCity());
-            }});
-            return false;
+            newOrderParams.setReceiveType("1");
+            newOrderParams.setOfflineCard("0");
+            newOrderParams.setAcceptType("1");
+//            orderMapper.updateOrder(new Order(){{
+//                setFdId(order.getFdId());
+//                setStatus("2");
+//                setRemark("不支持京东配送:"+jdCheck.getMsg());
+//                setCreateTime(DateUtils.getNowTime());
+//                setProvince(jdCheckAddressRequest.getAddressProvince());
+//                setAddressCity(jdCheckAddressRequest.getAddrssCity());
+//            }});
+//            return false;
         }
-
         //查询选号列表
         QueryChooseNumberListRequest queryChooseNumberListRequest = new QueryChooseNumberListRequest();
         queryChooseNumberListRequest.setRegion("200");
@@ -258,14 +262,12 @@ public class MobileResponseService {
         newOrderParams.setServnumber(queryChooseNumberListResponse.getMobileno());
         //品牌
         newOrderParams.setBrand(queryDiscountNumberListResponse.getBrand());
-        //受理方式 代客下单
-        newOrderParams.setAcceptType("2");
         //订单金额
         newOrderParams.setOrderAmount(queryDiscountNumberListResponse.getPrice());
         //支付方式
         newOrderParams.setPayWay("1");
 
-        //配送省份 省内不用填 省内要填省份和区域
+        //配送省份 省内不用填 省外要填省份和区域
         if(!"200".equals(jdCheckAddressRequest.getProvinceCode())){
             newOrderParams.setProvince(jdCheckAddressRequest.getAddressProvince());
             newOrderParams.setAddressArea(jdCheckAddressRequest.getAddressArea());
@@ -305,7 +307,7 @@ public class MobileResponseService {
                 MobileUrl.AirpickinstallnewOrder.getUrl(),
                 MobileUtil.getBodyByClass(request));
         JSONObject jsonObject = JSONObject.parseObject(jsonString);
-        if(null==jsonObject || !"0".equals(jsonObject.getString("respcode"))){
+        if(null==jsonObject || !SUCCESS_CODE.equals(jsonObject.getString("respcode"))){
             //删除缓存中的号码key 回归池库
             redisUtil.del(RedisEnum.SERVNUMBER+":"+newOrderParams.getServnumber());
             log.info("线上下单异常response："+jsonObject);
