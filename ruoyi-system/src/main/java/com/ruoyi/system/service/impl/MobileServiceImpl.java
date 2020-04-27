@@ -137,9 +137,9 @@ public class MobileServiceImpl implements MobileService {
     }
 
     @Override
-    public String JDCheckAddress2(String address) {
+    public String JDCheckAddress2(Order order) {
         String url = MobileUrl.JDCheckAddress.getUrl();
-        JDCheckAddressRequest request = addressResolutionService.addressResolution(address);
+        JDCheckAddressRequest request = addressResolutionService.addressResolution(order);
         String body = MobileUtil.getBodyByClass(request);
         return MobileUtil.getResponse(url, body);
     }
@@ -158,6 +158,7 @@ public class MobileServiceImpl implements MobileService {
         order.setCardtype("01");
         order.setSid("1000000019");
         order.setPack("prod.10086000025892");
+        order.setStatus("0");
         if(orderService.insertOrder(order)>0){
             return AjaxResult.success("订单发送成功");
         }

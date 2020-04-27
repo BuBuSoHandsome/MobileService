@@ -209,7 +209,7 @@ public class MobileResponseService {
         newOrderParams newOrderParams = new newOrderParams();
 
         //首先对京东地址校验是否配送
-        JDCheckAddressRequest jdCheckAddressRequest = addressResolutionService.addressResolution(order.getAddress());
+        JDCheckAddressRequest jdCheckAddressRequest = addressResolutionService.addressResolution(order);
         JDCheckAddressResponse jdCheck = this.JDCheakAddress(jdCheckAddressRequest);
         /**
          * 此处判断是否支持京东配送  不支持京东配送则使用省仓调用
@@ -223,15 +223,6 @@ public class MobileResponseService {
             newOrderParams.setReceiveType("1");
             newOrderParams.setOfflineCard("0");
             newOrderParams.setAcceptType("1");
-//            orderMapper.updateOrder(new Order(){{
-//                setFdId(order.getFdId());
-//                setStatus("2");
-//                setRemark("不支持京东配送:"+jdCheck.getMsg());
-//                setCreateTime(DateUtils.getNowTime());
-//                setProvince(jdCheckAddressRequest.getAddressProvince());
-//                setAddressCity(jdCheckAddressRequest.getAddrssCity());
-//            }});
-//            return false;
         }
         //查询选号列表
         QueryChooseNumberListRequest queryChooseNumberListRequest = new QueryChooseNumberListRequest();

@@ -54,12 +54,12 @@ import org.springframework.web.bind.annotation.*;
 
     /**
      * 京东物流地址校验 根据地址校验
-     * @param address
+     * @param order
      * @return
      */
     @RequestMapping("/JDCheckAddress2")
-    public String JDCheckAddress2(@RequestParam String address){
-        return mobileService.JDCheckAddress2(address);
+    public String JDCheckAddress2(@RequestBody Order order){
+        return mobileService.JDCheckAddress2(order);
     }
 
     /**
@@ -97,6 +97,7 @@ import org.springframework.web.bind.annotation.*;
         return mobileService.getExpressTrace(request);
     }
 
+    @CrossOrigin(origins = "*",maxAge = 3600)
     @PostMapping("sendOrder")
     public AjaxResult addBZCardOrder(@RequestBody Order order){
         return mobileService.addBZCardOrder(order);

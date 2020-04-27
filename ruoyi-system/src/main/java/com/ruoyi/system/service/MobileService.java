@@ -31,7 +31,7 @@ public interface MobileService {
 
     public DSAirpickinstallQueryOrderResponse getOrderMsg(DSAirpickinstallQueryOrderRequest request);
 
-    public String JDCheckAddress2(String address);
+    public String JDCheckAddress2(Order order);
 
     public String getExpressTrace(QryExpressTraceRequest request);
 
