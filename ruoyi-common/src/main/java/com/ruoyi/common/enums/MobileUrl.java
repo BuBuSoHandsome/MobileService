@@ -22,7 +22,21 @@ public enum  MobileUrl {
 
     DSAirpickinstallQueryOrder("https://221.179.11.204:443/eaop/rest/OrderCenter/resource/dsairpickinstallqueryorder/v1.1.1"),
 
-    QryExpressTrace("https://221.179.11.204:443/eaop/rest/JD/service/qryexpresstrace/v1.1.1");
+    QryExpressTrace("https://221.179.11.204:443/eaop/rest/JD/service/qryexpresstrace/v1.1.1"),
+
+    CheckUser("https://m.75510010.com/mall/api/unicom/zop-mall/check-user"),
+
+    CheckNum("https://m.75510010.com/mall/api/unicom/zop-mall/check-num"),
+
+    SelectNum("https://m.75510010.com/mall/api/unicom/zop-mall/select-num"),
+
+    OccupationNumber("https://m.75510010.com/mall/api/unicom/zop-mall/occupation-number"),
+
+    SafeCode("https://m.75510010.com/mall/api/unicom/zop-mall/safe-code"),
+
+    CheckCode("https://m.75510010.com/mall/api/unicom/zop-mall/check-code"),
+
+    CreateOrder("https://m.75510010.com/mall/api/unicom/zop-mall/create-order");
 
     private final String url;
 

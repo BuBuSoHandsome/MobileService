@@ -1,8 +1,9 @@
 package com.ruoyi.common.utils.moblie;
   
-import java.security.KeyFactory;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import org.apache.commons.codec.binary.Hex;
+
+import java.io.UnsupportedEncodingException;
+import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
@@ -25,7 +26,51 @@ public class RSASignature{
      * ǩ���㷨 
      */  
     public static final String SIGN_ALGORITHMS = "SHA256WithRSA";
-    
+
+        /**
+     　　* 利用java原生的摘要实现SHA256加密
+     　　* @param str 加密后的报文
+     　　* @return
+     　　*/
+       public static String getSHA256StrJava(String str){
+       MessageDigest messageDigest;
+       String encodeStr = "";
+       try {
+        messageDigest = MessageDigest.getInstance("SHA-256");
+         messageDigest.update(str.getBytes("UTF-8"));
+         encodeStr = byte2Hex(messageDigest.digest());
+         } catch (NoSuchAlgorithmException e) {
+         e.printStackTrace();
+         } catch (UnsupportedEncodingException e) {
+        e.printStackTrace();
+        }
+        return encodeStr.toUpperCase();
+        }
+
+        /**
+         　　* 将byte转为16进制
+         　　* @param bytes
+         　　* @return
+         　　*/
+        private static String byte2Hex(byte[] bytes){
+        StringBuffer stringBuffer = new StringBuffer();
+        String temp = null;
+        for (int i=0;i<bytes.length;i++){
+        temp = Integer.toHexString(bytes[i] & 0xFF);
+        if (temp.length()==1){
+        //1得到一位的进行补0操作
+        stringBuffer.append("0");
+        }
+        stringBuffer.append(temp);
+        }
+        return stringBuffer.toString();
+        }
+
+
+
+
+
+
     public static Map<String, String> getSortedMap(AsiainfoHashMap sysParams) {
         Map<String, String> sortedParams = new TreeMap<String, String>();
         if (sysParams != null && sysParams.size() > 0) {        	

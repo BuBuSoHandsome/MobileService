@@ -25,9 +25,12 @@ public class AddressResolutionService {
             if(null==addressCode){
                 return request;
             }
+            request.setProvinceCode(addressCode.getParentCode());
+            request.setEparchyCode(addressCode.getCode());
             request.setAddressProvince(order.getProvince());
             request.setAddrssCity(order.getAddressCity());
             request.setAddressArea(order.getCitycode());
+            request.setAddress(order.getAddress());
         }else{
             //只通过一个地址解析
             String regex="(?<province>[^省]+自治区|.*?省|.*?行政区|.*?市)(?<city>[^市]+自治州|.*?地区|.*?行政单位|.+盟|市辖区|.*?市|.*?县)(?<county>[^县]+县|.+区|.+市|.+旗|.+海域|.+岛)?(?<town>[^区]+区|.+镇)?(?<village>.*)";
@@ -43,21 +46,21 @@ public class AddressResolutionService {
                 request.setAddrssCity(m.group("city"));
                 request.setAddressArea(m.group("county"));
                 request.setAddress(order.getAddress());
-            }
+}
         }
-        return request;
-    }
+                return request;
+                }
 
-    public static void main(String[] args) {
+public static void main(String[] args) {
 
         String address = "北京市丰台区北京西客站南广场";
         String regex="(?<province>[^省]+自治区|.*?省|.*?行政区|.*?市)(?<city>[^市]+自治州|.*?地区|.*?行政单位|.+盟|市辖区|.*?市|.*?县)(?<county>[^县]+县|.+区|.+市|.+旗|.+海域|.+岛)?(?<town>[^区]+区|.+镇)?(?<village>.*)";
         Matcher m = Pattern.compile(regex).matcher(address);
         while (m.find()) {
-            System.out.println(m.group("province"));
-            System.out.println(m.group("city"));
-            System.out.println(m.group("county"));
+        System.out.println(m.group("province"));
+        System.out.println(m.group("city"));
+        System.out.println(m.group("county"));
         }
-    }
+        }
 
 }

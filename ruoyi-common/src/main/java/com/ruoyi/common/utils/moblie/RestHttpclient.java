@@ -95,7 +95,7 @@ public class RestHttpclient {
 	        CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(ssf).build();
 		return httpclient;
 	}
-	
+
 	  public static String post(String url,AsiainfoHeader header,String body) throws Exception {
 		    HttpClient httpclient=getsslhttpClient();
 	        try {  
@@ -114,7 +114,7 @@ public class RestHttpclient {
 	            postMethod.setHeader("sign",signstr);
 	            
 	            StringEntity entity = new StringEntity(body, "application/json", "UTF-8");
-	        	 postMethod.setEntity(entity);
+	            postMethod.setEntity(entity);
 
 	        	 log.info("请求报文："+body);
 
