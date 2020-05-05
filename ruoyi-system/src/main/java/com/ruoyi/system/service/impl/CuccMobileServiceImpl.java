@@ -3,18 +3,13 @@ package com.ruoyi.system.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.enums.MobileUrl;
 import com.ruoyi.common.utils.moblie.MobileUtil;
-import com.ruoyi.system.domain.cuccMobileRequest.CheckNumRequest;
-import com.ruoyi.system.domain.cuccMobileRequest.CheckUserRequest;
-import com.ruoyi.system.domain.cuccMobileRequest.SelectNumRequest;
-import com.ruoyi.system.domain.cuccMobileResponse.CheckNumResponse;
-import com.ruoyi.system.domain.cuccMobileResponse.CheckUserResponse;
-import com.ruoyi.system.domain.cuccMobileResponse.SelectNumResponse;
+import com.ruoyi.system.domain.cuccMobileRequest.*;
+import com.ruoyi.system.domain.cuccMobileResponse.*;
 import com.ruoyi.system.mobile.CuccMobileResponseService;
 import com.ruoyi.system.service.CuccMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +72,38 @@ public class CuccMobileServiceImpl implements CuccMobileService {
             return cuccMobileResponseService.selectNumber(selectNumResponse);
         }
         return new ArrayList<>();
+    }
+
+    @Override
+    public SafeCodeResponse safeCode(SafeCodeRequest request) {
+        String resultJson = "";
+        try {
+            resultJson = MobileUtil.doPost(MobileUrl.SafeCode.getUrl(), request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!"".equals(resultJson)){
+            JSONObject jsStr = JSONObject.parseObject(resultJson);
+            SafeCodeResponse safeCodeResponse = JSONObject.toJavaObject(jsStr,SafeCodeResponse.class);
+            return safeCodeResponse;
+        }
+        return new SafeCodeResponse();
+    }
+
+    @Override
+    public CheckCodeResponse checkCode(CheckCodeRequest request) {
+        String resultJson = "";
+        try {
+            resultJson = MobileUtil.doPost(MobileUrl.CheckCode.getUrl(), request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!"".equals(resultJson)){
+            JSONObject jsStr = JSONObject.parseObject(resultJson);
+            CheckCodeResponse checkCodeResponse = JSONObject.toJavaObject(jsStr,CheckCodeResponse.class);
+            return checkCodeResponse;
+        }
+        return new CheckCodeResponse();
     }
 
 }

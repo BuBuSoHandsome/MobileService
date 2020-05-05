@@ -1,10 +1,8 @@
 package com.ruoyi.web.controller.system;
 
 
-import com.ruoyi.system.domain.cuccMobileRequest.CheckUserRequest;
-import com.ruoyi.system.domain.cuccMobileRequest.SelectNumRequest;
-import com.ruoyi.system.domain.cuccMobileResponse.CheckUserResponse;
-import com.ruoyi.system.domain.cuccMobileResponse.SelectNumResponse;
+import com.ruoyi.system.domain.cuccMobileRequest.*;
+import com.ruoyi.system.domain.cuccMobileResponse.*;
 import com.ruoyi.system.service.CuccMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,4 +36,18 @@ public class CuccMobileController {
         return cuccMobileService.selectNum(request);
     }
 
+    @PostMapping("checkNum")
+    public CheckNumResponse checkNum(@RequestBody CheckNumRequest request){
+        return cuccMobileService.checkNum(request);
+    }
+
+    @PostMapping("safeCode")
+    public SafeCodeResponse safeCode(@RequestBody SafeCodeRequest request){
+        return cuccMobileService.safeCode(request);
+    }
+
+    @PostMapping("checkCode")
+    public CheckCodeResponse checkCode(@RequestBody CheckCodeRequest request){
+        return cuccMobileService.checkCode(request);
+    }
 }
