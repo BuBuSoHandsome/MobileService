@@ -13,7 +13,7 @@ public class CheckCodeRequest {
 
     private String appKey = "A3B43FEF873E99CAE053491962842D74";
     private String certNo;
-    private String channel;
+    private String channel= "08-2278-6984-9999";
     private String contactNum;
     private String safeCode;
     private String secret = "kKpuL2DedCk0YfET";
