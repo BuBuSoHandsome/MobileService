@@ -69,7 +69,6 @@ public class MobileUtil {
         Field[] fields = object.getClass().getDeclaredFields();
         for(Field f:fields){
             f.setAccessible(true);
-            System.out.println(f.getName()+":"+f.get(object));
             if(null==f.get(object)||"".equals(f.get(object))) {
                 continue;
             }
@@ -79,12 +78,10 @@ public class MobileUtil {
             nameValuePairs.add(valuePair);
         }
         String sign = stringBuffer.deleteCharAt(stringBuffer.length()-1).toString();
+
+        System.out.println("请求参数："+sign);
+
         nameValuePairs.add(new BasicNameValuePair("sign", RSASignature.getSHA256StrJava(sign)));
-
-
-        System.out.println(sign);
-        System.out.println(RSASignature.getSHA256StrJava(sign));
-
         //设置Client参数
         HttpClient client = HttpClientBuilder.create().build();
         //发送请求
@@ -92,7 +89,6 @@ public class MobileUtil {
         HttpEntity entity = new UrlEncodedFormEntity(nameValuePairs,"UTF-8");
         post.setEntity(entity);
         HttpResponse response = client.execute(post);
-
         //处理响应结果
         int statusCode = response.getStatusLine().getStatusCode();
         if (statusCode != 200) {
@@ -100,6 +96,9 @@ public class MobileUtil {
         } else {
             HttpEntity respEntity = response.getEntity();
             result = EntityUtils.toString(respEntity,"UTF-8");
+
+            System.out.println("返回结果："+result);
+
         }
         return result;
     }

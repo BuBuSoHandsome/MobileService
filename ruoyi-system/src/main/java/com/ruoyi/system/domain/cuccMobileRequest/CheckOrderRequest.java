@@ -6,21 +6,23 @@ import java.io.Serializable;
 
 /**
  * @Author Alan
- * @Date 2020/5/4 14:25
+ * @Date 2020/5/11 21:50
  * @Version 1.0
  */
 
 @Data
-public class CheckNumRequest implements Serializable {
+public class CheckOrderRequest implements Serializable {
 
-    private String appKey = "A3B43FEF873E99CAE053491962842D74";
+    private String certName;
 
     private String certNum;
+
+    private String cityCode;
+
+    private String provinceCode;
 
     private String goodsId;
 
     private String phoneNum;
-
-    private String secret = "kKpuL2DedCk0YfET";
 
 }

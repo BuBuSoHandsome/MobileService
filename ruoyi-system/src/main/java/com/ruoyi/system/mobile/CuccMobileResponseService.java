@@ -1,6 +1,7 @@
 package com.ruoyi.system.mobile;
 
-import com.ruoyi.system.domain.cuccMobileResponse.SelectNumResponse;
+import com.ruoyi.system.domain.cuccMobileRequest.OccupationNumberRequest;
+import com.ruoyi.system.domain.cuccMobileResponse.*;
 
 import java.util.List;
 
@@ -13,5 +14,9 @@ import java.util.List;
 public interface CuccMobileResponseService {
 
     List<String> selectNumber(SelectNumResponse response);
+
+    CheckOrderResponse checkOrder(CheckUserResponse response1, CheckNumResponse response2);
+
+    void updateCuccNum (OccupationNumberRequest request, OccupationNumberResponse response);
 
 }

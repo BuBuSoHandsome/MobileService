@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NumberCuccMapper">
+    
+    <resultMap type="NumberCucc" id="NumberCuccResult">
+        <result property="custid"    column="custId"    />
+        <result property="producttype"    column="productType"    />
+        <result property="provincecode"    column="provinceCode"    />
+        <result property="citycode"    column="cityCode"    />
+        <result property="phonenum"    column="phoneNum"    />
+        <result property="occupiedflag"    column="occupiedFlag"    />
+        <result property="occupiedtimetag"    column="occupiedTimeTag"    />
+        <result property="certnum"    column="certNum"    />
+    </resultMap>
+
+    <sql id="selectNumberCuccVo">
+        select custId, productType, provinceCode, cityCode, phoneNum, occupiedFlag, occupiedTimeTag, certNum from number_cucc
+    </sql>
+
+    <select id="selectNumberCuccList" parameterType="NumberCucc" resultMap="NumberCuccResult">
+        <include refid="selectNumberCuccVo"/>
+        <where>  
+            <if test="producttype != null  and producttype != ''"> and productType = #{producttype}</if>
+            <if test="provincecode != null  and provincecode != ''"> and provinceCode = #{provincecode}</if>
+            <if test="citycode != null  and citycode != ''"> and cityCode = #{citycode}</if>
+            <if test="phonenum != null  and phonenum != ''"> and phoneNum = #{phonenum}</if>
+            <if test="occupiedflag != null  and occupiedflag != ''"> and occupiedFlag = #{occupiedflag}</if>
+            <if test="occupiedtimetag != null  and occupiedtimetag != ''"> and occupiedTimeTag = #{occupiedtimetag}</if>
+            <if test="certnum != null  and certnum != ''"> and certNum = #{certnum}</if>
+        </where>
+    </select>
+    
+    <select id="selectNumberCuccById" parameterType="String" resultMap="NumberCuccResult">
+        <include refid="selectNumberCuccVo"/>
+        where custId = #{custid}
+    </select>
+        
+    <insert id="insertNumberCucc" parameterType="NumberCucc">
+        insert into number_cucc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="custid != null  and custid != ''">custId,</if>
+            <if test="producttype != null  and producttype != ''">productType,</if>
+            <if test="provincecode != null  and provincecode != ''">provinceCode,</if>
+            <if test="citycode != null  and citycode != ''">cityCode,</if>
+            <if test="phonenum != null  and phonenum != ''">phoneNum,</if>
+            <if test="occupiedflag != null  and occupiedflag != ''">occupiedFlag,</if>
+            <if test="occupiedtimetag != null  and occupiedtimetag != ''">occupiedTimeTag,</if>
+            <if test="certnum != null  and certnum != ''">certNum,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="custid != null  and custid != ''">#{custid},</if>
+            <if test="producttype != null  and producttype != ''">#{producttype},</if>
+            <if test="provincecode != null  and provincecode != ''">#{provincecode},</if>
+            <if test="citycode != null  and citycode != ''">#{citycode},</if>
+            <if test="phonenum != null  and phonenum != ''">#{phonenum},</if>
+            <if test="occupiedflag != null  and occupiedflag != ''">#{occupiedflag},</if>
+            <if test="occupiedtimetag != null  and occupiedtimetag != ''">#{occupiedtimetag},</if>
+            <if test="certnum != null  and certnum != ''">#{certnum},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNumberCucc" parameterType="NumberCucc">
+        update number_cucc
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="producttype != null  and producttype != ''">productType = #{producttype},</if>
+            <if test="provincecode != null  and provincecode != ''">provinceCode = #{provincecode},</if>
+            <if test="citycode != null  and citycode != ''">cityCode = #{citycode},</if>
+            <if test="phonenum != null  and phonenum != ''">phoneNum = #{phonenum},</if>
+            <if test="occupiedflag != null  and occupiedflag != ''">occupiedFlag = #{occupiedflag},</if>
+            <if test="occupiedtimetag != null  and occupiedtimetag != ''">occupiedTimeTag = #{occupiedtimetag},</if>
+            <if test="certnum != null  and certnum != ''">certNum = #{certnum},</if>
+        </trim>
+        where custId = #{custid}
+    </update>
+
+    <delete id="deleteNumberCuccById" parameterType="String">
+        delete from number_cucc where custId = #{custid}
+    </delete>
+
+    <delete id="deleteNumberCuccByIds" parameterType="String">
+        delete from number_cucc where custId in 
+        <foreach item="custid" collection="array" open="(" separator="," close=")">
+            #{custid}
+        </foreach>
+    </delete>
+    
+</mapper>

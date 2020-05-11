@@ -2,6 +2,8 @@ package com.ruoyi.system.domain.cuccMobileResponse;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @Author Alan
  * @Date 2020/5/3 22:09
@@ -9,7 +11,7 @@ import lombok.Data;
  */
 
 @Data
-public class SelectNumResponse {
+public class SelectNumResponse implements Serializable{
 
     private String code;
     private String message;

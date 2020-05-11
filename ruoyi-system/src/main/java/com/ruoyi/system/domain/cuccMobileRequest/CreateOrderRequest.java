@@ -2,6 +2,8 @@ package com.ruoyi.system.domain.cuccMobileRequest;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @Author Alan
  * @Date 2020/5/4 14:46
@@ -9,7 +11,7 @@ import lombok.Data;
  */
 
 @Data
-public class CreateOrderRequest {
+public class CreateOrderRequest implements Serializable {
 
     private String address;
     private String appKey = "A3B43FEF873E99CAE053491962842D74";

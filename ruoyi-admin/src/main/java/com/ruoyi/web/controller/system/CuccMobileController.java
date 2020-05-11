@@ -50,4 +50,10 @@ public class CuccMobileController {
     public CheckCodeResponse checkCode(@RequestBody CheckCodeRequest request){
         return cuccMobileService.checkCode(request);
     }
+
+    @PostMapping("checkOrder")
+    public CheckOrderResponse checkOrder(@RequestBody CheckOrderRequest request){
+        return cuccMobileService.checkOrder(request);
+    }
+
 }

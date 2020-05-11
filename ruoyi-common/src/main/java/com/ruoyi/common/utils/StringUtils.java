@@ -1,11 +1,13 @@
 package com.ruoyi.common.utils;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
 import com.ruoyi.common.core.text.StrFormatter;
+import lombok.Synchronized;
 
 /**
  * 字符串工具类
@@ -443,8 +445,21 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
         return shortBuffer.toString().toUpperCase();
     }
 
+
+    /**
+     * 通过加锁保证唯一prokey
+     * @return
+     */
+    public synchronized static String getProkey(){
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(Instant.now().getEpochSecond());
+        stringBuffer.append(new Random().nextInt(10));
+        return stringBuffer.toString();
+    }
+
+
     public static void main(String[] args) {
-        System.out.println(generateShortUuid());
+
     }
 
 }
