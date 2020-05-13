@@ -23,4 +23,12 @@ public interface CuccMobileService {
 
     OccupationNumberResponse lockNum( OccupationNumberRequest request);
 
+    LockNumAndApplyCodeResponse lockNumAndApplyCode (LockNumAndApplyCodeRequest request);
+
+    CreateOrderResponse createOrder(CreateOrderRequest request);
+
+
+
+
+
 }

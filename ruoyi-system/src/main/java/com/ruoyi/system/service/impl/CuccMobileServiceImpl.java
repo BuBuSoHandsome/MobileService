@@ -102,6 +102,29 @@ public class CuccMobileServiceImpl implements CuccMobileService {
     }
 
     @Override
+    public OccupationNumberResponse lockNum(OccupationNumberRequest request) {
+        request.setOccupiedFlag("S");
+        request.setOccupiedTimeTag("S8");
+        request.setProKey(StringUtils.getProkey());
+        String resultJson = "";
+        try {
+            resultJson = MobileUtil.doPost(MobileUrl.OccupationNumber.getUrl(), request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!"".equals(resultJson)){
+            JSONObject jsStr = JSONObject.parseObject(resultJson);
+            OccupationNumberResponse occupationNumberResponse = JSONObject.toJavaObject(jsStr,OccupationNumberResponse.class);
+            cuccMobileResponseService.insertCuccNum(request, occupationNumberResponse);
+            return occupationNumberResponse;
+        }
+        return new OccupationNumberResponse(){{
+            setCode("90");
+            setMessage("选占号码失败");
+        }};
+    }
+
+    @Override
     public CheckCodeResponse checkCode(CheckCodeRequest request) {
         String resultJson = "";
         try {
@@ -112,6 +135,7 @@ public class CuccMobileServiceImpl implements CuccMobileService {
         if(!"".equals(resultJson)){
             JSONObject jsStr = JSONObject.parseObject(resultJson);
             CheckCodeResponse checkCodeResponse = JSONObject.toJavaObject(jsStr,CheckCodeResponse.class);
+
             return checkCodeResponse;
         }
         return new CheckCodeResponse(){{
@@ -131,34 +155,26 @@ public class CuccMobileServiceImpl implements CuccMobileService {
         return cuccMobileResponseService.checkOrder(checkUserResponse, checkNumResponse);
     }
 
-    @Override
-    public OccupationNumberResponse lockNum(OccupationNumberRequest request) {
 
-        //如果带着prokey 说明号码已经占领下单
-        if(null!=request&&!"".equals(request.getProKey())){
-            request.setOccupiedFlag("D");
-            request.setOccupiedTimeTag("D8");
-        }else{
-            request.setOccupiedFlag("D");
-            request.setOccupiedTimeTag("D1");
-            request.setProKey(StringUtils.getProkey());
-        }
-        String resultJson = "";
-        try {
-            resultJson = MobileUtil.doPost(MobileUrl.OccupationNumber.getUrl(), request);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if(!"".equals(resultJson)){
-            JSONObject jsStr = JSONObject.parseObject(resultJson);
-            OccupationNumberResponse occupationNumberResponse = JSONObject.toJavaObject(jsStr,OccupationNumberResponse.class);
-            cuccMobileResponseService.updateCuccNum(request, occupationNumberResponse);
-            return occupationNumberResponse;
-        }
-        return new OccupationNumberResponse(){{
-            setCode("90");
-            setMessage("选占号码失败");
-        }};
+    @Override
+    public LockNumAndApplyCodeResponse lockNumAndApplyCode(LockNumAndApplyCodeRequest request) {
+        OccupationNumberRequest occupationNumberRequest = new OccupationNumberRequest();
+        SafeCodeRequest safeCodeRequest = new SafeCodeRequest();
+        BeanUtils.copyProperties(request, occupationNumberRequest);
+        BeanUtils.copyProperties(request, safeCodeRequest);
+        safeCodeRequest.setCertNo(occupationNumberRequest.getCertNum());
+        OccupationNumberResponse  occupationNumberResponse = this.lockNum(occupationNumberRequest);
+        SafeCodeResponse safeCodeResponse = this.safeCode(safeCodeRequest);
+        return cuccMobileResponseService.lockNumAndApplyCode(occupationNumberResponse, safeCodeResponse,occupationNumberRequest.getProKey());
+    }
+
+    @Override
+    public CreateOrderResponse createOrder(CreateOrderRequest request) {
+        CheckCodeRequest checkCodeRequest = new CheckCodeRequest();
+        checkCodeRequest.setCertNo(request.getCertNo());
+        checkCodeRequest.setContactNum(request.getContactNum());
+        CheckCodeResponse checkCodeResponse = this.checkCode(checkCodeRequest);
+        return cuccMobileResponseService.createOrder(request, checkCodeResponse);
     }
 
 }

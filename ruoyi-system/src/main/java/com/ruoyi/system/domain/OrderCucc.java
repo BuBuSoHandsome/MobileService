@@ -48,6 +48,8 @@ public class OrderCucc
 	private String updateTime;
 	/** 备注 */
 	private String remark;
+	/** 验证码回传参数*/
+	private String captchaId;
 
 	private Map<String, Object> params;
 

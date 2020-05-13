@@ -56,4 +56,20 @@ public class CuccMobileController {
         return cuccMobileService.checkOrder(request);
     }
 
+
+    @PostMapping("lockNum")
+    public OccupationNumberResponse lockNum(@RequestBody OccupationNumberRequest request){
+        return cuccMobileService.lockNum(request);
+    }
+
+    @PostMapping("lockNumAndApplyCode")
+    public LockNumAndApplyCodeResponse lockNumAndApplyCode(@RequestBody LockNumAndApplyCodeRequest request){
+        return cuccMobileService.lockNumAndApplyCode(request);
+    }
+
+    @PostMapping("createOrder")
+    public CreateOrderResponse createOrder(@RequestBody CreateOrderRequest request){
+        return cuccMobileService.createOrder(request);
+    }
+
 }

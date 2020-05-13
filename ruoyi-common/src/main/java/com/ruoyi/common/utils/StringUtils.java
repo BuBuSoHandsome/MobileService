@@ -454,12 +454,12 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(Instant.now().getEpochSecond());
         stringBuffer.append(new Random().nextInt(10));
-        return stringBuffer.toString();
+        return "99999"+stringBuffer.toString();
     }
 
 
     public static void main(String[] args) {
-
+        System.out.println(getProkey());
     }
 
 }

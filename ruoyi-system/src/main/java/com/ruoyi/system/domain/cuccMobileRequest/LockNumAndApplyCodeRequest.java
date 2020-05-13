@@ -12,14 +12,9 @@ import java.io.Serializable;
 
 @Data
 public class LockNumAndApplyCodeRequest implements Serializable {
-
     private String certNum;
     private String cityCode;
     private String phoneNum;
-    private String proKey;
     private String provinceCode;
-    private String occupiedFlag;
-    private String occupiedTimeTag;
-    private String certNo;
     private String contactNum;
 }

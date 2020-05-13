@@ -21,6 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="status"    column="status"    />
         <result property="updateTime"    column="updateTime"    />
         <result property="remark"    column="remark"    />
+        <result property="captchaId"    column="captchaId"    />
     </resultMap>
 	
 	<sql id="selectOrderCuccVo">
@@ -79,6 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			status,
 			updateTime,
 			<if test="remark != null  and remark != ''  ">remark,</if>
+            captchaId,
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="fdId != null  and fdId != ''  ">#{fdId},</if>
@@ -97,6 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			'0',
 			sysdate(),
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			#{captchaId},
          </trim>
     </insert>
 	 

@@ -19,27 +19,27 @@ import java.io.Serializable;
 public class NumberCucc implements Serializable
 {
     /** 占号资源id */
-    private String custid;
+    private String custId;
 
     /** 产品id */
-    private String producttype;
+    private String productType;
 
     /** 卡归属地省编码 */
-    private String provincecode;
+    private String provinceCode;
 
     /** 卡归属地市编码 */
-    private String citycode;
+    private String cityCode;
 
     /** 选号（新号码） */
-    private String phonenum;
+    private String phoneNum;
 
     /** 号码状态标识*/
-    private String occupiedflag;
+    private String occupiedFlag;
 
     /** 预占时间标记 */
-    private String occupiedtimetag;
+    private String occupiedTimeTag;
 
     /** 身份证 */
-    private String certnum;
+    private String certNum;
 
 }
