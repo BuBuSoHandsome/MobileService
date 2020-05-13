@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.OrderCuccMapper">
+    
+    <resultMap type="OrderCucc" id="OrderCuccResult">
+        <result property="fdId"    column="fd_id"    />
+        <result property="productType"    column="productType"    />
+        <result property="provinceCode"    column="provinceCode"    />
+        <result property="cityCode"    column="cityCode"    />
+        <result property="phoneNum"    column="phoneNum"    />
+        <result property="certName"    column="certName"    />
+        <result property="certNo"    column="certNo"    />
+        <result property="contactNum"    column="contactNum"    />
+        <result property="custId"    column="custId"    />
+        <result property="postProvinceCode"    column="postProvinceCode"    />
+        <result property="postCityCode"    column="postCityCode"    />
+        <result property="postDistrictCode"    column="postDistrictCode"    />
+        <result property="address"    column="address"    />
+        <result property="status"    column="status"    />
+        <result property="updateTime"    column="updateTime"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+	
+	<sql id="selectOrderCuccVo">
+        select fd_id, productType, provinceCode, cityCode, phoneNum, certName, certNo, contactNum, custId, postProvinceCode, postCityCode, postDistrictCode, address, status, updateTime, remark from order_cucc
+    </sql>
+	
+    <select id="selectOrderCuccList" parameterType="OrderCucc" resultMap="OrderCuccResult">
+        <include refid="selectOrderCuccVo"/>
+        <where>  
+            <if test="fdId != null  and fdId != '' "> and fd_id = #{fdId}</if>
+             <if test="productType != null  and productType != '' "> and productType = #{productType}</if>
+             <if test="provinceCode != null  and provinceCode != '' "> and provinceCode = #{provinceCode}</if>
+             <if test="cityCode != null  and cityCode != '' "> and cityCode = #{cityCode}</if>
+             <if test="phoneNum != null  and phoneNum != '' "> and phoneNum = #{phoneNum}</if>
+             <if test="certName != null  and certName != '' "> and certName like concat('%', #{certName}, '%')</if>
+             <if test="certNo != null  and certNo != '' "> and certNo = #{certNo}</if>
+             <if test="contactNum != null  and contactNum != '' "> and contactNum = #{contactNum}</if>
+             <if test="custId != null  and custId != '' "> and custId = #{custId}</if>
+             <if test="postProvinceCode != null  and postProvinceCode != '' "> and postProvinceCode = #{postProvinceCode}</if>
+             <if test="postCityCode != null  and postCityCode != '' "> and postCityCode = #{postCityCode}</if>
+             <if test="postDistrictCode != null  and postDistrictCode != '' "> and postDistrictCode = #{postDistrictCode}</if>
+             <if test="address != null  and address != '' "> and address = #{address}</if>
+             <if test="status != null  and status != '' "> and status = #{status}</if>
+             <if test="updateTime != null  and updateTime != '' "> and updateTime = #{updateTime}</if>
+             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                 and date_format(updateTime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+             </if>
+             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                 and date_format(updateTime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+             </if>
+              <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+         </where>
+    </select>
+    
+    <select id="selectOrderCuccById" parameterType="String" resultMap="OrderCuccResult">
+        <include refid="selectOrderCuccVo"/>
+        where fd_id = #{fdId}
+    </select>
+        
+    <insert id="insertOrderCucc" parameterType="OrderCucc">
+        insert into order_cucc
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="fdId != null  and fdId != ''  ">fd_id,</if>
+			<if test="productType != null  and productType != ''  ">productType,</if>
+			<if test="provinceCode != null  and provinceCode != ''  ">provinceCode,</if>
+			<if test="cityCode != null  and cityCode != ''  ">cityCode,</if>
+			<if test="phoneNum != null  and phoneNum != ''  ">phoneNum,</if>
+			<if test="certName != null  and certName != ''  ">certName,</if>
+			<if test="certNo != null  and certNo != ''  ">certNo,</if>
+			<if test="contactNum != null  and contactNum != ''  ">contactNum,</if>
+			<if test="custId != null  and custId != ''  ">custId,</if>
+			<if test="postProvinceCode != null  and postProvinceCode != ''  ">postProvinceCode,</if>
+			<if test="postCityCode != null  and postCityCode != ''  ">postCityCode,</if>
+			<if test="postDistrictCode != null  and postDistrictCode != ''  ">postDistrictCode,</if>
+			<if test="address != null  and address != ''  ">address,</if>
+			status,
+			updateTime,
+			<if test="remark != null  and remark != ''  ">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="fdId != null  and fdId != ''  ">#{fdId},</if>
+			<if test="productType != null  and productType != ''  ">#{productType},</if>
+			<if test="provinceCode != null  and provinceCode != ''  ">#{provinceCode},</if>
+			<if test="cityCode != null  and cityCode != ''  ">#{cityCode},</if>
+			<if test="phoneNum != null  and phoneNum != ''  ">#{phoneNum},</if>
+			<if test="certName != null  and certName != ''  ">#{certName},</if>
+			<if test="certNo != null  and certNo != ''  ">#{certNo},</if>
+			<if test="contactNum != null  and contactNum != ''  ">#{contactNum},</if>
+			<if test="custId != null  and custId != ''  ">#{custId},</if>
+			<if test="postProvinceCode != null  and postProvinceCode != ''  ">#{postProvinceCode},</if>
+			<if test="postCityCode != null  and postCityCode != ''  ">#{postCityCode},</if>
+			<if test="postDistrictCode != null  and postDistrictCode != ''  ">#{postDistrictCode},</if>
+			<if test="address != null  and address != ''  ">#{address},</if>
+			'0',
+			sysdate(),
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateOrderCucc" parameterType="OrderCucc">
+        update order_cucc
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productType != null  and productType != ''  ">productType = #{productType},</if>
+            <if test="provinceCode != null  and provinceCode != ''  ">provinceCode = #{provinceCode},</if>
+            <if test="cityCode != null  and cityCode != ''  ">cityCode = #{cityCode},</if>
+            <if test="phoneNum != null  and phoneNum != ''  ">phoneNum = #{phoneNum},</if>
+            <if test="certName != null  and certName != ''  ">certName = #{certName},</if>
+            <if test="certNo != null  and certNo != ''  ">certNo = #{certNo},</if>
+            <if test="contactNum != null  and contactNum != ''  ">contactNum = #{contactNum},</if>
+            <if test="custId != null  and custId != ''  ">custId = #{custId},</if>
+            <if test="postProvinceCode != null  and postProvinceCode != ''  ">postProvinceCode = #{postProvinceCode},</if>
+            <if test="postCityCode != null  and postCityCode != ''  ">postCityCode = #{postCityCode},</if>
+            <if test="postDistrictCode != null  and postDistrictCode != ''  ">postDistrictCode = #{postDistrictCode},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+            <if test="status != null  and status != ''  ">status = #{status},</if>
+            updateTime = sysdate(),
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where fd_id = #{fdId}
+    </update>
+
+	<delete id="deleteOrderCuccById" parameterType="String">
+        delete from order_cucc where fd_id = #{fdId}
+    </delete>
+	
+    <delete id="deleteOrderCuccByIds" parameterType="String">
+        delete from order_cucc where fd_id in 
+        <foreach item="fdId" collection="array" open="(" separator="," close=")">
+            #{fdId}
+        </foreach>
+    </delete>
+    
+</mapper>

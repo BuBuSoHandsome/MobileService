@@ -165,7 +165,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         (
             select pack, count(*)successNum from `order`
             <where>
-                status = '1'
+                status = '3'
                 <if test="startTime !='' and startTime != null">
                     and create_time >= #{startTime}
                 </if>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>腾讯大王卡</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
+
+    <link th:href="@{/ajax/libs/picker/weui.css}" rel="stylesheet"/>
+    <link th:href="@{/ajax/libs/picker/weui2.css}" rel="stylesheet"/>
+    <!--<link th:href="@{/ajax/libs/picker/weuix.css}" rel="stylesheet"/>-->
+    <link th:href="@{/ajax/libs/picker/weuixx.css}" rel="stylesheet"/>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        a,a:link,a:hover,a:visited{
+            text-decoration: none;
+        }
+        body{
+            min-height: 100%;
+            max-width: 40rem;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-size: 16px;
+            background-color: #ccc;
+            font-family: -apple-system-font, "Helvetica Neue", sans-serif;
+        }
+        .bannerImg{
+            width: 100%;
+        }
+        .bannerImg img{
+            width: 100%;
+        }
+        .content{
+            padding: 10px 0;
+            background: #f2471c;
+        }
+        .form-con{
+            width: 90%;
+            margin: auto;
+            overflow: hidden;
+            background: #fff;
+        }
+        h3.fill-desc{
+            margin: 0;
+            color: #6e6e6e;
+            font-size: .8125rem;
+            line-height: 2.8125rem;
+            padding: 0 1.125rem;
+            border-bottom: 1px solid #f1f1f1;
+            background-color: #d4d4d4;
+        }
+        .fill-item{
+            position: relative;
+            display: flex;
+            padding-left: 1.125rem;
+            line-height: 2.875rem;
+            background-color: #fff;
+            font-size: .8125rem;
+        }
+        .fill-item label{
+            flex: 0 0 5rem;
+            font-weight: 900;
+            margin: 0;
+        }
+        label.error{
+            top: 0;
+        }
+        .red{
+            color: red;
+        }
+        .fill-item .form-ctrl{
+            flex: 1;
+            border: none;
+            outline: none;
+        }
+        .fill-item a{
+            flex: 0 0 auto;
+            padding-right: 10px ;
+            color: #18b4ed;
+        }
+        .submit-btn{
+            width: 90%;
+            height: 2.5rem;
+            margin:1rem auto;
+            display: block;
+            line-height: 2.5rem;
+            font-size: 1.0625rem;
+            text-align: center;
+            text-decoration: none;
+            -webkit-border-radius: .1875rem;
+            -moz-border-radius: .1875rem;
+            border-radius: .1875rem;
+            background-color: #dba95e;
+            color: #fff;
+        }
+        .protocol-div{
+            display: flex;
+            padding-top: 1rem;
+            padding-left: 1.125rem;
+            font-size: .75rem;
+        }
+        .check-btn{
+            padding-right: .8rem;
+            position: relative;
+        }
+        .check-btn i{
+            font-size: 1.8rem;
+            color: #ccc;
+        }
+        .check-btn input[type=checkbox]{
+            position: absolute;
+            top: -.3rem;
+            left: 0;
+            width: 1.8rem;
+            height: 1.8rem;
+            opacity: 0;
+        }
+        .privacy{
+            font-size: .75rem;
+            text-align: center;
+            padding-bottom: 1rem;
+        }
+        .privacy p{
+            margin: 0;
+        }
+    </style>
+</head>
+<script>
+    var fontSizeAuto = function (){
+        var viewportWidth = document.documentElement.clientWidth;
+        if(viewportWidth >= 640){ viewportWidth = 640; }
+        if(viewportWidth <= 320){ viewportWidth = 320; }
+        document.documentElement.style.fontSize = viewportWidth/ 22 +'px';
+    };
+    fontSizeAuto();
+    window.onresize = fontSizeAuto;
+</script>
+
+<body>
+    <div class="bannerImg">
+        <img th:src="@{/img/landing/tx/tx_header.jpg}" alt="">
+    </div>
+    <div class="content">
+        <div class="form-con">
+            <form action="" method="post" name="userInfo" id="userInfo">
+                <div class="fill">
+                    <h3 class="fill-desc">
+                        <b>根据国家实名制要求, 请准确提供有效证件信息</b>
+                    </h3>
+                    <div class="fill-item">
+                        <label><span class="red">*</span>姓名</label>
+                        <input name="certName" id="certName" class="form-ctrl" type="text" placeholder="请输入有效证件姓名" required>
+                    </div>
+                    <div class="fill-item">
+                        <label><span class="red">*</span>联系方式</label>
+                        <input name="mobilePhone" id="mobilePhone" class="form-ctrl" type="number" placeholder="请输入联系电话" required>
+                    </div>
+                    <div class="fill-item">
+                        <label><span class="red">*</span>有效证件</label>
+                        <input name="certNo" id="certNo" class="form-ctrl" type="number" placeholder="有效证件号码" required>
+                    </div>
+                    <div class="fill-item">
+                        <label><span class="red">*</span>验证码</label>
+                        <input name="safeCode" id="safeCode" class="form-ctrl" type="text" placeholder="请输入验证码" required>
+                        <a id="captchaBtn" onclick="getSafeCode();">获取验证码</a>
+                        <div id="captchaHint" style="white-space: nowrap"><a id="second_hint" style="padding: 0;"></a> 秒后重发</div>
+                    </div>
+                </div>
+
+                <div class="fill">
+                    <h3 class="fill-desc">
+                        <b>请填写配送地址</b>
+                    </h3>
+                    <div class="fill-item">
+                        <label><span class="red">*</span>所在地区</label>
+                        <input name="selCity" id="selCity" class="form-ctrl" type="text" placeholder="点击选取省市区县" required readonly>
+                        <input name="selProvinceCode" id="selProvinceCode" class="form-ctrl" type="hidden">
+                        <input name="selCityCode" id="selCityCode" class="form-ctrl" type="hidden">
+                        <input name="selCityCounty" id="selCityCounty" class="form-ctrl" type="hidden">
+                    </div>
+                   <div class="fill-item">
+                        <textarea  name="address" id="address" class="form-ctrl" rows="1" style="white-space: nowrap;"  placeholder="街道/镇+村/小区/写字楼+门牌号" required></textarea>
+                    </div>
+                </div>
+
+                <div class="fill">
+                    <h3 class="fill-desc">
+                        <b>号码归属地</b>
+                    </h3>
+                    <div class="fill-item">
+                        <input name="homeCity" id="homeCity" class="form-ctrl" type="text" placeholder="点击选择号码归属地" required readonly>
+                        <input type="hidden" name="homeProvinceCode" id="homeProvinceCode">
+                        <input type="hidden" name="homeCityCode" id="homeCityCode">
+                    </div>
+                </div>
+
+                <div class="fill">
+                    <h3 class="fill-desc">
+                        <b>请选择号码</b>
+                    </h3>
+                    <div class="fill-item">
+                        <label style="flex:0 1 6rem;"><span class="red">*</span>点击选取号码</label>
+                        <input name="serial_number" id="serial_number" class="form-ctrl" type="text" onclick="showmark();" required  readonly>
+                    </div>
+                </div>
+            </form>
+
+            <div style="background: #f7f7f7">
+                <div class="protocol-div">
+                <span class="check-btn">
+                    <i class="fa fa-circle-thin"></i>
+                    <input name="read" id="read" type="checkbox">
+                </span>
+                    <div>我已阅读并同意
+                        <a href="https://www.gzuni.com/apps/kingcard/b2i/display__protocal/">《客户入网服务协议及业务协议》</a>
+                        <a href="">《业务办理公告》</a>
+                    </div>
+                </div>
+                <div class="btn-box">
+                    <div class="submit-btn" onclick="summit_form_front();">立即提交   免费送货上门</div><!--summit_form-->
+                </div>
+                <div class="privacy">
+                    <p><span class="red">*1、未满16周岁的，因政策原因不发货，请勿下单。</span></p>
+                    <p>*2、请保持电话畅通，我们将随时可能与您联系。</p>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="bannerImg">
+        <img th:src="@{/img/landing/tx/tx_footer.jpg}" alt="">
+    </div>
+
+    <!--选择号码-->
+    <div class="weui_mask" id="pick_number_mask_alert"></div>
+    <div class="weui-custom-pop" id="pick_number_alert">
+        <div class="close" onclick="hidemark()">
+            <i class="fa fa-close"></i>
+        </div>
+        <div class="weui-custom-hd">
+            <h2>选择号码</h2></div>
+        <div class="searchbar_wrap"></div>
+        <div id="get_num_hint"></div>
+        <table id="tb">
+            <tbody id="tbody"></tbody>
+        </table>
+        <div class="weui-custom-ft">
+            <a href="javascript:num_page();">换一批</a></div>
+        <input type="textarea" id="num" hidden="" value="">
+        <input type="text" id="cur_page" hidden="" value="">
+    </div>
+
+</body>
+
+<script th:src="@{/ajax/libs/picker/picker.min.js}"></script>
+<script th:src="@{/ajax/libs/picker/zepto.min.js}"></script>
+<script th:src="@{/ajax/libs/picker/zepto.weui.js}"></script>
+<script th:src="@{/ajax/libs/picker/city.js}"></script>
+<script th:src="@{/ajax/libs/picker/cityselect.js}"></script>
+<script th:src="@{/ajax/libs/picker/cityhomeselect.js}"></script>
+
+<script th:src="@{/ajax/libs/picker/query_num_s.js}"></script>
+
+
+<script>
+
+
+
+
+</script>
+
+
+</html>

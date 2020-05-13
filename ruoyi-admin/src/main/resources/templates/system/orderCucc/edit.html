@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('添加联通订单')" />
+	<th:block th:include="include :: select2-css" />
+	<style>
+		.red{
+			color: red;
+		}
+	</style>
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-orderCucc-edit" th:object="${orderCucc}">
+            <input id="fdId" name="fdId" th:field="*{fdId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span class="red">*</span>产品编号：</label>
+				<div class="col-sm-8">
+					<input id="productType" name="productType" th:field="*{productType}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span class="red">*</span>号码归属地区：</label>
+				<div class="col-sm-4">
+					<select name="provinceCode" id="provinceCode" th:field="*{provinceCode}" level="0" type="0" class="form-control"></select>
+				</div>
+				<div class="col-sm-4">
+					<select name="cityCode" id="cityCode" level="1" th:field="*{cityCode}" class="form-control"></select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span class="red">*</span>所选号码：</label>
+				<div class="col-sm-8">
+					<input id="phoneNum" name="phoneNum" th:field="*{phoneNum}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span class="red">*</span>姓名：</label>
+				<div class="col-sm-8">
+					<input id="certName" name="certName" th:field="*{certName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span class="red">*</span>身份证号：</label>
+				<div class="col-sm-8">
+					<input id="certNo" name="certNo" th:field="*{certNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span class="red">*</span>联系号码：</label>
+				<div class="col-sm-8">
+					<input id="contactNum" name="contactNum" th:field="*{contactNum}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span class="red">*</span>占号资源id：</label>
+				<div class="col-sm-8">
+					<input id="custId" name="custId" th:field="*{custId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span class="red">*</span>收货地区：</label>
+				<div class="col-sm-3">
+					<select name="postProvinceCode" id="postProvinceCode" level="0" class="form-control"></select>
+				</div>
+				<div class="col-sm-3">
+					<select name="postCityCode" id="postCityCode" level="1"  class="form-control"></select>
+				</div>
+				<div class="col-sm-3">
+					<select name="postDistrictCode" id="postDistrictCode" level="2"  class="form-control"></select>
+				</div>
+			</div>
+
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span class="red">*</span>详细收货地址：</label>
+				<div class="col-sm-8">
+					<input id="address" name="address" th:field="*{address}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"><span class="red">*</span>订单状态：</label>
+				<div class="col-sm-8">
+					<select th:field="*{status}" name="status" id="status" level="2" class="form-control">
+						<option value="0" th:selected="*{status == '0'}">未下单</option>
+						<option value="1" th:selected="*{status == '1'}">下单成功</option>
+						<option value="2" th:selected="*{status == '2'}">	下单失败</option>
+						<option value="3" th:selected="*{status == '3'}">激活成功</option>
+						<option value="4" th:selected="*{status == '4'}">订单拒收</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="remark" name="remark" th:field="*{remark}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+	<th:block th:include="include :: footer" />
+	<th:block th:include="include :: select2-js" />
+	<script th:src="@{/ajax/libs/picker/city.js}"></script>
+    <script type="text/javascript">
+		var prefix = ctx + "system/orderCucc";
+
+        var selectIndex = [0,0,0];
+        $(function(){
+            getCode(city,'provinceCode');
+            getCode(city[0].sub,'cityCode');
+            getCode(city,'postProvinceCode');
+            getCode(city[0].sub,'postCityCode');
+            getCode(city[0].sub[0].sub,'postDistrictCode');
+            $('#provinceCode').on('change',changeEven);
+            $('#postProvinceCode').on('change',changeEven);
+        });
+        function getCode(data,obj){
+            var h = '';
+            for(var i=0; i<data.length; i++){
+                h += '<option value="'+data[i].code+'" idx="' + i + '">'+data[i].name+'</option>'
+            }
+            $('#' + obj).html(h);
+        }
+        function changeEven(){
+            var level = $(this).attr('level');
+            var nextSelectId = $(this).parent().next().children().attr('id');
+            $('#' + nextSelectId).parent().next().find('select').html('')
+            selectIndex[level] = parseInt($(this).find('option:selected').attr('idx'));
+            var data = [];
+            if(level == 0 ){
+                data = city[selectIndex[0]].hasOwnProperty('sub')?city[selectIndex[0]].sub:[]
+            }else if(level == 1){
+                data = city[selectIndex[0]].sub[selectIndex[1]].hasOwnProperty('sub')?city[selectIndex[0]].sub[selectIndex[1]].sub:[];
+            }
+            var h2 = '';
+            for(var i=0; i<data.length; i++){
+                h2 += '<option value="'+data[i].code+'" idx="' + i + '">'+data[i].name+'</option>';
+            }
+            $('#'+nextSelectId).html(h2);
+            if(nextSelectId){
+                $('#'+ nextSelectId).on('change',changeEven);
+            }
+
+
+        }
+		$("#form-orderCucc-edit").validate({
+			rules:{
+                productType:{
+                    required:true,
+                },
+                provinceCode:{
+                    required:true,
+                },
+                cityCode:{
+                    required:true,
+                },
+                phoneNum:{
+                    required:true,
+                },
+                certName:{
+                    required:true,
+                },
+                certNo:{
+                    required:true,
+                },
+                contactNum:{
+                    required:true,
+                },
+                custId:{
+                    required:true,
+                },
+                postProvinceCode:{
+                    required:true,
+                },
+                postCityCode:{
+                    required:true,
+                },
+                address:{
+                    required:true,
+                },
+                status:{
+                    required:true,
+                }
+			}
+		});
+		
+		function submitHandler() {
+		    console.log($('#form-orderCucc-edit').serialize())
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-orderCucc-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>
