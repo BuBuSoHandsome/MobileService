@@ -105,6 +105,7 @@ public class CuccMobileResponseImpl implements CuccMobileResponseService {
                 BeanUtils.copyProperties(request, orderCucc);
                 orderCucc.setFdId(UUID.randomUUID().toString().replaceAll("-", ""));
                 orderCucc.setCaptchaId(resultJson.getString("ID"));
+                orderCucc.setStatus("0");
                 orderCuccMapper.insertOrderCucc(orderCucc);
                 return new CreateOrderResponse(){{
                     setCode("0");
