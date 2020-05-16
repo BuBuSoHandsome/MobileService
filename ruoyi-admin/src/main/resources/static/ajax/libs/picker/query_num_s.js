@@ -143,7 +143,6 @@ function num_page(numarray, current_page) {
 function showmark(searchValue) {
     var homeProvinceCode = $('#homeProvinceCode').val();
     var homeCityCode = $('#homeCityCode').val();
-    console.log(homeProvinceCode,homeCityCode)
     if (homeProvinceCode == '' || homeProvinceCode == undefined) {
         alert('请选择号码归属地');
         return false;
@@ -165,6 +164,7 @@ function showmark(searchValue) {
         contentType: 'application/json',
         data:  JSON.stringify(postData),
         success: function(data) {
+            //console.log(JSON.stringify(data))
             var current_page = 0;
             if(data.length > 0 ){
                 $('#get_num_hint').empty();
@@ -197,7 +197,6 @@ $('.searchbar_wrap').on('click','.weui_icon_clear',function(){
 $(function() {
     //复选框事件
     $('#read').on('click',function(){
-        console.log($(this).is(':checked'))
         if($(this).is(':checked')){
             $(this).parent().find('i').removeClass('fa-circle-thin').addClass('fa-check-circle').css('color','#dba95e');
         }else{
@@ -225,8 +224,14 @@ $(function() {
         }
     });
 });
+
 /*
-*   获取验证码
+* 第一个是一证五户
+第二个是申请验证码
+第三个是创建订单
+* */
+/*
+*   点击获取验证码事件
 * */
 function getSafeCode(){
     var mobilePhone = $('#mobilePhone').val();
@@ -241,40 +246,44 @@ function getSafeCode(){
     }
     resetCode();
     var certNo = $('#certNo').val();
+    var provinceCode = certNo.substr(0,2) + '0000';
+    var cityCode = certNo.substr(0,4) + '00';
     var checkUser = {
         certName : $('#certName').val(),
         certNum : certNo,
-        cityCode : certNo.substr(0,4) + '00',
-        provinceCode : certNo.substr(0,2)+ '0000',
+        cityCode : cityCode,
+        provinceCode : provinceCode,
         goodsId : '981610241535',
         phoneNum : mobilePhone
     };
-    //验证用户一证五户和下单数量
+    //验证用户一证五户和验证重复下单
     $.ajax({
         url: "/CuccMobile/checkOrder",
         type: "post",
         contentType: 'application/json',
         data: JSON.stringify(checkUser),
         success:function(data){
+            //console.log(data)
             if(data.code != 0){
                 alert(data.message);
                 return false;
             }
-            //获取验证码
+            //获取验证码并锁住号码
             $.ajax({
-                url: "/CuccMobile/safeCode",
+                url: "/CuccMobile/lockNumAndApplyCode",
                 type: "post",
                 contentType: 'application/json',
-                data: JSON.stringify({certNo:certNo,contactNum:mobilePhone}),
+                data: JSON.stringify({certNum:certNo,provinceCode:$('#homeProvinceCode').val(),cityCode:$('#homeCityCode').val(),contactNum:mobilePhone,phoneNum:$('#serial_number').val()}),
                 success:function(data){
+                    //console.log(data)
                     if(data.code != 0)return false;
+                    $('#custId').val(data.custId);
                     $.toast('验证码已发送！', 1500);
                 }
             })
         }
     })
 }
-$.toast('2323',1000)
 /*
 * 发送验证码定时器  每个60秒可发送
 * */
@@ -319,123 +328,86 @@ function getCheckCode(){
 * 表单验证
 * */
 function summit_form() {
-    var user_name = $('#certName').val();
-    var id_card = $('#certNo').val();
-    var mobile = $('#mobilePhone').val();
-    var sel_city = $('#selCity').val();
-    var addr_detail = $('#address').val();
-
-    var productType = '215';
-    var provinceCode = $('#homeProvinceCode').val();
-    var cityCode = $('#homeCityCode').val();
-    var phoneNum = $('#serial_number').val();
-
+    var captchaId = $('#safeCode').val();//验证码
     var certName = $('#certName').val();
-    var certNo = $('#certNo').val();
-    var contactNum = $('#mobilePhone').val();
-    var custId = '99999'// 下单用户关键字,代表下单唯一用户，随机数， 需以“99999”开头，最长 16 位数字，不同订 单尽量不要重复；与号码状态变更接口的号码 预占关键字 proKey 保持传值一致
+    var certNo  = $('#certNo').val();
+    var channel = '';
+    var contactNum  = $('#mobilePhone').val();
+    var custId  = $('#custId').val();
+    var phoneNum  = $('#serial_number').val();
+    var productType = '215';
+    var provinceCode  = $('#homeProvinceCode').val();
+    var cityCode  = $('#homeCityCode').val();
     var postProvinceCode = $('#selProvinceCode').val();
     var postCityCode = $('#selCityCode').val();
     var postDistrictCode = $('#selCityCounty').val();
-    var address = $('#selCity').val().replace(/ /g,'') + $('#address').val();
-    var channel = '';//触点编码
-    var captchaId = '';//验证码校验成功后返回的 ID
+    var address = $('#address').val();
+    var referrerCode = '';
 
-    var addr = sel_city + addr_detail;
     var pt = /^0?1[3|4|5|6|7|8|9][0-9]\d{8}$/;
-    var serial_number = $('#serial_number').val();
-    var k_tag = $('#k_tag').val() || 0;
-    console.log(k_tag)
-    var captcha_tag = $('#captcha_tag').val() || 1;
-    var captcha_code = $('#safeCode').val();//验证码
 
-    var need_cert = $('#need_cert').val();
-    var sanzhao_tag = $('#sanzhao_tag').val();
-    // var arr = Object.keys(_img.getImg());
-    // var pic_1 = '';
-    // var pic_2 = '';
-    // var pic_3 = '';
-
-    var url = 'https://www.gzuni.com/apps/kingcard/b2i/wangka_summit/';
-    var home_city_set = $('#home-city-set').val();
-    if (checkName(user_name)) {
+    if (checkName(certName)) {
         alert("姓名必须至少包含两个汉字");
         return false;
-    }else if (!pt.test(mobile)) {
+    }else if (!pt.test(contactNum)) {
         alert('请输入正确的联系号码');
         return false;
-    }else if (IdentityCodeValid(id_card)) {
+    }else if (IdentityCodeValid(certNo)) {
         return false;
-    } else if (addr.length >= 50 || !addr) {
-        alert('请正确输入地址');
-        return false;
-    } else if (/^[0-9]+$/.test(addr_detail)) {
-        alert('详细地址填写有误');
-        return false;
-    } else if (!sel_city) {
-        alert('请点击选取省市区县');
-        return false;
-    }else if (addr_detail.length >= 50 || !addr_detail || addr_detail.length < 6) {
+    }else if (address.length >= 50 || !address || address.length < 6) {
         alert('请输入正确的详细地址');
         return false;
+    }else if (/^[0-9]+$/.test(address)) {
+        alert('详细地址填写有误');
+        return false;
+    } else if (!$('#selCity').val()) {
+        alert('请点击选取省市区县');
+        return false;
     }
-    if (k_tag == '0' || k_tag == '2') {
-        if (serial_number == '') {
-            alert("请选择号码");
-            return false;
-        }
-    } else {
-        url = 'https://www.gzuni.com/apps/kingcard/b2i/wangka_summit_test/';
+    if (!phoneNum || phoneNum == '') {
+        alert("请选择号码");
+        return false;
     }
-    if (captcha_tag == '1') {
-        if (captcha_code == '' || captcha_code == 'undefined') {
-            alert('请输入验证码，谢谢');
-            return false;
-        }
+    if (!captchaId || captchaId == '') {
+        alert('请输入验证码，谢谢');
+        return false;
     }
 
-    var uuid = getCheckCode();//返回uuid
-    console.log(uuid)
-
-    var postData = {
-        "certName": user_name,
-        "contractPhone": mobile,
-        "certId": id_card,
-        "addr": addr,
-        "number": serial_number,
-        "home_city_set": home_city_set,
-        "captcha_tag": captcha_tag,
-        "captcha_code": captcha_code,
-    };
+    var postData = JSON.stringify({
+        "address":address,
+        "captchaId":captchaId,
+        "certName":certName,
+        "certNo":certNo,
+        "cityCode":cityCode,
+        "contactNum":contactNum,
+        "custId":custId,
+        "phoneNum":phoneNum,
+        "productType":productType,
+        "provinceCode":provinceCode,
+        "postCityCode":postCityCode,
+        "postDistrictCode":postDistrictCode,
+        "postProvinceCode":postProvinceCode
+    });
     $(".submit-btn").hide();
     //$.showLoading('请稍后');
     $.ajax({
-        type: "POST",
-        url: url,
+        url: '/CuccMobile/createOrder',
+        type: 'post',
+        contentType: 'application/json',
         data: postData,
-        success: function(msg) {
-            var respon = eval("(" + msg + ")");
-            var link = respon.link;
-            var res_ = respon.rspDesc;
-            var tag = respon.tag;
-            var scene = respon.scene;
-
+        success: function(data) {
+            //console.log(data)
             $(".submit-btn").show();
             $.hideLoading();
-            if (link == '') {
-                if (tag == '1') {
-                    js_Track();
-                    alert(res_);
-                } else {
-                    alert(res_);
-
-                }
-            } else {
-                js_Track();
-                alert(res_);
-                window.location.href = link;
+            if(data.code == 0){
+                $.toast(data.message, 1500);
+                setTimeout(function(){
+                    window.location.href = window.location.href;
+                },1500)
+            }else{
+                alert(data.message);
+                window.location.href = window.location.href;
             }
-
         }
     })
 }
@@ -452,6 +424,7 @@ function summit_form_front() {
         summit_form();
     }else{
         alert('请选择号码归属地');
+        return false;
     }
 
 }

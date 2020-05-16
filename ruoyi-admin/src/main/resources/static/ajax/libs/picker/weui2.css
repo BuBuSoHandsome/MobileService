@@ -43,7 +43,8 @@ a:active {
   display: table; }
 
 .cell {
-  display: cell-table; }
+  display: table-cell;
+}
 
 .tleft {
   text-align: left; }
@@ -1098,7 +1099,7 @@ border-radius:0!important;
     -webkit-transform-origin: 50% 50%; } }
 .xz360 {
   -webkit-animation: xz360 6s ease-out 0.1s infinite;
-  animation: xz360 6s ease-out 0.1s infinite; }\
+  animation: xz360 6s ease-out 0.1s infinite; }
 .xz180{-webkit-transform:rotate(180deg);transform:rotate(180deg);-webkit-transform-origin:50% 50%;transform-origin:50% 50%}
   
 .reverse {
@@ -1634,7 +1635,7 @@ weui-box*/
     background: rgba(0, 0, 0, 0.7) none repeat scroll 0 0;
     height: 100%;
     left: 0;
-    display:node;
+    display: none;
     position: fixed;
     text-align: center;
     top: 0;
@@ -1897,10 +1898,10 @@ weui-box*/
 /*weui-tab*/
 .weui_tab_nav
 {
-	display: box;
+	display: -moz-box;
 	display: -webkit-box;
 	display: -webkit-flex;
-	display: display:flex
+	display: flex;
 }
 .weui_tab_nav .weui_nav_green
 {

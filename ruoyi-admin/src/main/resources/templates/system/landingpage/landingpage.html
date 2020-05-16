@@ -12,7 +12,7 @@
     <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
 
     <link th:href="@{/ajax/libs/picker/weui.css}" rel="stylesheet"/>
-    <link th:href="@{/ajax/libs/picker/weui2.css}" rel="stylesheet"/>
+   <!-- <link th:href="@{/ajax/libs/picker/weui2.css}" rel="stylesheet"/>-->
     <!--<link th:href="@{/ajax/libs/picker/weuix.css}" rel="stylesheet"/>-->
     <link th:href="@{/ajax/libs/picker/weuixx.css}" rel="stylesheet"/>
     <style>
@@ -166,11 +166,23 @@
                     </div>
                     <div class="fill-item">
                         <label><span class="red">*</span>有效证件</label>
-                        <input name="certNo" id="certNo" class="form-ctrl" type="number" placeholder="有效证件号码" required>
+                        <input name="certNo" id="certNo" class="form-ctrl" type="text" placeholder="有效证件号码" required>
+                    </div>
+
+                    <div class="fill-item">
+                        <label><span class="red">*</span>号码归属地</label>
+                        <input name="homeCity" id="homeCity" class="form-ctrl" type="text" placeholder="点击选择号码归属地" required readonly>
+                        <input type="hidden" name="homeProvinceCode" id="homeProvinceCode">
+                        <input type="hidden" name="homeCityCode" id="homeCityCode">
+                    </div>
+                    <div class="fill-item">
+                        <label><span class="red">*</span>选取号码</label>
+                        <input name="serial_number" id="serial_number" class="form-ctrl" type="text" placeholder="点击选取号码" onclick="showmark();" required  readonly>
                     </div>
                     <div class="fill-item">
                         <label><span class="red">*</span>验证码</label>
                         <input name="safeCode" id="safeCode" class="form-ctrl" type="text" placeholder="请输入验证码" required>
+                        <input name="custId" id="custId" type="hidden">
                         <a id="captchaBtn" onclick="getSafeCode();">获取验证码</a>
                         <div id="captchaHint" style="white-space: nowrap"><a id="second_hint" style="padding: 0;"></a> 秒后重发</div>
                     </div>
@@ -189,27 +201,6 @@
                     </div>
                    <div class="fill-item">
                         <textarea  name="address" id="address" class="form-ctrl" rows="1" style="white-space: nowrap;"  placeholder="街道/镇+村/小区/写字楼+门牌号" required></textarea>
-                    </div>
-                </div>
-
-                <div class="fill">
-                    <h3 class="fill-desc">
-                        <b>号码归属地</b>
-                    </h3>
-                    <div class="fill-item">
-                        <input name="homeCity" id="homeCity" class="form-ctrl" type="text" placeholder="点击选择号码归属地" required readonly>
-                        <input type="hidden" name="homeProvinceCode" id="homeProvinceCode">
-                        <input type="hidden" name="homeCityCode" id="homeCityCode">
-                    </div>
-                </div>
-
-                <div class="fill">
-                    <h3 class="fill-desc">
-                        <b>请选择号码</b>
-                    </h3>
-                    <div class="fill-item">
-                        <label style="flex:0 1 6rem;"><span class="red">*</span>点击选取号码</label>
-                        <input name="serial_number" id="serial_number" class="form-ctrl" type="text" onclick="showmark();" required  readonly>
                     </div>
                 </div>
             </form>

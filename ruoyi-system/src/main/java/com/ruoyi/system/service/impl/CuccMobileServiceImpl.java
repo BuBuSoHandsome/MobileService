@@ -173,6 +173,7 @@ public class CuccMobileServiceImpl implements CuccMobileService {
         CheckCodeRequest checkCodeRequest = new CheckCodeRequest();
         checkCodeRequest.setCertNo(request.getCertNo());
         checkCodeRequest.setContactNum(request.getContactNum());
+        checkCodeRequest.setSafeCode(request.getCaptchaId());
         CheckCodeResponse checkCodeResponse = this.checkCode(checkCodeRequest);
         return cuccMobileResponseService.createOrder(request, checkCodeResponse);
     }
