@@ -341,7 +341,7 @@ function summit_form() {
     var postProvinceCode = $('#selProvinceCode').val();
     var postCityCode = $('#selCityCode').val();
     var postDistrictCode = $('#selCityCounty').val();
-    var address = $('#address').val();
+    var address = $('#homeCity').val().replace(/ /g,'') + $('#address').val();
     var referrerCode = '';
 
     var pt = /^0?1[3|4|5|6|7|8|9][0-9]\d{8}$/;
