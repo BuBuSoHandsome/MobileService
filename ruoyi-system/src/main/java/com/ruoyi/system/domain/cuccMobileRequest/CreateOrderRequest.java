@@ -18,17 +18,17 @@ public class CreateOrderRequest implements Serializable {
     private String captchaId;
     private String certName ;
     private String certNo ;
-    private String channel;
+    private String channel= "08-2278-6984-9999";
     private String cityCode ;
     private String contactNum ;
     private String custId ;
     private String phoneNum ;
-    private String productType;
-    private String provinceCode ;
     private String postCityCode;
     private String postDistrictCode;
     private String postProvinceCode ;
-    private String referrerCode ;
+    private String productType;
+    private String provinceCode ;
+    private String referrerCode ="5111725421";
     private String secret = "kKpuL2DedCk0YfET";
 
 
