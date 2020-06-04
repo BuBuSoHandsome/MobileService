@@ -1,5 +1,6 @@
 package com.ruoyi.system.service;
 
+import com.ruoyi.system.domain.OrderCucc;
 import com.ruoyi.system.domain.cuccMobileRequest.*;
 import com.ruoyi.system.domain.cuccMobileResponse.*;
 
@@ -26,6 +27,8 @@ public interface CuccMobileService {
     LockNumAndApplyCodeResponse lockNumAndApplyCode (LockNumAndApplyCodeRequest request);
 
     CreateOrderResponse createOrder(CreateOrderRequest request);
+
+    CreateOrderResponse installOrder(OrderCucc orderCucc);
 
 
 

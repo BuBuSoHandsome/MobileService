@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectOrderCuccVo">
-        select fd_id, productType, provinceCode, cityCode, phoneNum, certName, certNo, contactNum, custId, postProvinceCode, postCityCode, postDistrictCode, address, status, updateTime, remark from order_cucc
+        select fd_id, productType, provinceCode, cityCode, phoneNum, certName, certNo, contactNum, custId, postProvinceCode, postCityCode, postDistrictCode, address, status, updateTime, remark ,captchaId from order_cucc
     </sql>
 	
     <select id="selectOrderCuccList" parameterType="OrderCucc" resultMap="OrderCuccResult">

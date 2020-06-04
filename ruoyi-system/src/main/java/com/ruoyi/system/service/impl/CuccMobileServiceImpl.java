@@ -4,14 +4,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.enums.MobileUrl;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.moblie.MobileUtil;
+import com.ruoyi.system.domain.OrderCucc;
 import com.ruoyi.system.domain.cuccMobileRequest.*;
 import com.ruoyi.system.domain.cuccMobileResponse.*;
+import com.ruoyi.system.mapper.OrderCuccMapper;
 import com.ruoyi.system.mobile.CuccMobileResponseService;
 import com.ruoyi.system.service.CuccMobileService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,6 +148,28 @@ public class CuccMobileServiceImpl implements CuccMobileService {
         }};
     }
 
+
+    @Override
+    public CreateOrderResponse installOrder(OrderCucc orderCucc) {
+        CreateOrderRequest createOrderRequest = new CreateOrderRequest();
+        BeanUtils.copyProperties(orderCucc, createOrderRequest);
+        String resultJson = "";
+        try {
+            resultJson = MobileUtil.doPost(MobileUrl.CreateOrder.getUrl(), createOrderRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!"".equals(resultJson)){
+            JSONObject jsStr = JSONObject.parseObject(resultJson);
+            CreateOrderResponse checkCodeResponse = JSONObject.toJavaObject(jsStr,CreateOrderResponse.class);
+            return checkCodeResponse;
+        }
+        return new CreateOrderResponse(){{
+            setCode("90");
+            setMessage("下订单失败");
+        }};
+    }
+
     @Override
     public CheckOrderResponse checkOrder(CheckOrderRequest request) {
         CheckUserRequest checkUserRequest = new CheckUserRequest();
@@ -177,5 +203,7 @@ public class CuccMobileServiceImpl implements CuccMobileService {
         CheckCodeResponse checkCodeResponse = this.checkCode(checkCodeRequest);
         return cuccMobileResponseService.createOrder(request, checkCodeResponse);
     }
+
+
 
 }

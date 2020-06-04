@@ -17,9 +17,15 @@
 							<li>
 								所选号码：<input type="text" name="phoneNum"/>
 							</li>
-
 							<li>
 								姓名：<input type="text" name="certName"/>
+							</li>
+							<li>
+								<p>订单状态：</p>
+								<select name="status" th:with="type=${@dict.getType('order_status')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
 							</li>
 
 							<li class="select-time">
@@ -61,6 +67,7 @@
         var editFlag = [[${@permission.hasPermi('system:orderCucc:edit')}]];
         var removeFlag = [[${@permission.hasPermi('system:orderCucc:remove')}]];
         var prefix = ctx + "system/orderCucc";
+		var datas2 = [[${@dict.getType('order_status')}]];
 
         $(function() {
             var options = {
@@ -115,26 +122,26 @@
 					title : '联系号码',
 					sortable: true
 				},
-				{
-					field : 'custId', 
-					title : '占号资源id',
-					sortable: true
-				},
-				{
-					field : 'postProvinceCode', 
-					title : '收货省编码',
-					sortable: true
-				},
-				{
-					field : 'postCityCode', 
-					title : '收货地市编码',
-					sortable: true
-				},
-				{
-					field : 'postDistrictCode', 
-					title : '收货区编码',
-					sortable: true
-				},
+				// {
+				// 	field : 'custId',
+				// 	title : '占号资源id',
+				// 	sortable: true
+				// },
+				// {
+				// 	field : 'postProvinceCode',
+				// 	title : '收货省编码',
+				// 	sortable: true
+				// },
+				// {
+				// 	field : 'postCityCode',
+				// 	title : '收货地市编码',
+				// 	sortable: true
+				// },
+				// {
+				// 	field : 'postDistrictCode',
+				// 	title : '收货区编码',
+				// 	sortable: true
+				// },
 				{
 					field : 'address', 
 					title : '详细收货地址',
@@ -143,7 +150,9 @@
 				{
 					field : 'status', 
 					title : '订单状态',
-					sortable: true
+					formatter: function(value, row, index) {
+						return $.table.selectDictLabel(datas2, value);
+					}
 				},
 				{
 					field : 'updateTime', 

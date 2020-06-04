@@ -259,6 +259,10 @@ public class ShiroConfig
         //不拦截mobile服务接口（方便调试 ， 后期接口稳定后则加入拦截。）
         filterChainDefinitionMap.put("/mobile/**","anon");
         filterChainDefinitionMap.put("/CuccMobile/**","anon");
+        filterChainDefinitionMap.put("/system/landingpage","anon");
+
+
+
 
         // 系统权限列表
         // filterChainDefinitionMap.putAll(SpringUtils.getBean(IMenuService.class).selectPermsAll());

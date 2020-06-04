@@ -6,13 +6,17 @@ import com.ruoyi.common.enums.MobileUrl;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.moblie.MobileUtil;
 import com.ruoyi.system.domain.Order;
+import com.ruoyi.system.domain.OrderCucc;
 import com.ruoyi.system.domain.OrderLogistics;
+import com.ruoyi.system.domain.cuccMobileResponse.CreateOrderResponse;
 import com.ruoyi.system.domain.mobileRequest.DSAirpickinstallQueryOrderRequest;
 import com.ruoyi.system.domain.mobileRequest.QueryChooseNumberListRequest;
 import com.ruoyi.system.domain.mobileResponse.DSAirpickinstallQueryOrderResponse;
 import com.ruoyi.system.domain.mobileResponse.QueryChooseNumberListResponse;
+import com.ruoyi.system.mapper.OrderCuccMapper;
 import com.ruoyi.system.mapper.OrderLogisticsMapper;
 import com.ruoyi.system.mapper.OrderMapper;
+import com.ruoyi.system.service.CuccMobileService;
 import com.ruoyi.system.service.MobileService;
 import net.sf.ehcache.util.NamedThreadFactory;
 import org.slf4j.Logger;
@@ -39,8 +43,23 @@ public class MobileTask {
     @Resource
     private OrderMapper orderMapper;
 
+    @Resource
+    private OrderCuccMapper orderCuccMapper;
+
     @Autowired
     private MobileService mobileService;
+
+    @Autowired
+    private CuccMobileService cuccMobileService;
+
+    //每30个任务一个线程
+    private static final Integer MAX_NUMBER =  30;
+    private static Integer countStep(Integer size){
+        if(size<=0){
+            throw  new RuntimeException();
+        }
+        return (size+MAX_NUMBER -1)/MAX_NUMBER;
+    }
 
     //内部任务类
     class refreshOrderTask implements Callable<Integer> {
@@ -117,6 +136,22 @@ public class MobileTask {
         }
     }
 
+    public void installDwOrder(){
+        List<OrderCucc> orderCuccs = orderCuccMapper.selectOrderCuccList(new OrderCucc(){{
+            setStatus("0");
+        }});
+
+        if (orderCuccs.isEmpty()){
+            log.info("系统没有未下单大王卡的订单");
+            return;
+        }
+        for(OrderCucc orderCucc:orderCuccs){
+            CreateOrderResponse orderResponse =  cuccMobileService.installOrder(orderCucc);
+            log.info(orderResponse.getCode());
+            log.info(orderResponse.getMessage());
+        }
+    }
+
 
     public void installBzOrder(){
         JSONObject queryChooseNumberListString = JSONObject.parseObject(
@@ -148,7 +183,7 @@ public class MobileTask {
         }
         List<Order> orderList = orderMapper.selectOrderList10(orderNum);
         if(null == orderList||orderList.isEmpty()){
-            log.info("系统没有未下单的订单");
+            log.info("系统没有未下单宝藏卡的订单");
             return;
         }
         Integer num  = 0;
@@ -160,15 +195,6 @@ public class MobileTask {
         log.info("本次下单 "+orderList.size()+" 记录，成功"+ num +"条，详情请查询系统日志");
     }
 
-
-    private static final Integer MAX_NUMBER =  30;
-
-    private static Integer countStep(Integer size){
-        if(size<=0){
-            throw  new RuntimeException();
-        }
-        return (size+MAX_NUMBER -1)/MAX_NUMBER;
-    }
 }
 
 
