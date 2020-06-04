@@ -1,7 +1,10 @@
 package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.OrderLogistics;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单物流Mapper接口
@@ -58,4 +61,7 @@ public interface OrderLogisticsMapper
      * @return 结果
      */
     public int deleteOrderLogisticsByIds(String[] fdIds);
+
+    public List<Map<String,Object>> selectProvinceData();
+    public List<Map<String,Object>> getDistrictData(@Param("parentCode") String parentCode);
 }

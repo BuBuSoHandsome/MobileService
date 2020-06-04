@@ -621,6 +621,10 @@ label {
 .search-collapse .col-sm-6 .control-label {
 	color: #333;
 }
+.control-label.is-required:before{
+	content: '* ';
+	color: red;
+}
 
 @media ( max-width : 768px) {
 	.search-collapse {

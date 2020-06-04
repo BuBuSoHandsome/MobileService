@@ -124,5 +124,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{fdId}
         </foreach>
     </delete>
+
+    <select id="selectProvinceData" resultType="java.util.Map">
+        select fd_id id, name, code, parent_code parentCode from address_code where type = 1
+    </select>
+
+    <select id="getDistrictData" parameterType="String" resultType="java.util.Map">
+        select fd_id id, name, code, parent_code parentCode from address_code
+         where type != 1 and parent_code = #{parentCode}
+    </select>
     
 </mapper>

@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.ChooseNumberColumn;
@@ -216,6 +217,22 @@ public class OrderController extends BaseController
         mmap.put("orderLogistics", orderLogistics);
         mmap.put("order",order);
         return prefix + "/logisticsDetail";
+    }
+
+    @GetMapping("/getProvince")
+    @ResponseBody
+    public List<Map<String,Object>> getProvince()
+    {
+        List<Map<String,Object>> list = orderLogisticsService.selectProvinceData();
+        return list;
+    }
+
+    @GetMapping("/getDistrict")
+    @ResponseBody
+    public List<Map<String,Object>> getDistrict(String parentCode)
+    {
+        List<Map<String,Object>> list = orderLogisticsService.getDistrictData(parentCode);
+        return list;
     }
 
 

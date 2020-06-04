@@ -1,6 +1,8 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,5 +95,19 @@ public class OrderLogisticsServiceImpl implements IOrderLogisticsService
     public int deleteOrderLogisticsById(String fdId)
     {
         return orderLogisticsMapper.deleteOrderLogisticsById(fdId);
+    }
+
+    /*
+    * 获取省地区数据
+    * */
+    public List<Map<String,Object>> selectProvinceData(){
+       return orderLogisticsMapper.selectProvinceData();
+
+    }
+    /*
+     * 获取区、县数据
+     * */
+    public List<Map<String,Object>> getDistrictData(String parentCode){
+        return orderLogisticsMapper.getDistrictData(parentCode);
     }
 }

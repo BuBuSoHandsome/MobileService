@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import com.ruoyi.system.domain.OrderLogistics;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单物流Service接口
@@ -58,4 +59,14 @@ public interface IOrderLogisticsService
      * @return 结果
      */
     public int deleteOrderLogisticsById(String fdId);
+
+    /*
+    * 获取省地区数据
+    * */
+    public List<Map<String,Object>> selectProvinceData();
+
+    /*
+    * 获取区、县数据
+    * */
+    public List<Map<String,Object>> getDistrictData(String parentCode);
 }

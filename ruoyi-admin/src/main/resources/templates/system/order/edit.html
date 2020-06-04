@@ -2,13 +2,14 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <th:block th:include="include :: header('修改订单')" />
+    <th:block th:include="include :: select2-css" />
 </head>
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-order-edit" th:object="${order}">
             <input name="fdId" th:field="*{fdId}" type="hidden">
             <div class="form-group">    
-                <label class="col-sm-3 control-label">卡类：</label>
+                <label class="col-sm-3 control-label is-required">卡类：</label>
                 <div class="col-sm-8">
                     <select name="sid" class="form-control m-b" th:with="type=${@dict.getType('number_column')}">
                         <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{sid}"></option>
@@ -22,13 +23,13 @@
                 <!--</div>-->
             <!--</div>-->
             <div class="form-group">    
-                <label class="col-sm-3 control-label">真实姓名：</label>
+                <label class="col-sm-3 control-label is-required">真实姓名：</label>
                 <div class="col-sm-8">
                     <input name="realname" th:field="*{realname}" class="form-control" type="text" required>
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">联系方式：</label>
+                <label class="col-sm-3 control-label is-required">联系方式：</label>
                 <div class="col-sm-8">
                     <input name="phone" th:field="*{phone}" class="form-control" type="text" required>
                 </div>
@@ -42,45 +43,26 @@
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">证件号码：</label>
+                <label class="col-sm-3 control-label is-required">证件号码：</label>
                 <div class="col-sm-8">
                     <input name="cardid" th:field="*{cardid}" class="form-control" type="text" required>
                 </div>
             </div>
-            <!--<div class="form-group">    -->
-                <!--<label class="col-sm-3 control-label">省份编码：</label>-->
-                <!--<div class="col-sm-8">-->
-                    <!--<input name="provincecode" th:field="*{provincecode}" class="form-control" type="text">-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group">    -->
-                <!--<label class="col-sm-3 control-label">地市编码：</label>-->
-                <!--<div class="col-sm-8">-->
-                    <!--<input name="eparchycode" th:field="*{eparchycode}" class="form-control" type="text">-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group">    -->
-                <!--<label class="col-sm-3 control-label">区县编码：</label>-->
-                <!--<div class="col-sm-8">-->
-                    <!--<input name="citycode" th:field="*{citycode}" class="form-control" type="text">-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group">-->
-                <!--<label class="col-sm-3 control-label">配送省份：</label>-->
-                <!--<div class="col-sm-8">-->
-                    <!--<input name="province" th:field="*{province}" class="form-control" type="text">-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group">-->
-                <!--<label class="col-sm-3 control-label">配送地址中文名：</label>-->
-                <!--<div class="col-sm-8">-->
-                    <!--<input name="addressCity" th:field="*{addressCity}" class="form-control" type="text">-->
-                <!--</div>-->
-            <!--</div>-->
+            <div class="form-group">
+                <label class="col-sm-3 control-label is-required">收货地区：</label>
+                <div class="col-sm-4">
+                    <select name="provincecode" id="provincecode" level="0" class="form-control" onchange="selectChangeEvent(this)">
+                        <option value="">请选择地区</option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <select name="eparchycode" id="eparchycode" level="1" class="form-control"></select>
+                </div>
+            </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">配送地址：</label>
+                <label class="col-sm-3 control-label is-required">配送地址：</label>
                 <div class="col-sm-8">
-                    <input name="address" th:field="*{address}" class="form-control" type="text">
+                    <input name="address" id="address" th:field="*{address}" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">    
@@ -94,15 +76,55 @@
         </form>
     </div>
     <th:block th:include="include :: footer" />
-    <script type="text/javascript">
+    <th:block th:include="include :: select2-js" />
+    <script type="text/javascript" th:inline="javascript">
         var prefix = ctx + "system/order";
         $("#form-order-edit").validate({
             focusCleanup: true
         });
+        var order = [[${order}]];
+        getProvinceData();
+        $('#address').val($('#address').val().replace(order.province,'').replace(order.addressCity,''));
+        function getProvinceData(){
+            $.ajax({
+                url:prefix+'/getProvince',
+                type:'get',
+                success:function(data){
+                    var h = '';
+                    for(var i=0; i<data.length; i++){
+                        var isSelect = (data[i].code == order.provincecode)?'selected':'';
+                        h += '<option value="'+data[i].code+'" '+isSelect+'>'+data[i].name+'</option>'
+                    }
+                    $('#provincecode').append(h);
+                    selectChangeEvent();
+                }
+            });
+        }
+        function selectChangeEvent(obj){
+            var parentCode = $(obj).val() || $('#provincecode').val();
+            $.ajax({
+                url:prefix+'/getDistrict',
+                type:'get',
+                data:{parentCode:parentCode},
+                success:function(data){
+                    $('#eparchycode').html('');
+                    var h = '';
+                    for(var i=0; i<data.length; i++){
+                        var isSelect = (data[i].code == order.provincecode)?'selected':'';
+                        h += '<option value="'+data[i].code+'" isSelect>'+data[i].name+'</option>'
+                    }
+                    $('#eparchycode').html(h);
+                }
+            });
+        }
+
 
         function submitHandler() {
             if ($.validate.form()) {
-                $.operate.save(prefix + "/edit", $('#form-order-edit').serialize());
+                var address = $('#provincecode').find('option:selected').text() + $('#eparchycode').find('option:selected').text()+$('#address').val();
+                var data = 'province='+ $('#provincecode').find('option:selected').text() +'&addressCity='+ $('#eparchycode').find('option:selected').text() + '&';
+                data += $('#form-order-edit').serialize().replace(/address=.+&/,'address='+address+'&');
+                $.operate.save(prefix + "/edit", data);
             }
         }
     </script>
