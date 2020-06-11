@@ -49,13 +49,16 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label is-required">收货地区：</label>
-                <div class="col-sm-4">
-                    <select name="provincecode" id="provincecode" level="0" class="form-control" onchange="selectChangeEvent(this)">
+                <div class="col-sm-3">
+                    <select name="provincecode" id="provincecode" level="0" class="form-control" onchange="selectChangeEvent(this,'#eparchycode')">
                         <option value="">请选择地区</option>
                     </select>
                 </div>
-                <div class="col-sm-4">
-                    <select name="eparchycode" id="eparchycode" level="1"  class="form-control"></select>
+                <div class="col-sm-3">
+                    <select name="eparchycode" id="eparchycode" level="1"  class="form-control" onchange="selectChangeEvent(this,'#citycode')"></select>
+                </div>
+                <div class="col-sm-3">
+                    <select name="citycode" id="citycode" level="1"  class="form-control"></select>
                 </div>
             </div>
             <div class="form-group">    
@@ -90,25 +93,26 @@
                 success:function(data){
                     var h = '';
                     for(var i=0; i<data.length; i++){
-                        h += '<option value="'+data[i].code+'" idx="' + i + '">'+data[i].name+'</option>'
+                        h += '<option value="'+data[i].code+'">'+data[i].name+'</option>'
                     }
                     $('#provincecode').append(h);
                 }
             });
         }
-        function selectChangeEvent(obj){
+        function selectChangeEvent(obj,nextObj){
             var parentCode = $(obj).val();
             $.ajax({
                 url:prefix+'/getDistrict',
                 type:'get',
                 data:{parentCode:parentCode},
                 success:function(data){
-                    $('#eparchycode').html('');
+                    $(nextObj).html('');
                     var h = '';
                     for(var i=0; i<data.length; i++){
-                        h += '<option value="'+data[i].code+'" idx="' + i + '">'+data[i].name+'</option>'
+                        h += '<option value="'+data[i].code+'">'+data[i].name+'</option>'
                     }
-                    $('#eparchycode').html(h);
+                    $(nextObj).html(h);
+                    $(nextObj).change();
                 }
             });
         }
