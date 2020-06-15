@@ -59,7 +59,7 @@
                     <select name="eparchycode" id="eparchycode" level="1" class="form-control" onchange="selectChangeEvent('#eparchycode','#citycode')"></select>
                 </div>
                 <div class="col-sm-3">
-                    <select name="citycode" id="citycode" level="1"  class="form-control"></select>
+                    <select name="citycode" id="citycode" level="1"  class="form-control" onchange="lastSelectChange(this)"></select>
                 </div>
             </div>
             <div class="form-group">    
@@ -87,7 +87,6 @@
         });
         var order = [[${order}]];
         getProvinceData();
-            $('#address').val($('#address').val().replace(order.province,'').replace(order.addressCity,''));
         function getProvinceData(){
             $.ajax({
                 url:prefix+'/getProvince',
@@ -119,14 +118,22 @@
                     }
                     $(nextObj).html(h);
                     $(nextObj).change();
+                    var protext = $('#provincecode').find('option:selected').text();
+                    var eparchytext = $('#eparchycode').find('option:selected').text();
+                    var citytext = $('#citycode').find('option:selected').text();
+                    $('#address').val($('#address').val().replace(protext,'').replace(eparchytext,'').replace(citytext,''));
                 }
             });
+        }
+        function lastSelectChange(obj){
+            var citytext = $('#citycode').find('option:selected').text();
+            $('#address').val($('#address').val().replace(citytext,''));
         }
 
 
         function submitHandler() {
             if ($.validate.form()) {
-                var address = $('#provincecode').find('option:selected').text() + $('#eparchycode').find('option:selected').text()+$('#address').val();
+                var address = $('#provincecode').find('option:selected').text() + $('#eparchycode').find('option:selected').text() + $('#citycode').find('option:selected').text()+$('#address').val();
                 var data = 'province='+ $('#provincecode').find('option:selected').text() +'&addressCity='+ $('#eparchycode').find('option:selected').text() + '&';
                 data += $('#form-order-edit').serialize().replace(/address=.+&/,'address='+address+'&');
                 $.operate.save(prefix + "/edit", data);
