@@ -108,5 +108,8 @@ import org.springframework.web.bind.annotation.*;
         return mobileService.testReadValueChannel(field);
     }
 
-
+    @RequestMapping("insertRedisAddressCode")
+    public void  insertRedisAddressCode(){
+       mobileService.insertRedisAddressCode();
+    }
 }

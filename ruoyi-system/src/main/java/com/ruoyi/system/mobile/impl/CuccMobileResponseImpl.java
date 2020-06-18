@@ -13,6 +13,7 @@ import com.ruoyi.system.mapper.NumberCuccMapper;
 import com.ruoyi.system.mapper.OrderCuccMapper;
 import com.ruoyi.system.mobile.CuccMobileResponseService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
  * @Date 2020/5/4 13:56
  * @Version 1.0
  */
+
 
 
 @Service
@@ -85,6 +87,7 @@ public class CuccMobileResponseImpl implements CuccMobileResponseService {
         }};
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public void insertCuccNum(OccupationNumberRequest request, OccupationNumberResponse response) {
         if(null!=response&&SUCCESS_CODE.equals(response.getCode())){
@@ -95,6 +98,7 @@ public class CuccMobileResponseImpl implements CuccMobileResponseService {
         }
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public CreateOrderResponse createOrder(CreateOrderRequest request, CheckCodeResponse response) {
         if(null!=request && null!=response){
@@ -117,6 +121,21 @@ public class CuccMobileResponseImpl implements CuccMobileResponseService {
             setCode("90");
             setMessage("订单保存失败");
         }};
+    }
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    @Override
+    public boolean updateOrder(OrderCucc orderCucc) {
+        int result = orderCuccMapper.updateOrderCucc(new OrderCucc(){{
+            setFdId(orderCucc.getFdId());
+            setStatus("1");
+        }});
+        //修改一条成功则返回，修改多条则报错
+        if(result==1) {
+            return true;
+        }else{
+            throw new RuntimeException("订单状态更新异常------id号："+orderCucc.getFdId());
+        }
     }
 
 

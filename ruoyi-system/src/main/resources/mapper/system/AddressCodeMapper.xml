@@ -16,6 +16,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select fd_id, name, code, parent_code, type from address_code
     </sql>
 
+    <select id="selectAllAddressCodeList" resultMap="AddressCodeResult">
+        <include refid="selectAddressCodeVo"/>
+    </select>
+
     <select id="selectAddressCodeList" parameterType="AddressCode" resultMap="AddressCodeResult">
         <include refid="selectAddressCodeVo"/>
         <where>  

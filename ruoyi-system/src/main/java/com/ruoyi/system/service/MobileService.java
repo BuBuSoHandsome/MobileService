@@ -38,5 +38,7 @@ public interface MobileService {
     public AjaxResult addBZCardOrder(Order order);
 
     public String testReadValueChannel(String field);
+
+    public void insertRedisAddressCode();
 }
 

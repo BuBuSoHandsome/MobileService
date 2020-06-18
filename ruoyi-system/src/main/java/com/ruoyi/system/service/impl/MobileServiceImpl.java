@@ -8,10 +8,13 @@ import com.ruoyi.common.enums.MobileUrl;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.moblie.MobileUtil;
+import com.ruoyi.common.utils.redis.RedisUtil;
+import com.ruoyi.system.domain.AddressCode;
 import com.ruoyi.system.domain.ChooseNumberColumn;
 import com.ruoyi.system.domain.Order;
 import com.ruoyi.system.domain.mobileRequest.*;
 import com.ruoyi.system.domain.mobileResponse.*;
+import com.ruoyi.system.mapper.AddressCodeMapper;
 import com.ruoyi.system.mapper.ChooseNumberColumnMapper;
 import com.ruoyi.system.mapper.MobileUrlMapper;
 import com.ruoyi.system.mobile.AddressResolutionService;
@@ -53,6 +56,12 @@ public class MobileServiceImpl implements MobileService {
 
     @Autowired
     private IOrderService orderService;
+
+    @Resource
+    private AddressCodeMapper addressCodeMapper;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Value("${channel.wayid}")
     private String wayid;
@@ -159,6 +168,11 @@ public class MobileServiceImpl implements MobileService {
         order.setSid("1000000019");
         order.setPack("prod.10086000025892");
         order.setStatus("0");
+        order.setProvince((String)redisUtil.get("1|"+order.getProvincecode()));
+        order.setAddressCity((String) redisUtil.get("2|"+order.getEparchycode()));
+        order.setAddress((String) redisUtil.get("1|"+order.getProvincecode())+
+                         (String) redisUtil.get("2|"+order.getEparchycode())+
+                         (String) redisUtil.get("3|"+order.getCitycode())+ order.getAddress());
         if(orderService.insertOrder(order)>0){
             return AjaxResult.success("订单发送成功");
         }
@@ -172,6 +186,15 @@ public class MobileServiceImpl implements MobileService {
         }else{
             return operatorId;
         }
+    }
+
+    @Override
+    public void insertRedisAddressCode() {
+        List<AddressCode> addressCodeList = addressCodeMapper.selectAllAddressCodeList();
+        for(AddressCode addressCode:addressCodeList){
+            redisUtil.setIfAbsent(addressCode.getType()+"|"+addressCode.getCode(),addressCode.getName(),0);
+        }
+        System.out.println(addressCodeList.size());
     }
 
     @Override

@@ -34,6 +34,15 @@ public interface AddressCodeMapper
      */
     public List<AddressCode> selectAddressCodeList(AddressCode addressCode);
 
+
+    /**
+     * 查询所有省市编码列表
+     *
+     * @return 省市编码集合
+     */
+    public List<AddressCode> selectAllAddressCodeList();
+
+
     /**
      * 新增省市编码
      * 

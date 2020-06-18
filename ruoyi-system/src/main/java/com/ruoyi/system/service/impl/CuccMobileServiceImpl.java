@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.enums.MobileUrl;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.moblie.MobileUtil;
@@ -161,8 +162,14 @@ public class CuccMobileServiceImpl implements CuccMobileService {
         }
         if(!"".equals(resultJson)){
             JSONObject jsStr = JSONObject.parseObject(resultJson);
-            CreateOrderResponse checkCodeResponse = JSONObject.toJavaObject(jsStr,CreateOrderResponse.class);
-            return checkCodeResponse;
+            CreateOrderResponse createOrderResponse = JSONObject.toJavaObject(jsStr,CreateOrderResponse.class);
+
+            //下单成功改变订单状态
+            if(createOrderResponse.getCode().equals(Constants.SUCCESS)){
+                cuccMobileResponseService.updateOrder(orderCucc);
+            }
+
+            return createOrderResponse;
         }
         return new CreateOrderResponse(){{
             setCode("90");
