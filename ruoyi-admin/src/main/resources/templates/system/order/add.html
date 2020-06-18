@@ -50,12 +50,12 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label is-required">收货地区：</label>
                 <div class="col-sm-3">
-                    <select name="provincecode" id="provincecode" level="0" class="form-control" onchange="selectChangeEvent(this,'#eparchycode')">
+                    <select name="provincecode" id="provincecode" level="0" class="form-control" onchange="selectChangeEvent(this,'#eparchycode',2)">
                         <option value="">请选择地区</option>
                     </select>
                 </div>
                 <div class="col-sm-3">
-                    <select name="eparchycode" id="eparchycode" level="1"  class="form-control" onchange="selectChangeEvent(this,'#citycode')"></select>
+                    <select name="eparchycode" id="eparchycode" level="1"  class="form-control" onchange="selectChangeEvent(this,'#citycode',3)"></select>
                 </div>
                 <div class="col-sm-3">
                     <select name="citycode" id="citycode" level="1"  class="form-control"></select>
@@ -99,12 +99,12 @@
                 }
             });
         }
-        function selectChangeEvent(obj,nextObj){
+        function selectChangeEvent(obj,nextObj,level){
             var parentCode = $(obj).val();
             $.ajax({
                 url:prefix+'/getDistrict',
                 type:'get',
-                data:{parentCode:parentCode},
+                data:{parentCode:parentCode,level:level},
                 success:function(data){
                     $(nextObj).html('');
                     var h = '';

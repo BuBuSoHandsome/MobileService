@@ -107,7 +107,7 @@ public class OrderLogisticsServiceImpl implements IOrderLogisticsService
     /*
      * 获取区、县数据
      * */
-    public List<Map<String,Object>> getDistrictData(String parentCode){
-        return orderLogisticsMapper.getDistrictData(parentCode);
+    public List<Map<String,Object>> getDistrictData(String parentCode,String level){
+        return orderLogisticsMapper.getDistrictData(parentCode,level);
     }
 }

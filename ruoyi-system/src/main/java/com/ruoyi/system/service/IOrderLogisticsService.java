@@ -68,5 +68,5 @@ public interface IOrderLogisticsService
     /*
     * 获取区、县数据
     * */
-    public List<Map<String,Object>> getDistrictData(String parentCode);
+    public List<Map<String,Object>> getDistrictData(String parentCode,String level);
 }

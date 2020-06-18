@@ -63,5 +63,5 @@ public interface OrderLogisticsMapper
     public int deleteOrderLogisticsByIds(String[] fdIds);
 
     public List<Map<String,Object>> selectProvinceData();
-    public List<Map<String,Object>> getDistrictData(@Param("parentCode") String parentCode);
+    public List<Map<String,Object>> getDistrictData(@Param("parentCode") String parentCode,@Param("level")String level);
 }

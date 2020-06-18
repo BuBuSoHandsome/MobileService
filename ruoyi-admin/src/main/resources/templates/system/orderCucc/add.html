@@ -159,7 +159,6 @@
             }
         });
         function submitHandler() {
-		    console.log($('#form-orderCucc-add').serialize())
 	        if ($.validate.form()) {
 	            $.operate.save(prefix + "/add", $('#form-orderCucc-add').serialize());
 	        }

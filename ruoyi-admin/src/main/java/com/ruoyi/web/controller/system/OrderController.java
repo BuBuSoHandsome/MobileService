@@ -229,9 +229,9 @@ public class OrderController extends BaseController
 
     @GetMapping("/getDistrict")
     @ResponseBody
-    public List<Map<String,Object>> getDistrict(String parentCode)
+    public List<Map<String,Object>> getDistrict(String parentCode,String level)
     {
-        List<Map<String,Object>> list = orderLogisticsService.getDistrictData(parentCode);
+        List<Map<String,Object>> list = orderLogisticsService.getDistrictData(parentCode,level);
         return list;
     }
 
