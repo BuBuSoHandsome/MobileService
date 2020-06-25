@@ -192,7 +192,7 @@ public class MobileServiceImpl implements MobileService {
     public void insertRedisAddressCode() {
         List<AddressCode> addressCodeList = addressCodeMapper.selectAllAddressCodeList();
         for(AddressCode addressCode:addressCodeList){
-            redisUtil.setIfAbsent(addressCode.getType()+"|"+addressCode.getCode(),addressCode.getName(),0);
+            redisUtil.set(addressCode.getType()+"|"+addressCode.getCode(),addressCode.getName(),0);
         }
         System.out.println(addressCodeList.size());
     }
