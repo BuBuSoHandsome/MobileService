@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -38,14 +37,6 @@ public class ChooseNumberColumnController extends BaseController
     {
         return prefix + "/column";
     }
-
-
-    @RequestMapping("/testRedis")
-    @ResponseBody
-    public boolean testRedis(){
-        return chooseNumberColumnService.testRedis("bubu","帅气");
-    };
-
 
     /**
      * 查询【选号卡类栏目】列表
@@ -99,7 +90,7 @@ public class ChooseNumberColumnController extends BaseController
      * 修改【选号卡类栏目】
      */
     @GetMapping("/edit/{sid}")
-    public String edit(@PathVariable("sid") Long sid, ModelMap mmap)
+    public String edit(@PathVariable("sid") String sid, ModelMap mmap)
     {
         ChooseNumberColumn chooseNumberColumn = chooseNumberColumnService.selectChooseNumberColumnById(sid);
         mmap.put("chooseNumberColumn", chooseNumberColumn);

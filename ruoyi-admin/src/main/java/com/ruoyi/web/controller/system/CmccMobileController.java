@@ -22,26 +22,6 @@ import org.springframework.web.bind.annotation.*;
     @Autowired
     private MobileService mobileService;
 
-    @RequestMapping("/testGetUrl")
-    public String testGetUrl( String eumn){
-        return mobileService.testGetUrl(eumn);
-    }
-
-    @RequestMapping("/queryChooseNumberColumn")
-    public String queryChooseNumberColumn(){
-        return mobileService.queryChooseNumberColumn();
-    }
-
-    /**
-     * 查询卡类业务信息
-     * @param request
-     * @return
-     */
-    @PostMapping("/chooseNumberBusiness")
-    public String chooseNumberBusiness(@RequestBody ChooseNumberbusinessRequest request){
-        return mobileService.chooseNumberBusiness(request);
-    }
-
     /**
      * 京东物流地址校验
      * @param request
@@ -72,16 +52,6 @@ import org.springframework.web.bind.annotation.*;
         return mobileService.queryChooseNumberList(request);
     }
 
-    /**
-     * 选号查询号码可选优惠
-     * @param request
-     * @return
-     */
-    @PostMapping("QueryDiscountNumberList")
-    public String queryDiscountNumberList(@RequestBody QueryDiscountNumberListRequest request){
-        return mobileService.getResponse(request);
-    }
-
     @PostMapping("airpickinstallnewOrder")
     public Boolean airpickinstallnewOrder (@RequestBody Order order){
         return mobileService.AirpickinstallnewOrder(order);
@@ -90,6 +60,11 @@ import org.springframework.web.bind.annotation.*;
     @PostMapping("getOrderMsg")
     public DSAirpickinstallQueryOrderResponse getOrderMsg(@RequestBody DSAirpickinstallQueryOrderRequest request){
         return mobileService.getOrderMsg(request);
+    }
+
+    @PostMapping("insertOrderMsg")
+    public void insertOrderMsg(@RequestBody DSAirpickinstallQueryOrderRequest request){
+         mobileService.insertOrderMsg(request);
     }
 
     @PostMapping("getExpressTrace")
@@ -103,13 +78,14 @@ import org.springframework.web.bind.annotation.*;
         return mobileService.addBZCardOrder(order);
     }
 
-    @RequestMapping("testReadValueChannel")
-    public String testReadValueChannel(@RequestParam String field){
-        return mobileService.testReadValueChannel(field);
+    @RequestMapping("insertRedisAddressCode")
+    public String  insertRedisAddressCode(){
+       return mobileService.insertRedisAddressCode();
     }
 
-    @RequestMapping("insertRedisAddressCode")
-    public void  insertRedisAddressCode(){
-       mobileService.insertRedisAddressCode();
+    @RequestMapping("insertRedisCmccProduct")
+    public String insertRedisCmccProduct(){
+        return mobileService.insertRedisCmccProduct();
     }
+
 }

@@ -143,8 +143,9 @@ public class OrderServiceImpl implements IOrderService
         Integer num = 0;
         for (int i =0;i<idS.length;i++){
             int finalI = i;
+            Order order = orderMapper.selectOrderById(idS[finalI]);
             DSAirpickinstallQueryOrderResponse response = mobileService.getOrderMsg(
-                    new DSAirpickinstallQueryOrderRequest(){{ setOrderId(idS[finalI]);
+                    new DSAirpickinstallQueryOrderRequest(){{ setServnumber(order.getServnumber());
             }});
             if(DateUtils.isLastTwoWeeks(response.getCreateTime())){
                 //更新订单表状态 改为拒收状态
@@ -153,7 +154,7 @@ public class OrderServiceImpl implements IOrderService
                     setStatus("4");
                 }});
             }
-            if("激活成功".equals(response.getOrderRemark())){
+            if("激活成功".equals(response.getOrderRemark()) && "已完成".equals(response.getOrderStatus())){
                 //更新订单表状态 改为激活成功
                 orderMapper.updateOrder(new Order(){{
                     setFdId(idS[finalI]);

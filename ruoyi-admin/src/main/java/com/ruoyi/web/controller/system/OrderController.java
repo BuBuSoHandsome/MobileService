@@ -105,8 +105,8 @@ public class OrderController extends BaseController
     public AjaxResult addSave(Order order)
     {
         order.setFdId(StringUtils.generateRandomString(12).toUpperCase());
-        ChooseNumberColumn chooseNumberColumn = chooseNumberColumnMapper.selectChooseNumberColumnById(Long.parseLong(order.getSid()));
-        order.setPack(chooseNumberColumn.getPack());
+        ChooseNumberColumn chooseNumberColumn = chooseNumberColumnMapper.selectChooseNumberColumnById(order.getSid());
+        order.setPackageName(chooseNumberColumn.getText());
         return toAjax(orderService.insertOrder(order));
     }
 
@@ -130,8 +130,8 @@ public class OrderController extends BaseController
     @ResponseBody
     public AjaxResult editSave(Order order)
     {
-        ChooseNumberColumn chooseNumberColumn = chooseNumberColumnMapper.selectChooseNumberColumnById(Long.parseLong(order.getSid()));
-        order.setPack(chooseNumberColumn.getPack());
+        ChooseNumberColumn chooseNumberColumn = chooseNumberColumnMapper.selectChooseNumberColumnById(order.getSid());
+        order.setPackageName(chooseNumberColumn.getText());
         return toAjax(orderService.updateOrder(order));
     }
 

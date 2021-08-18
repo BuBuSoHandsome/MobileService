@@ -39,10 +39,5 @@ public class RyTask
         }
     }
 
-    //更新一次 选号卡类栏目
-    public void refreshChooseNumberColumn(){
-        System.out.println(mobileService.queryChooseNumberColumn());
-    }
-
 
 }

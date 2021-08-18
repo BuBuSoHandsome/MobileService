@@ -1,27 +1,98 @@
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.enums.MobileUrl;
+import com.ruoyi.common.json.JSON;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.moblie.MobileUtil;
+import com.ruoyi.common.utils.moblie.RSASignature;
 import com.ruoyi.common.utils.moblie.StringUtil;
 import com.ruoyi.common.utils.security.Md5Utils;
 import com.ruoyi.system.domain.ChooseNumberColumn;
 import com.ruoyi.system.domain.Order;
+import com.ruoyi.system.domain.cuccMobileRequest.CheckUserRequest;
+import com.ruoyi.system.domain.cuccMobileResponse.CheckUserResponse;
 import com.ruoyi.system.domain.mobileRequest.DSAirpickinstallQueryOrderRequest;
 import com.ruoyi.system.domain.mobileResponse.*;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class testtest {
 
-    public static void main(String[] args) {
+
+
+
+
+    public static void main(String[] args) throws Exception {
+
+
+//
+//        String jsonStr = "{\"rspCode\":\"0000\",\"rspDesc\":\"操作成功\",\"uuid\":\"a50e37ed-ac6a-4706-90a4-f0daabe775b4\",\"body\":\"{\\\"ID\\\":\\\"20051322290314531654\\\"}\",\"ok\":true,\"message\":\"操作成功\",\"data\":\"{\\\"ID\\\":\\\"20051322290314531654\\\"}\"}";
+//        JSONObject jsonObject = JSONObject.parseObject(jsonStr);
+//        JSONObject resultJson = JSONObject.parseObject(jsonObject.getString("data"));
+//        System.out.println(resultJson.getString("ID"));
+//
+
+
+
+//        CheckUserRequest checkUserRequest = new CheckUserRequest();
+//        checkUserRequest.setCertName("钟玉兰");
+//        checkUserRequest.setCertNum("440125196306282146");
+//        checkUserRequest.setProvinceCode("440000");
+//        checkUserRequest.setCityCode("440100");
+//
+//        Class superClass = checkUserRequest.getClass();
+//        Field[] fields = superClass.getDeclaredFields();
+//        for(Field f:fields){
+//            f.setAccessible(true);
+//            System.out.println(f.getName()+f.get(checkUserRequest));
+//        }
+
+
+//
+//        String resultJson = "";
+//        try {
+//             resultJson = doPost("https://m.75510010.com/mall/api/unicom/zop-mall/check-user", checkUserRequest);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        if(!"".equals(resultJson)){
+//            JSONObject jsStr = JSONObject.parseObject(resultJson);
+//            CheckUserResponse checkUserResponse = JSONObject.toJavaObject(jsStr,CheckUserResponse.class);
+//            Field[] fields = checkUserResponse.getClass().getDeclaredFields();
+//            for(Field f:fields){
+//                f.setAccessible(true);
+//                System.out.println("属性名："+f.getName()+"----属性值："+f.get(checkUserResponse));
+//            }
+//
+//        }
+
+
+//        try {
+//
+//            System.out.println("加密前："+reflect(checkUserRequest));
+//            System.out.println("加密后："+RSASignature.getSHA256StrJava(reflect(checkUserRequest)));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
 
 
 

@@ -1,5 +1,6 @@
 package com.ruoyi.system.mobile;
 
+import com.ruoyi.common.enums.RedisEnum;
 import com.ruoyi.common.utils.redis.RedisUtil;
 import com.ruoyi.system.domain.AddressCode;
 import com.ruoyi.system.domain.Order;
@@ -36,7 +37,7 @@ public class AddressResolutionService {
             request.setEparchyCode(order.getEparchycode());
             request.setAddressProvince(order.getProvince());
             request.setAddrssCity(order.getAddressCity());
-            request.setAddressArea( (String)redisUtil.get("3|"+order.getCitycode()));
+            request.setAddressArea((String)redisUtil.get(RedisEnum.ADDRESSCODE+"|"+"3|"+order.getCitycode()));
             request.setAddress(order.getAddress());
         }else{
             //只通过一个地址解析
@@ -54,25 +55,25 @@ public class AddressResolutionService {
                 if(order.getAddress().indexOf("北京市")>-1){
                     request.setProvinceCode("100");
                     request.setEparchyCode("102");
-                    request.setAddressProvince("北京市");
+                    request.setAddressProvince("北京");
                     request.setAddrssCity("北京市");
                 }
                 if(order.getAddress().indexOf("上海市")>-1){
                     request.setProvinceCode("210");
                     request.setEparchyCode("120");
-                    request.setAddressProvince("上海市");
+                    request.setAddressProvince("上海");
                     request.setAddrssCity("上海市");
                 }
                 if(order.getAddress().indexOf("天津市")>-1){
                     request.setProvinceCode("220");
                     request.setEparchyCode("220");
-                    request.setAddressProvince("天津市");
+                    request.setAddressProvince("天津");
                     request.setAddrssCity("天津市");
                 }
                 if(order.getAddress().indexOf("重庆市")>-1){
                     request.setProvinceCode("230");
                     request.setEparchyCode("230");
-                    request.setAddressProvince("重庆市");
+                    request.setAddressProvince("重庆");
                     request.setAddrssCity("重庆市");
                 }
                 request.setAddressArea(m.group("county"));
@@ -84,7 +85,7 @@ public class AddressResolutionService {
 
         public static void main(String[] args) {
 
-                String address = "北京市丰台区北京西客站南广场";
+                String address = "广东省广州市增城区滨海花园";
                 String regex="(?<province>[^省]+自治区|.*?省|.*?行政区|.*?市)(?<city>[^市]+自治州|.*?地区|.*?行政单位|.+盟|市辖区|.*?市|.*?县)(?<county>[^县]+县|.+区|.+市|.+旗|.+海域|.+岛)?(?<town>[^区]+区|.+镇)?(?<village>.*)";
                 Matcher m = Pattern.compile(regex).matcher(address);
                 while (m.find()) {

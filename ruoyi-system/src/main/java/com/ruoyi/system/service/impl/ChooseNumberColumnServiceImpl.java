@@ -32,7 +32,7 @@ public class ChooseNumberColumnServiceImpl implements IChooseNumberColumnService
      * @return 选号卡类栏目
      */
     @Override
-    public ChooseNumberColumn selectChooseNumberColumnById(Long sid)
+    public ChooseNumberColumn selectChooseNumberColumnById(String sid)
     {
         return chooseNumberColumnMapper.selectChooseNumberColumnById(sid);
     }
@@ -95,14 +95,5 @@ public class ChooseNumberColumnServiceImpl implements IChooseNumberColumnService
     public int deleteChooseNumberColumnById(Long sid)
     {
         return chooseNumberColumnMapper.deleteChooseNumberColumnById(sid);
-    }
-
-    @Override
-    public boolean testRedis(String key , String value) {
-
-
-
-
-        return redisUtil.set(key, value);
     }
 }

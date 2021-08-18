@@ -36,11 +36,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectChooseNumberColumnById" parameterType="Long" resultMap="ChooseNumberColumnResult">
+    <select id="selectChooseNumberColumnById" parameterType="String" resultMap="ChooseNumberColumnResult">
         <include refid="selectChooseNumberColumnVo"/>
         where sid = #{sid}
     </select>
-        
+
+    <select id="selectAllChooseNumberColumnList" resultMap="ChooseNumberColumnResult">
+        <include refid="selectChooseNumberColumnVo"/>
+    </select>
+
     <insert id="insertChooseNumberColumn" parameterType="ChooseNumberColumn">
         insert into choose_number_column
         <trim prefix="(" suffix=")" suffixOverrides=",">

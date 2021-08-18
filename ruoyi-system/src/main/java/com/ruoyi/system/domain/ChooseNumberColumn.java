@@ -19,7 +19,7 @@ public class ChooseNumberColumn extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 编码（唯一id） */
-    private Long sid;
+    private String sid;
 
     /** 渠道 */
     @Excel(name = "渠道")
@@ -57,12 +57,12 @@ public class ChooseNumberColumn extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatetime;
 
-    public void setSid(Long sid)
+    public void setSid(String sid)
     {
         this.sid = sid;
     }
 
-    public Long getSid()
+    public String getSid()
     {
         return sid;
     }

@@ -43,8 +43,8 @@ public class MobileUtil {
 
     public static String getResponse(String url,String body){
         AsiainfoHeader header=new AsiainfoHeader();
-        //系统id 101443
-        header.setAppId("101443");
+        //系统id 102094
+        header.setAppId("102094");
         //随机uuid 去掉 -   fc3058b83e6943cba6f565d7bf9b28bb
         header.setBusiSerial(UUID.randomUUID().toString().replace("-",""));
         //32位随机数字字母 大写 JQIRCRGAHIWOOLNEEUQ6J5WDVPW6MOEJ

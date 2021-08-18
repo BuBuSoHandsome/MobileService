@@ -1,33 +1,30 @@
 package com.ruoyi.system.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.MobileUrl;
-import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.enums.RedisEnum;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.moblie.MobileUtil;
 import com.ruoyi.common.utils.redis.RedisUtil;
 import com.ruoyi.system.domain.AddressCode;
 import com.ruoyi.system.domain.ChooseNumberColumn;
 import com.ruoyi.system.domain.Order;
+import com.ruoyi.system.domain.OrderLogistics;
 import com.ruoyi.system.domain.mobileRequest.*;
 import com.ruoyi.system.domain.mobileResponse.*;
 import com.ruoyi.system.mapper.AddressCodeMapper;
 import com.ruoyi.system.mapper.ChooseNumberColumnMapper;
 import com.ruoyi.system.mapper.MobileUrlMapper;
+import com.ruoyi.system.mapper.OrderLogisticsMapper;
 import com.ruoyi.system.mobile.AddressResolutionService;
 import com.ruoyi.system.mobile.MobileResponseService;
 import com.ruoyi.system.service.IOrderService;
 import com.ruoyi.system.service.MobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -60,77 +57,20 @@ public class MobileServiceImpl implements MobileService {
     @Resource
     private AddressCodeMapper addressCodeMapper;
 
+    @Resource
+    private OrderLogisticsMapper orderLogisticsMapper;
+
     @Autowired
     private RedisUtil redisUtil;
 
-    @Value("${channel.wayid}")
-    private String wayid;
-
-    @Value("${channel.operatorId}")
-    private String operatorId;
-
-    @Override
-    public String queryChooseNumberColumn() {
-        String url = MobileUrl.QueryChooseNumberColumn.getUrl();
-        Map<String, String> map = new HashMap<>();
-        map.put("channel", "newWap");
-        JSONObject itemJSONObj = JSONObject.parseObject(JSON.toJSONString(map));
-        String body = itemJSONObj.toString();
-
-        JSONObject responsejsonObject = JSONObject.parseObject(MobileUtil.getResponse(url, body));
-        //返回状态为0
-        if ("0".equals(responsejsonObject.getString("respcode"))) {
-            String infos = JSONObject.parseObject(responsejsonObject.getString("result")).getString("infos");
-            List<ChooseNumberColumnResponse> lists = JSONArray.parseArray(infos, ChooseNumberColumnResponse.class);
-
-            if (lists == null || lists.isEmpty()) {
-                return "接口查询数据为空";
-            }
-
-            //每次insert前把表数据清空
-            chooseNumberColumnMapper.deleteAll();
-            //循环赋值更新
-            lists.stream().forEach(list -> {
-                ChooseNumberColumn chooseNumberColumn = new ChooseNumberColumn();
-                chooseNumberColumn.setChannel(list.getChannel() == null ? "" : list.getChannel());
-                chooseNumberColumn.setConstraint(list.getConstraint() == null ? "" : list.getConstraint());
-                chooseNumberColumn.setDescribe(list.getDescribe() == null ? "" : list.getDescribe());
-                chooseNumberColumn.setPack(list.getPack() == null ? "" : list.getPack());
-                chooseNumberColumn.setPic(list.getPic() == null ? "" : list.getPic());
-                chooseNumberColumn.setStatus(list.getStatus() == null ? "" : list.getStatus());
-                chooseNumberColumn.setPosition(list.getPosition() == null ? "" : list.getPosition());
-                chooseNumberColumn.setText(list.getText() == null ? "" : list.getText());
-                chooseNumberColumn.setSid(list.getSid() == null ? 00000 : list.getSid());
-                chooseNumberColumn.setupdatetime(DateUtils.getDateFromString(list.getUpdatetime()));
-                chooseNumberColumnMapper.insertChooseNumberColumn(chooseNumberColumn);
-            });
-            return "选项卡类更新成功";
-        }
-        return "接口调用失败";
-    }
-
-    @Override
-    public String chooseNumberBusiness(ChooseNumberbusinessRequest request) {
-        String url = mobileUrlMapper.selectMobileUrlByEumn("ChooseNumberBusiness").getUrl();
-        String body = MobileUtil.getBodyByClass(request);
-        return MobileUtil.getResponse(url, body);
-    }
-
     @Override
     public JDCheckAddressResponse JDCheckAddress(JDCheckAddressRequest request) {
-        return mobileResponseService.JDCheakAddress(request);
+        return mobileResponseService.JDCheckAddress(request);
     }
 
     @Override
     public String queryChooseNumberList(QueryChooseNumberListRequest request) {
         String url = mobileUrlMapper.selectMobileUrlByEumn("QueryChooseNumberList").getUrl();
-        String body = MobileUtil.getBodyByClass(request);
-        return MobileUtil.getResponse(url, body);
-    }
-
-    @Override
-    public String getResponse(QueryDiscountNumberListRequest request) {
-        String url = MobileUrl.QueryDiscountNumberList.getUrl();
         String body = MobileUtil.getBodyByClass(request);
         return MobileUtil.getResponse(url, body);
     }
@@ -155,6 +95,8 @@ public class MobileServiceImpl implements MobileService {
 
     @Override
     public String getExpressTrace(QryExpressTraceRequest request) {
+        Order order = orderService.selectOrderById(request.getOrderid());
+        request.setOrderid(order.getOrderId());
         return mobileResponseService.getExpressTrace(request);
     }
 
@@ -165,14 +107,14 @@ public class MobileServiceImpl implements MobileService {
         }
         order.setFdId(StringUtils.generateRandomString(12).toUpperCase());
         order.setCardtype("01");
-        order.setSid("1000000019");
-        order.setPack("prod.10086000025892");
+        order.setSid("prod.10086000034120");
+        order.setPackageName("19元移动花卡宝藏版");
         order.setStatus("0");
-        order.setProvince((String)redisUtil.get("1|"+order.getProvincecode()));
-        order.setAddressCity((String) redisUtil.get("2|"+order.getEparchycode()));
-        order.setAddress((String) redisUtil.get("1|"+order.getProvincecode())+
-                         (String) redisUtil.get("2|"+order.getEparchycode())+
-                         (String) redisUtil.get("3|"+order.getCitycode())+ order.getAddress());
+        order.setProvince(RedisEnum.ADDRESSCODE+"|"+(String)redisUtil.get("1|"+order.getProvincecode()));
+        order.setAddressCity(RedisEnum.ADDRESSCODE+"|"+(String) redisUtil.get("2|"+order.getEparchycode()));
+        order.setAddress(RedisEnum.ADDRESSCODE+"|"+(String) redisUtil.get("1|"+order.getProvincecode())+
+                         RedisEnum.ADDRESSCODE+"|"+(String) redisUtil.get("2|"+order.getEparchycode())+
+                         RedisEnum.ADDRESSCODE+"|"+(String) redisUtil.get("3|"+order.getCitycode())+ order.getAddress());
         if(orderService.insertOrder(order)>0){
             return AjaxResult.success("订单发送成功");
         }
@@ -180,29 +122,30 @@ public class MobileServiceImpl implements MobileService {
     }
 
     @Override
-    public String testReadValueChannel(String field) {
-        if(field!=null&&"wayid".equals(field)){
-            return wayid;
-        }else{
-            return operatorId;
-        }
-    }
-
-    @Override
-    public void insertRedisAddressCode() {
+    public String insertRedisAddressCode() {
         List<AddressCode> addressCodeList = addressCodeMapper.selectAllAddressCodeList();
         for(AddressCode addressCode:addressCodeList){
-            redisUtil.set(addressCode.getType()+"|"+addressCode.getCode(),addressCode.getName(),0);
+            redisUtil.set(RedisEnum.ADDRESSCODE+"|"+addressCode.getType()+"|"+addressCode.getCode(),addressCode.getName(),0);
         }
-        System.out.println(addressCodeList.size());
+        return ("插入了"+addressCodeList.size()+"区域信息");
     }
 
     @Override
-    public String testGetUrl(String eumn) {
-        System.out.println("标识：" + eumn);
-        return mobileUrlMapper.selectMobileUrlByEumn(eumn).getUrl();
+    public String insertRedisCmccProduct() {
+        List<ChooseNumberColumn> cmccProductList = chooseNumberColumnMapper.selectAllChooseNumberColumnList();
+        for(ChooseNumberColumn cmccProduct:cmccProductList){
+            redisUtil.set(RedisEnum.PRODUCT+"|"+cmccProduct.getSid(),cmccProduct.getPack(),0);
+        }
+        return ("插入了"+cmccProductList.size()+"条产品信息");
     }
 
-
+    @Override
+    public void insertOrderMsg(DSAirpickinstallQueryOrderRequest request) {
+        DSAirpickinstallQueryOrderResponse response = mobileResponseService.getOrderMsg(request);
+        OrderLogistics orderLogistics = new OrderLogistics();
+        BeanUtils.copyProperties(response, orderLogistics);
+        orderLogistics.setFdId(response.getOrderId());
+        orderLogisticsMapper.insertOrderLogistics(orderLogistics);
+    }
 
 }

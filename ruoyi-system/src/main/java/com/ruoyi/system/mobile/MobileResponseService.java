@@ -2,6 +2,7 @@ package com.ruoyi.system.mobile;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.constant.CmccConstant;
 import com.ruoyi.common.enums.MobileUrl;
 import com.ruoyi.common.enums.RedisEnum;
 import com.ruoyi.common.utils.DateUtils;
@@ -41,7 +42,7 @@ public class MobileResponseService {
 
 
     @Value("${channel.wayid}")
-    private String wayid;
+    private String wayId;
 
     @Value("${channel.operatorId}")
     private String operatorId;
@@ -59,33 +60,6 @@ public class MobileResponseService {
     private RedisUtil redisUtil;
 
     private static String SUCCESS_CODE = "0";
-    
-
-    public QueryDiscountNumberListResponse getQueryDiscountNumberList(QueryDiscountNumberListRequest request){
-        String jsonString = MobileUtil.getResponse(
-                MobileUrl.QueryDiscountNumberList.getUrl(),
-                MobileUtil.getBodyByClass(request));
-        JSONObject jsonObj = JSONObject.parseObject(jsonString);
-        String brand = JSONObject.parseObject(jsonObj.getString("result")).getString("brand") ;
-        if(null==jsonObj.getString("respcode")||!SUCCESS_CODE.equals(jsonObj.getString("respcode"))){
-            log.info("查询选号查询号码可选优惠异常:"+jsonObj.toJSONString());
-        }
-        String infos = JSONObject.parseObject(jsonObj.getString("result")).getString("infos").replaceAll("\\[","").replaceAll("\\]","");
-        JSONObject infosJson = JSONObject.parseObject(infos);
-        String price = infosJson.getString("price");
-        String account=infosJson.getString("account");
-        String solution_id=infosJson.getString("solution_id");
-        String solution_name =infosJson.getString("solution_name");
-        String productid =infosJson.getString("productid");
-        QueryDiscountNumberListResponse response = new QueryDiscountNumberListResponse();
-        response.setBrand(brand == null ? "" : brand);
-        response.setPrice(price ==null ? "":price);
-        response.setAccount(account == null ? "" : account);
-        response.setSolution_id(solution_id == null ? "" :solution_id);
-        response.setSolution_name(solution_name == null ? "" :solution_name);
-        response.setProductid(productid == null ?  "":productid);
-        return  response;
-    }
 
     public QueryChooseNumberListResponse getQueryChooseNumberList(QueryChooseNumberListRequest request){
         JSONObject queryChooseNumberListString = JSONObject.parseObject(
@@ -93,8 +67,8 @@ public class MobileResponseService {
                         MobileUrl.QueryChooseNumberList.getUrl(),
                         MobileUtil.getBodyByClass(request)));
         //获取选号号码列表失败
-        if(null==queryChooseNumberListString||null==queryChooseNumberListString.getString("respcode")
-                ||!SUCCESS_CODE.equals(queryChooseNumberListString.getString("respcode"))){
+        if(null==queryChooseNumberListString||null==queryChooseNumberListString.getString(CmccConstant.RESPCODE)
+                ||!SUCCESS_CODE.equals(queryChooseNumberListString.getString(CmccConstant.RESPCODE))){
             log.info("查询选号号码列表异常:"+queryChooseNumberListString.toJSONString());
         }
         List<QueryChooseNumberListResponse> numberLists = JSONArray.parseArray(JSONObject.parseObject(
@@ -122,41 +96,21 @@ public class MobileResponseService {
         return response;
     }
 
-    public JDCheckAddressResponse JDCheakAddress(JDCheckAddressRequest request){
+    public JDCheckAddressResponse JDCheckAddress(JDCheckAddressRequest request){
         JDCheckAddressResponse response = new JDCheckAddressResponse();
         String jsonString = MobileUtil.getResponse(
                 MobileUrl.JDCheckAddress.getUrl(),
                 MobileUtil.getBodyByClass(request));
         JSONObject jsonObject = JSONObject.parseObject(jsonString);
         //0 可以配送 1 无法配送
-        if(null!=jsonObject && SUCCESS_CODE.equals(jsonObject.getString("respcode")) && "可以京配".equals(jsonObject.getString("respdesc"))){
-            response.setCode("0");
-            response.setMsg("可以京配");
+        if(null!=jsonObject && CmccConstant.JDCheckAddress.SUCCESS_CODE.equals(jsonObject.getString(CmccConstant.RESPCODE))){
+            response.setCode(CmccConstant.JDCheckAddress.ALLOW_DELIVERY);
+            response.setMsg(jsonObject.getString(CmccConstant.RESPDESC));
             return response;
         }
-        response.setCode("1");
-        response.setMsg(jsonObject.getString("respdesc"));
+        response.setCode(CmccConstant.JDCheckAddress.NOT_ALLOW_DELIVERY);
+        response.setMsg(jsonObject.getString(CmccConstant.RESPDESC));
         return response;
-    }
-
-
-
-    public ChooseNumberbusinessResponse getChooseNumberbusiness (ChooseNumberbusinessRequest request){
-        String jsonString = MobileUtil.getResponse(
-                MobileUrl.ChooseNumberBusiness.getUrl(),
-                MobileUtil.getBodyByClass(request));
-        JSONObject jsonObject = JSONObject.parseObject(jsonString);
-        if(null == jsonObject.getString("respcode") || !SUCCESS_CODE.equals(jsonObject.getString("respcode"))){
-            log.info("查询放号单品业务信息能力异常:"+jsonObject.toJSONString());
-        }
-        String infos = jsonObject.getJSONObject("result").getString("businessinfo").replaceAll("\\[","").replaceAll("\\]","");
-        JSONObject jsonInfos = JSONObject.parseObject(infos);
-        ChooseNumberbusinessResponse response = new ChooseNumberbusinessResponse();
-        String packageCode = jsonInfos.getString("packagecode");
-        String packageName = jsonInfos.getString("packagename");
-        response.setPackageCode(packageCode == null ? "" : packageCode);
-        response.setPackageName(packageName == null ? "" : packageName);
-        return  response;
     }
 
     public String getExpressTrace(QryExpressTraceRequest request){
@@ -171,11 +125,12 @@ public class MobileResponseService {
         String body = MobileUtil.getBodyByClass(request);
         String jsonString = MobileUtil.getResponse(url, body);
         JSONObject jsonObject = JSONObject.parseObject(jsonString);
-        if(null==jsonObject  || !SUCCESS_CODE.equals(jsonObject.getString("respcode")) || !SUCCESS_CODE.equals(jsonObject.getString("resptype"))){
+        if(null==jsonObject  || !SUCCESS_CODE.equals(jsonObject.getString(CmccConstant.RESPCODE)) || !SUCCESS_CODE.equals(jsonObject.getString("resptype"))){
              log.info("查询物流信息异常:"+jsonObject.toJSONString());
         }
         JSONArray jsonArray = JSONArray.parseArray(jsonObject.getJSONObject("result").getString("order"));
-        JSONObject jsonObject1 = jsonArray.getJSONObject(0);
+        //取最新的订单信息， 号码可能以前曾经注销过
+        JSONObject jsonObject1 = jsonArray.getJSONObject(jsonArray.size()-1);
         DSAirpickinstallQueryOrderResponse dsAirpickinstallQueryOrderResponse = new DSAirpickinstallQueryOrderResponse();
         if(null!=jsonObject1.getString("createTime")){
             String createTime = jsonObject1.getString("createTime").replaceAll("年", "-").replaceAll("月", "-").replaceAll("日","")
@@ -208,9 +163,9 @@ public class MobileResponseService {
         AirpickinstallnewOrderRequest request = new AirpickinstallnewOrderRequest();
         newOrderParams newOrderParams = new newOrderParams();
 
-        //首先对京东地址校验是否配送
+        //首先对京东地址校验是否配送 顺便决定产品编码是跟线上自助还是京东上门
         JDCheckAddressRequest jdCheckAddressRequest = addressResolutionService.addressResolution(order);
-        JDCheckAddressResponse jdCheck = this.JDCheakAddress(jdCheckAddressRequest);
+        JDCheckAddressResponse jdCheck = this.JDCheckAddress(jdCheckAddressRequest);
         /**
          * 此处判断是否支持京东配送  不支持京东配送则使用省仓调用
          * 支持   ReceiveType = 4  OfflineCard = 3
@@ -224,25 +179,17 @@ public class MobileResponseService {
             newOrderParams.setOfflineCard("0");
             newOrderParams.setAcceptType("1");
         }
+
+        String packageCode = (String) redisUtil.get(RedisEnum.PRODUCT+"|"+order.getSid());
         //查询选号列表
         QueryChooseNumberListRequest queryChooseNumberListRequest = new QueryChooseNumberListRequest();
         queryChooseNumberListRequest.setRegion("200");
         queryChooseNumberListRequest.setTag("0");
-        queryChooseNumberListRequest.setPackagecode(order.getPack());
+        queryChooseNumberListRequest.setPackagecode(packageCode);
         QueryChooseNumberListResponse queryChooseNumberListResponse = this.getQueryChooseNumberList(queryChooseNumberListRequest);
 
-        //查询放号单品业务信息能力
-        ChooseNumberbusinessRequest chooseNumberbusinessRequest = new ChooseNumberbusinessRequest();
-        chooseNumberbusinessRequest.setTypecode(order.getPack());
-        ChooseNumberbusinessResponse chooseNumberbusinessResponse = this.getChooseNumberbusiness(chooseNumberbusinessRequest);
-
-        //选号查询号码可选优惠
-        QueryDiscountNumberListRequest queryDiscountNumberListRequest = new QueryDiscountNumberListRequest();
-        queryDiscountNumberListRequest.setMobileno(queryChooseNumberListResponse.getMobileno());
-        QueryDiscountNumberListResponse queryDiscountNumberListResponse = this.getQueryDiscountNumberList(queryDiscountNumberListRequest);
-
         //渠道编码 工号必传
-        newOrderParams.setWayid(wayid);
+        newOrderParams.setWayid(wayId);
         newOrderParams.setOperatorId(operatorId);
 
         //号码归属地市编码
@@ -251,12 +198,8 @@ public class MobileResponseService {
         newOrderParams.setAreaName("广州");
         //新购号码
         newOrderParams.setServnumber(queryChooseNumberListResponse.getMobileno());
-        //品牌
-        newOrderParams.setBrand(queryDiscountNumberListResponse.getBrand());
-        //订单金额
-        newOrderParams.setOrderAmount(queryDiscountNumberListResponse.getPrice());
         //支付方式
-        newOrderParams.setPayWay("1");
+        newOrderParams.setPayWay(CmccConstant.AirpickinstallnewOrder.PAY_WAY);
 
         //配送省份 省内不用填 省外要填省份和区域
         if(!"200".equals(jdCheckAddressRequest.getProvinceCode())){
@@ -275,19 +218,11 @@ public class MobileResponseService {
         newOrderParams.setCerType(order.getCardtype());
         //证件号码
         newOrderParams.setCerNo(order.getCardid());
-        //主套餐id
-        newOrderParams.setMainprodid(chooseNumberbusinessResponse.getPackageCode());
-        //主套餐名称
-        newOrderParams.setMainprodname(chooseNumberbusinessResponse.getPackageName());
-        //营销方案编码
-        newOrderParams.setGoodsId(queryDiscountNumberListResponse.getProductid());
-        //营销方案名称
-        newOrderParams.setGoodsName(queryDiscountNumberListResponse.getSolution_name());
-        //内含话费
-        newOrderParams.setCharge(queryDiscountNumberListResponse.getAccount());
-        //活动id
-        newOrderParams.setOfferCompId(queryDiscountNumberListResponse.getSolution_id());
-        //运行商
+        //商品编码
+        newOrderParams.setMainprodid(packageCode);
+        //商品名称
+        newOrderParams.setMainprodname(order.getPackageName());
+        //订单id
         newOrderParams.setOrderId(order.getFdId());
         //商品编码
         newOrderParams.setOfferId(queryChooseNumberListResponse.getCommid());
@@ -298,16 +233,14 @@ public class MobileResponseService {
                 MobileUrl.AirpickinstallnewOrder.getUrl(),
                 MobileUtil.getBodyByClass(request));
         JSONObject jsonObject = JSONObject.parseObject(jsonString);
-        if(null==jsonObject || !SUCCESS_CODE.equals(jsonObject.getString("respcode"))){
-            //删除缓存中的号码key 回归池库
-            redisUtil.del(RedisEnum.SERVNUMBER+":"+newOrderParams.getServnumber());
+        if(null==jsonObject || !SUCCESS_CODE.equals(jsonObject.getString(CmccConstant.RESPCODE))){
             log.info("线上下单异常response："+jsonObject);
             //更新订单表状态
             orderMapper.updateOrder(new Order(){{
                 setFdId(newOrderParams.getOrderId());
                 setStatus("2");
                 setCreateTime(DateUtils.getNowTime());
-                setRemark(jsonObject.getString("respdesc"));
+                setRemark(jsonObject.getString(CmccConstant.RESPDESC));
                 setProvince(jdCheckAddressRequest.getAddressProvince());
                 setAddressCity(jdCheckAddressRequest.getAddrssCity());
             }});
@@ -321,13 +254,15 @@ public class MobileResponseService {
             setRemark("新购卡号："+queryChooseNumberListResponse.getMobileno());
             setProvince(jdCheckAddressRequest.getAddressProvince());
             setAddressCity(jdCheckAddressRequest.getAddrssCity());
+            setServnumber(queryChooseNumberListResponse.getMobileno());
+            setOrderId(jsonObject.getString(CmccConstant.AirpickinstallnewOrder.ORDERID));
         }});
-        //新增物流表数据
-        DSAirpickinstallQueryOrderResponse response = this.getOrderMsg(new DSAirpickinstallQueryOrderRequest(){{ setOrderId(order.getFdId());}});
-        OrderLogistics orderLogistics = new OrderLogistics();
-        BeanUtils.copyProperties(response, orderLogistics);
-        orderLogistics.setFdId(order.getFdId());
-        orderLogisticsMapper.insertOrderLogistics(orderLogistics);
+        //新增物流表数据  删掉，因为订单详情不会实时更新，用自动job替代
+//        DSAirpickinstallQueryOrderResponse response = this.getOrderMsg(new DSAirpickinstallQueryOrderRequest(){{setServnumber(queryChooseNumberListResponse.getMobileno());}});
+//        OrderLogistics orderLogistics = new OrderLogistics();
+//        BeanUtils.copyProperties(response, orderLogistics);
+//        orderLogistics.setFdId(order.getFdId());
+//        orderLogisticsMapper.insertOrderLogistics(orderLogistics);
         return true;
     }
 

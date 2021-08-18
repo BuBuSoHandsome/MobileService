@@ -17,7 +17,7 @@ public interface IChooseNumberColumnService
      * @param sid 【选号卡类栏目】ID
      * @return 【选号卡类栏目】
      */
-    public ChooseNumberColumn selectChooseNumberColumnById(Long sid);
+    public ChooseNumberColumn selectChooseNumberColumnById(String sid);
 
     /**
      * 查询【选号卡类栏目】列表
@@ -58,7 +58,5 @@ public interface IChooseNumberColumnService
      * @return 结果
      */
     public int deleteChooseNumberColumnById(Long sid);
-
-    public boolean testRedis(String key,String value);
 
 }

@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="Order" id="OrderResult">
         <result property="fdId"    column="fd_id"    />
         <result property="sid"    column="sid"    />
-        <result property="pack"    column="pack"    />
+        <result property="packageName"    column="packageName"    />
         <result property="realname"    column="realName"    />
         <result property="phone"    column="phone"    />
         <result property="cardtype"    column="cardType"    />
@@ -20,17 +20,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="status"    column="status"    />
         <result property="createTime"    column="create_time"    />
         <result property="remark"    column="remark"    />
+        <result property="servnumber"    column="servnumber"    />
+        <result property="orderId"    column="orderId"    />
     </resultMap>
 
     <sql id="selectOrderVo">
-        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status,create_time,remark from `order`
+        select fd_id, sid, packageName, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status,create_time,remark,servnumber,orderId from `order`
     </sql>
 
     <select id="selectOrderList" parameterType="Order" resultMap="OrderResult">
         <include refid="selectOrderVo"/>
         <where>  
             <if test="sid != null  and sid != ''"> and sid = #{sid}</if>
-            <if test="pack != null  and pack != ''"> and pack = #{pack}</if>
+            <if test="packageName != null  and packageName != ''"> and packageName = #{packageName}</if>
             <if test="realname != null  and realname != ''"> and realName like concat('%', #{realname}, '%')</if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
             <if test="cardtype != null  and cardtype != ''"> and cardType = #{cardtype}</if>
@@ -54,14 +56,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectOrderList10"  parameterType="java.lang.Integer" resultMap="OrderResult">
-        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status,create_time,remark from `order` WHERE status='0' LIMIT #{nums}
+        select fd_id, sid, packageName, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status,create_time,remark from `order` WHERE status='0' LIMIT #{nums}
     </select>
 
 
     <select id="selectOrderIds" parameterType="Order" resultType="java.lang.String">
         select fd_id from `order`
         <where>
-            <if test="pack != null  and pack != ''"> and pack = #{pack}</if>
+            <if test="packageName != null  and packageName != ''"> and packageName = #{packageName}</if>
             <if test="province != null  and province != ''"> and address = #{province}</if>
             <if test="addressCity != null  and addressCity != ''"> and addressCity = #{addressCity}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
@@ -70,7 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="selectOrderListByIds" parameterType="String" resultMap="OrderResult">
-        select fd_id, sid, pack, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status,create_time from `order` where status!='1' and fd_id in
+        select fd_id, sid, packageName, realName, phone, cardType, cardId, provinceCode, eparchyCode, cityCode, address, province,addressCity,status,create_time from `order` where status!='1' and fd_id in
         <foreach item="fdId" collection="array" open="(" separator="," close=")">
             #{fdId}
         </foreach>
@@ -86,7 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="fdId != null  and fdId != ''">fd_id,</if>
             <if test="sid != null  and sid != ''">sid,</if>
-            <if test="pack != null  and pack != ''">pack,</if>
+            <if test="packageName != null  and packageName != ''">packageName,</if>
             <if test="realname != null  and realname != ''">realName,</if>
             <if test="phone != null  and phone != ''">phone,</if>
             <if test="cardtype != null  and cardtype != ''">cardType,</if>
@@ -103,7 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="fdId != null  and fdId != ''">#{fdId},</if>
             <if test="sid != null  and sid != ''">#{sid},</if>
-            <if test="pack != null  and pack != ''">#{pack},</if>
+            <if test="packageName != null  and packageName != ''">#{packageName},</if>
             <if test="realname != null  and realname != ''">#{realname},</if>
             <if test="phone != null  and phone != ''">#{phone},</if>
             <if test="cardtype != null  and cardtype != ''">#{cardtype},</if>
@@ -123,7 +125,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update `order`
         <trim prefix="SET" suffixOverrides=",">
             <if test="sid != null  and sid != ''">sid = #{sid},</if>
-            <if test="pack != null  and pack != ''">pack = #{pack},</if>
+            <if test="packageName != null  and packageName != ''">packageName = #{packageName},</if>
             <if test="realname != null  and realname != ''">realName = #{realname},</if>
             <if test="phone != null  and phone != ''">phone = #{phone},</if>
             <if test="cardtype != null  and cardtype != ''">cardType = #{cardtype},</if>
@@ -137,6 +139,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null  and status != ''">status = #{status},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
             <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="servnumber != null  and servnumber != ''">servnumber = #{servnumber},</if>
+            <if test="orderId != null  and orderId != ''">orderId = #{orderId},</if>
         </trim>
         where fd_id = #{fdId}
     </update>

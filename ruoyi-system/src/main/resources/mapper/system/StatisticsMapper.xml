@@ -143,10 +143,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="simTypeChart" parameterType="String" resultType="java.util.Map">
-        select t1.text , t1.pack, IFNULL(allNum,0)allNum, IFNULL(successNum,0)successNum from choose_number_column t1
+        select t1.text , t1.sid, IFNULL(allNum,0)allNum, IFNULL(successNum,0)successNum from choose_number_column t1
         left join
         (
-            select pack,count(pack) allNum from `order`
+            select sid,count(sid) allNum from `order`
             <where>
                 <if test="startTime !='' and startTime != null">
                     and create_time >= #{startTime}
@@ -158,12 +158,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     and province = #{provinceName}
                 </if>
             </where>
-            group by pack
+            group by sid
 
-        )t2 on t1.pack = t2.pack
+        )t2 on t1.sid = t2.sid
         left join
         (
-            select pack, count(*)successNum from `order`
+            select sid, count(*)successNum from `order`
             <where>
                 status = '3'
                 <if test="startTime !='' and startTime != null">
@@ -176,8 +176,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     and province = #{provinceName}
                 </if>
             </where>
-            group by pack
-        ) t3 on t1.pack = t3.pack
+            group by sid
+        ) t3 on t1.sid = t3.sid
 
     </select>
 

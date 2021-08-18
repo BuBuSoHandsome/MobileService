@@ -11,7 +11,7 @@
                     <div class="select-list">
                         <ul>
                             <li>
-                                <p>卡类：</p>
+                                <p>商品名称：</p>
                                 <select name="sid" th:with="type=${@dict.getType('number_column')}">
                                     <option value="">所有</option>
                                     <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
@@ -108,8 +108,8 @@
                     visible: false
                 },
                 {
-                    field : 'sid', 
-                    title : '卡类',
+                    field : 'sid',
+                    title : '商品名称',
                     formatter: function(value, row, index) {
                         return $.table.selectDictLabel(datas0, value);
                     }

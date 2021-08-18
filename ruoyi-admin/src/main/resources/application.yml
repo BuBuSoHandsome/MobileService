@@ -17,11 +17,11 @@ ruoyi:
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为80
-  port: 443
-  ssl:
-    key-store: classpath:3402625_xingyingkeji.cn.pfx
-    key-store-password: PGtx2cIq
-    key-store-type: PKCS12
+#  port: 443
+#  ssl:
+#    key-store: classpath:3402625_xingyingkeji.cn.pfx
+#    key-store-password: PGtx2cIq
+#    key-store-type: PKCS12
   servlet:
     # 应用的访问路径
     context-path: /
@@ -77,7 +77,7 @@ spring:
   # Redis
   redis:
     #内网
-    host: 172.16.119.18
+    host: 172.16.0.9
     #外网
     #host: 47.98.203.60
     port: 6379
@@ -149,9 +149,12 @@ xss:
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
 
-#星盈渠道号（很重要每个系统都得区分）
+#移动渠道号（很重要每个系统都得区分）
 channel:
   wayid: GZ08EC200043
-  operatorId: AGZZC1000YHJ
+  operatorId: AGZZC00949
 
-
+#联通渠道号
+cucc:
+  appKey: A3B43FEF873E99CAE053491962842D74
+  secret: kKpuL2DedCk0YfET

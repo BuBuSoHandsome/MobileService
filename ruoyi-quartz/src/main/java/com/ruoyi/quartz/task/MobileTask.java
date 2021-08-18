@@ -64,39 +64,40 @@ public class MobileTask {
     //内部任务类
     class refreshOrderTask implements Callable<Integer> {
 
-        private List<String> orderIds;
+        private List<Order> orders;
 
-        public refreshOrderTask(List<String> orderIds){
-            this.orderIds = orderIds;
+        public refreshOrderTask(List<Order> orders){
+            this.orders = orders;
         }
 
         @Override
         public Integer call() throws Exception {
             Integer num = 0;
-            for (int i=0;i<orderIds.size();i++){
+            for (int i=0;i<orders.size();i++){
                 int finalI = i;
                 DSAirpickinstallQueryOrderResponse response = mobileService.getOrderMsg(
-                        new DSAirpickinstallQueryOrderRequest(){{ setOrderId(orderIds.get(finalI));
+                        new DSAirpickinstallQueryOrderRequest(){{  setServnumber(orders.get(finalI).getServnumber());
                         }});
-
+                //超过两周没有收货
                 if(DateUtils.isLastTwoWeeks(response.getCreateTime())){
                     //更新订单表状态 改为拒收状态
                     orderMapper.updateOrder(new Order(){{
-                        setFdId(orderIds.get(finalI));
+                        setFdId(orders.get(finalI).getFdId());
                         setStatus("4");
                     }});
                 }
-                if("激活成功".equals(response.getOrderRemark())){
+                if("激活成功".equals(response.getOrderRemark()) &&"已完成".equals(response.getOrderStatus())){
                     //更新订单表状态
                     orderMapper.updateOrder(new Order(){{
-                        setFdId(orderIds.get(finalI));
+                        setFdId(orders.get(finalI).getFdId());
                         setStatus("3");
                     }});
                 }
+                // 如果状态有其他变化或者是新入库的订单 删掉原数据并重新insert订单详情
                 OrderLogistics orderLogistics = new OrderLogistics();
                 BeanUtils.copyProperties(response, orderLogistics);
-                orderLogistics.setFdId(orderIds.get(finalI));
-                orderLogisticsMapper.deleteOrderLogisticsById(orderIds.get(finalI));
+                orderLogistics.setFdId(orders.get(finalI).getFdId());
+                orderLogisticsMapper.deleteOrderLogisticsById(orders.get(finalI).getFdId());
                 int nums = orderLogisticsMapper.insertOrderLogistics(orderLogistics);
                 num += nums;
             }
@@ -109,7 +110,7 @@ public class MobileTask {
      * 通过线程池去创建线程异步更新 提升效率
      */
     public void refreshOrderMsg(){
-        List<String> orderIds = orderMapper.selectOrderIds(new Order(){{
+        List<Order> orderIds = orderMapper.selectOrderList(new Order(){{
             setStatus("1");
         }});
         if(null == orderIds || orderIds.isEmpty()){
@@ -117,7 +118,7 @@ public class MobileTask {
         }
         int stepNum = countStep(orderIds.size());
         //通过分段拆分list
-        List<List<String>> splitList = Stream.iterate(0, n -> n + 1).
+        List<List<Order>> splitList = Stream.iterate(0, n -> n + 1).
                 limit(stepNum).parallel().map(a -> orderIds.stream().skip(a * MAX_NUMBER).
                 limit(MAX_NUMBER).parallel().collect(Collectors.toList())).collect(Collectors.toList());
         ThreadPoolExecutor pool = null;
@@ -130,8 +131,8 @@ public class MobileTask {
                 Future<Integer> f = pool.submit(refreshOrderTask);
                 futures.add(f);
             }
-            log.info("本次成功更新 "+orderIds.size()+" 物流记录，详情请查询系统日志");
         }finally {
+            log.info("本次成功更新 "+orderIds.size()+" 物流记录，详情请查询系统日志");
             pool.shutdown();
         }
     }

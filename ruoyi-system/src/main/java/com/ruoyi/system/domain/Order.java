@@ -32,10 +32,10 @@ public class Order {
     private String sid;
 
     /**
-     * 套餐编码
+     * 商品名称
      */
-    @Excel(name = "套餐编码")
-    private String pack;
+    @Excel(name = "商品名称")
+    private String packageName;
 
     /**
      * 真实姓名
@@ -109,6 +109,17 @@ public class Order {
      */
     @Excel(name = "备注")
     private String remark;
+
+    /**
+     * 新号码
+     */
+    @Excel(name = "新号码")
+    private String servnumber;
+
+    /**
+     * 移动订单ID
+     */
+    private String orderId;
 
     /** 请求参数 */
     private Map<String, Object> params;

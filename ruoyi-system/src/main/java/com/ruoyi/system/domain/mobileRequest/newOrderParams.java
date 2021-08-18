@@ -20,6 +20,7 @@ public class newOrderParams implements Serializable {
 
     /**
      * 子店铺ID
+     * （选填）
      */
     private String subsShopId;
 
@@ -55,12 +56,13 @@ public class newOrderParams implements Serializable {
 
     /**
      * 品牌
+     * （选填）
      */
     private String brand;
 
     /**
-     * 受理方式（1-自助2-代客下单3-预约
-     * 此处填2）
+     * 受理方式（1-自助2-代客下单3-预约)
+     * 此处填2
      */
     private String acceptType;
 
@@ -71,18 +73,20 @@ public class newOrderParams implements Serializable {
     private String receiveType;
 
     /**
-     * 订单金额
+     * 订单金额(修改成非必填， 默认 0)
+     * （选填）
      */
-    private String orderAmount;
+    private double orderAmount;
 
     /**
      * 优惠金额
+     * （选填）
      */
-    private String deductCash;
+    private double deductCash;
 
     /**
-     * 支付方式（0货到付款1在线支付2到厅支付3语音支付4不需要支付
-     * 此处填1）
+     * 支付方式（0货到付款1在线支付2到厅支付3语音支付4不需要支付)
+     * 此处填1
      */
     private String payWay;
 
@@ -103,11 +107,12 @@ public class newOrderParams implements Serializable {
 
     /**
      * 邮政编码
+     * （选填）
      */
     private String postCode;
 
     /**
-     * 配送省份（如果是广东省可以不填）
+     * 配送省份
      */
     private String province;
 
@@ -117,7 +122,8 @@ public class newOrderParams implements Serializable {
     private String addressCity;
 
     /**
-     * 配送区域（如果是广东省可以不填）
+     * 配送区域
+     * （选填）
      */
     private String addressArea;
 
@@ -128,46 +134,43 @@ public class newOrderParams implements Serializable {
 
     /**
      * 配送地址经度
+     * （选填）
      */
     private String addressLongitude;
 
     /**
      * 配送地址维度
+     * （选填）
      */
     private String addressLatitude;
 
     /**
      * 推荐人号码
+     * （选填）
      */
     private String referenceNumber;
 
     /**
-     * 主套餐ID
+     * 商品编码
+     * (修改为必填)
      */
     private String mainprodid;
 
     /**
-     * 主套餐名称
+     * 商品名称
+     * （选填）
      */
     private String mainprodname;
 
     /**
-     * 营销方案编码
-     */
-    private String goodsId;
-
-    /**
-     * 营销方案名称
-     */
-    private String goodsName;
-
-    /**
      * 内含话费
+     * （选填）
      */
     private String charge;
 
     /**
      * 活动ID
+     * （选填）
      */
     private String offerCompId;
 
@@ -178,21 +181,25 @@ public class newOrderParams implements Serializable {
 
     /**
      * 商品编码
+     * （选填）
      */
     private String offerId;
 
     /**
      * 录取地市
+     * （选填）
      */
     private String admissionCity;
 
     /**
      * 录取学校
+     * （选填）
      */
     private String admissionUniversity;
 
     /**
      * 被录取专业
+     * （选填）
      */
     private String admissionMajor;
 
@@ -203,6 +210,13 @@ public class newOrderParams implements Serializable {
      * 3-外部电商自行配卡
      * 4-外部电商不支持上门（转省仓配卡）
      * ）
+     *
+     * API 传 值 此 处 为 3 !
      */
     private String offlineCard;
+
+    /**
+     * 推荐专区ID
+     */
+    private String recoid;
 }

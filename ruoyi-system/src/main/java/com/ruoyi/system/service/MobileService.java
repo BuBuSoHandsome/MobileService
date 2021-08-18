@@ -15,30 +15,24 @@ import com.ruoyi.system.domain.mobileResponse.JDCheckAddressResponse;
 
 public interface MobileService {
 
-    public String testGetUrl(String eumn);
+     JDCheckAddressResponse JDCheckAddress(JDCheckAddressRequest request);
 
-    public String queryChooseNumberColumn();
+     String queryChooseNumberList(QueryChooseNumberListRequest request);
 
-    public String chooseNumberBusiness(ChooseNumberbusinessRequest request);
+     Boolean AirpickinstallnewOrder(Order order);
 
-    public JDCheckAddressResponse JDCheckAddress(JDCheckAddressRequest request);
+     DSAirpickinstallQueryOrderResponse getOrderMsg(DSAirpickinstallQueryOrderRequest request);
 
-    public String queryChooseNumberList(QueryChooseNumberListRequest request);
+     String JDCheckAddress2(Order order);
 
-    public String getResponse(QueryDiscountNumberListRequest request);
+     String getExpressTrace(QryExpressTraceRequest request);
 
-    public Boolean AirpickinstallnewOrder(Order order);
+     AjaxResult addBZCardOrder(Order order);
 
-    public DSAirpickinstallQueryOrderResponse getOrderMsg(DSAirpickinstallQueryOrderRequest request);
+     String insertRedisAddressCode();
 
-    public String JDCheckAddress2(Order order);
+     String insertRedisCmccProduct();
 
-    public String getExpressTrace(QryExpressTraceRequest request);
-
-    public AjaxResult addBZCardOrder(Order order);
-
-    public String testReadValueChannel(String field);
-
-    public void insertRedisAddressCode();
+     void insertOrderMsg(DSAirpickinstallQueryOrderRequest request);
 }
 

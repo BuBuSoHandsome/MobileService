@@ -11,13 +11,22 @@ import java.util.List;
  */
 public interface ChooseNumberColumnMapper 
 {
+
+    /**
+     * 查询所有【选号卡类栏目】
+     *
+     *
+     * @return 【选号卡类栏目】
+     */
+    public List<ChooseNumberColumn> selectAllChooseNumberColumnList();
+
     /**
      * 查询【选号卡类栏目】
      * 
      * @param sid 【选号卡类栏目】ID
      * @return 【选号卡类栏目】
      */
-    public ChooseNumberColumn selectChooseNumberColumnById(Long sid);
+    public ChooseNumberColumn selectChooseNumberColumnById(String sid);
 
     /**
      * 查询【选号卡类栏目】列表
