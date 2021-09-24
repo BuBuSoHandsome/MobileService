@@ -107,7 +107,6 @@ public class Order {
     /**
      * 备注
      */
-    @Excel(name = "备注")
     private String remark;
 
     /**
